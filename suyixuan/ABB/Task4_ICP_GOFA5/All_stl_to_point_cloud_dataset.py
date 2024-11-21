@@ -2,7 +2,6 @@
 Author: Yixuan Su
 Date: 2024/11/17 10:26
 File: All_stl_to_point_cloud_dataset.py
-
 """
 
 import os

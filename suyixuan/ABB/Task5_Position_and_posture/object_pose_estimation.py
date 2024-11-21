@@ -4,6 +4,7 @@ Date: 2024/11/19 21:32
 File: object_pose_estimation.py
 Description: 
 """
+
 import os
 import numpy as np
 import open3d as o3d
@@ -57,4 +58,3 @@ output_scene_path = r"E:\ABB-Project\ABB_wrs\suyixuan\ABB_Point_Cloud\colored_po
 o3d.io.write_point_cloud(output_scene_path, scene_point_cloud)
 
 print(f"最终的场景点云已保存至：{output_scene_path}")
-
