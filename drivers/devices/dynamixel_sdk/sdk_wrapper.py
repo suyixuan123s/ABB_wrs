@@ -629,7 +629,6 @@ if __name__ == "__main__":
     # # exit(0)
     # dxl_con.set_dxl_position_p_gain(300, 1)
 
-
     # dxl_con.set_dxl_current_limit(400, 1)
     # dxl_con.set_dxl_current_limit(400, 2)
     #

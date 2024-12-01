@@ -1,6 +1,5 @@
 from grpc.tools import protoc
 
-
 protoc.main(
     (
         '',

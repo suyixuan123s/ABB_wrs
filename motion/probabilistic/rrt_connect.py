@@ -128,7 +128,7 @@ class RRTConnect(rrt.RRT):
                                             obstacle_list=obstacle_list,
                                             otherrobot_list=otherrobot_list,
                                             animation=animation)
-            if last_nid != -1: # not trapped:
+            if last_nid != -1:  # not trapped:
                 goal_nid = last_nid
                 tree_b_goal_conf = tree_a.nodes[goal_nid]['conf']
                 last_nid = self._extend_roadmap(component_name=component_name,
@@ -167,7 +167,6 @@ if __name__ == '__main__':
     import numpy as np
     import matplotlib.pyplot as plt
     import robot_sim.robots.xybot.xybot as xyb
-
 
     # ====Search Path with RRT====
     obstacle_list = [

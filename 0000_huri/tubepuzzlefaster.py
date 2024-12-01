@@ -5,6 +5,7 @@ import cv2
 import time
 import scipy.signal as ss
 
+
 class Node(object):
 
     def __init__(self, grid):
@@ -19,10 +20,10 @@ class Node(object):
 
         self.grid = copy.deepcopy(grid)
         self._nrow, self._ncolumn = self.grid.shape
-        self.ngrids = self._nrow*self._ncolumn
+        self.ngrids = self._nrow * self._ncolumn
         self.parent = None
         self.gs = 0
-        self.gridpadded = np.pad(self.grid, (1,1), 'constant')
+        self.gridpadded = np.pad(self.grid, (1, 1), 'constant')
 
     @property
     def nrow(self):
@@ -44,9 +45,9 @@ class Node(object):
         date: 20200425
         """
 
-        i = i+1
-        j = j+1
-        return self.gridpadded[i-1:i+1, j-1:j+1]
+        i = i + 1
+        j = j + 1
+        return self.gridpadded[i - 1:i + 1, j - 1:j + 1]
 
     def __getitem__(self, x):
         return self.grid[x]
@@ -79,16 +80,17 @@ class Node(object):
             else:
                 outstring += " ["
             for j in range(self._ncolumn):
-                outstring = outstring+str(int(self.grid[i][j]))+", "
+                outstring = outstring + str(int(self.grid[i][j])) + ", "
             outstring = outstring[:-1] + "]"
             outstring += ",\n"
         outstring = outstring[:-2] + "]]"
 
         return outstring
 
+
 class TubePuzzle(object):
 
-    def __init__(self, elearray, goalpattern = None):
+    def __init__(self, elearray, goalpattern=None):
         """
 
         :param nrow:
@@ -106,11 +108,11 @@ class TubePuzzle(object):
         self.closelist = []
         self._setValues(elearray)
         if goalpattern is None:
-            self.goalpattern = np.array([[1,1,1,1,0,0,2,2,2,2],
-                                         [1,1,1,1,0,0,2,2,2,2],
-                                         [1,1,1,1,0,0,2,2,2,2],
-                                         [1,1,1,0,0,0,0,2,2,2],
-                                         [1,1,1,0,0,0,0,2,2,2]])
+            self.goalpattern = np.array([[1, 1, 1, 1, 0, 0, 2, 2, 2, 2],
+                                         [1, 1, 1, 1, 0, 0, 2, 2, 2, 2],
+                                         [1, 1, 1, 1, 0, 0, 2, 2, 2, 2],
+                                         [1, 1, 1, 0, 0, 0, 0, 2, 2, 2],
+                                         [1, 1, 1, 0, 0, 0, 0, 2, 2, 2]])
             # self.goal_pattern = np.array([[1,1,1,1,1,1,1,1,1,1],
             #                              [1,1,1,1,1,1,1,1,1,1],
             #                              [0,0,0,0,0,0,0,0,0,0],
@@ -118,7 +120,6 @@ class TubePuzzle(object):
             #                              [2,2,2,2,2,2,2,2,2,2]])
         else:
             self.goalpattern = goalpattern
-
 
     def _setValues(self, elearray):
         """
@@ -146,7 +147,7 @@ class TubePuzzle(object):
         date: 20200104
         """
 
-        return np.sum((self.goalpattern!=1)*(node.grid==1)+(self.goalpattern!=2)*(node.grid==2))
+        return np.sum((self.goalpattern != 1) * (node.grid == 1) + (self.goalpattern != 2) * (node.grid == 2))
 
     def isdone(self, node):
         """
@@ -157,14 +158,14 @@ class TubePuzzle(object):
         date: 20190828
         """
 
-        if np.any((self.goalpattern != 1)*(node.grid==1)) or np.any((self.goalpattern != 2)*(node.grid==2)):
+        if np.any((self.goalpattern != 1) * (node.grid == 1)) or np.any((self.goalpattern != 2) * (node.grid == 2)):
             return False
         return True
 
     def fcost(self, node):
         hs = self._hs(node)
         gs = node.gs
-        return hs+gs, hs, gs
+        return hs + gs, hs, gs
 
     def getMovableFillablePair(self, node, badlist):
         """
@@ -193,8 +194,8 @@ class TubePuzzle(object):
         # mask_urbl2 = np.array([[0,1,1],[1,0,0],[1,0,0]])
         # mask_ulbr2_flp = np.array([[1,1,0],[0,0,1],[0,0,1]])
         # mask_urbl2_flp = np.array([[0,0,1],[0,0,1],[1,1,0]])
-        mask_ucbc = np.array([[0,1,0],[0,0,0],[0,1,0]])
-        mask_crcl = np.array([[0,0,0],[1,0,1],[0,0,0]])
+        mask_ucbc = np.array([[0, 1, 0], [0, 0, 0], [0, 1, 0]])
+        mask_crcl = np.array([[0, 0, 0], [1, 0, 1], [0, 0, 0]])
         # mask_ul = np.array([[1,1,1], [1,0,0], [1,0,0]])
         # mask_ur = np.array([[1,1,1], [0,0,1], [0,0,1]])
         # mask_bl = np.array([[1,0,0], [1,0,0], [1,1,1]])
@@ -205,8 +206,8 @@ class TubePuzzle(object):
         # cg_urbl2_flp = ss.correlate2d(node.grid, mask_urbl2_flp)[1:-1,1:-1]
         # cg_ulbr2_flp = ss.correlate2d(node.grid, mask_ulbr2_flp)[1:-1,1:-1]
         # cg_urbl2_flp = ss.correlate2d(node.grid, mask_urbl2_flp)[1:-1,1:-1]
-        cg_ucbc = ss.correlate2d(node.grid, mask_ucbc)[1:-1,1:-1]
-        cg_crcl = ss.correlate2d(node.grid, mask_crcl)[1:-1,1:-1]
+        cg_ucbc = ss.correlate2d(node.grid, mask_ucbc)[1:-1, 1:-1]
+        cg_crcl = ss.correlate2d(node.grid, mask_crcl)[1:-1, 1:-1]
         # cg_ul = ss.correlate2d(node.grid, mask_ul)[1:-1,1:-1]
         # cg_ur = ss.correlate2d(node.grid, mask_ur)[1:-1,1:-1]
         # cg_bl = ss.correlate2d(node.grid, mask_bl)[1:-1,1:-1]
@@ -214,13 +215,13 @@ class TubePuzzle(object):
         ## fillable
         # cf = ((cg_ulbr==0)+(cg_urbl==0)+(cg_ulbr_flp==0)+(cg_urbl_flp==0)+(cg_ucbc==0)+(cg_crcl==0))*(node.grid==0)
         # cf = ((cg_ulbr==0)+(cg_urbl==0)+(cg_ucbc==0)+(cg_crcl==0))*(node.grid==0)
-        cf = ((cg_ucbc==0)+(cg_crcl==0))*(node.grid==0)
+        cf = ((cg_ucbc == 0) + (cg_crcl == 0)) * (node.grid == 0)
         # cf = ((cg_ucbc==0)+(cg_crcl==0)+(cg_ul==0)+(cg_ur==0)+(cg_bl==0)+(cg_br==0))*(node.grid==0)
         # always fill the first element
         # fillable1array = np.asarray(np.where((self.goal_pattern==1)*cf)).T
         # fillable2array = np.asarray(np.where((self.goal_pattern==2)*cf)).T
-        fillable1array = np.asarray(np.where((self.goalpattern==1)*cf)).T
-        fillable2array = np.asarray(np.where((self.goalpattern==2)*cf)).T
+        fillable1array = np.asarray(np.where((self.goalpattern == 1) * cf)).T
+        fillable2array = np.asarray(np.where((self.goalpattern == 2) * cf)).T
         # fillable 1
         # for i in range(fillable1array.shape[0]):
         #     if weight_array[fillable1array[i][0], fillable1array[i][1]] !=0:
@@ -234,11 +235,11 @@ class TubePuzzle(object):
         #     if weight_array[fillable_type2[0][0], fillable_type2[0][1]] !=0:
         #         continue
         if fillable1array.shape[0] == 0:
-            fillable_type1 = [np.asarray(np.where((self.goalpattern!=1)*cf)).T[0]]
+            fillable_type1 = [np.asarray(np.where((self.goalpattern != 1) * cf)).T[0]]
         else:
             fillable_type1 = [fillable1array[0]]
         if fillable2array.shape[0] == 0:
-            fillable_type2 = [np.asarray(np.where((self.goalpattern!=2)*cf)).T[0]]
+            fillable_type2 = [np.asarray(np.where((self.goalpattern != 2) * cf)).T[0]]
         else:
             fillable_type2 = [fillable2array[0]]
         # # fillable 1
@@ -250,30 +251,30 @@ class TubePuzzle(object):
         # cg_urbl[node.grid==0]=-1
         # cg_ulbr_flp[node.grid==0]=-1
         # cg_urbl_flp[node.grid==0]=-1
-        cg_ucbc[node.grid==0]=-1
-        cg_crcl[node.grid==0]=-1
+        cg_ucbc[node.grid == 0] = -1
+        cg_crcl[node.grid == 0] = -1
         # cg_ul[node.grid==0]=-1
         # cg_ur[node.grid==0]=-1
         # cg_bl[node.grid==0]=-1
         # cg_br[node.grid==0]=-1
         # cg = (cg_ulbr==0)+(cg_urbl==0)+(cg_ulbr_flp==0)+(cg_urbl_flp==0)+(cg_ucbc==0)+(cg_crcl==0)
         # cg = (cg_ulbr==0)+(cg_urbl==0)+(cg_ucbc==0)+(cg_crcl==0)
-        cg = (cg_ucbc==0)+(cg_crcl==0)
+        cg = (cg_ucbc == 0) + (cg_crcl == 0)
         # cg = (cg_ucbc==0)+(cg_crcl==0)+(cg_ul==0)+(cg_ur==0)+(cg_bl==0)+(cg_br==0)
         # movable 1
-        movable_type1 = np.asarray(np.where(cg*(node.grid==1))).T.tolist()
+        movable_type1 = np.asarray(np.where(cg * (node.grid == 1))).T.tolist()
         # movable 2
-        movable_type2 = np.asarray(np.where(cg*(node.grid==2))).T.tolist()
+        movable_type2 = np.asarray(np.where(cg * (node.grid == 2))).T.tolist()
 
         print("movable type1", movable_type1)
         print("movable type2", movable_type2)
         print("fillable_type1", fillable_type1)
         print("fillable_type2", fillable_type2)
 
-        movable_expanded_type1 = movable_type1*len(fillable_type1)
-        movable_expanded_type2 = movable_type2*len(fillable_type2)
-        fillable_expanded_type1 = [y for x in fillable_type1 for y in [x]*len(movable_expanded_type1)]
-        fillable_expanded_type2 = [y for x in fillable_type2 for y in [x]*len(movable_expanded_type2)]
+        movable_expanded_type1 = movable_type1 * len(fillable_type1)
+        movable_expanded_type2 = movable_type2 * len(fillable_type2)
+        fillable_expanded_type1 = [y for x in fillable_type1 for y in [x] * len(movable_expanded_type1)]
+        fillable_expanded_type2 = [y for x in fillable_type2 for y in [x] * len(movable_expanded_type2)]
 
         movable_expanded_type1_list = []
         fillable_expanded_type1_list = []
@@ -282,7 +283,7 @@ class TubePuzzle(object):
             fi, fj = fillable_expanded_type1[i]
             init3x3 = node.get3x3(mi, mj)
             goal3x3 = node.get3x3(fi, fj)
-            goal3x3[1,1] = init3x3[1,1]
+            goal3x3[1, 1] = init3x3[1, 1]
             flag = "done"
             for biij, bi3x3 in bil:
                 if biij[0] == mi and biij[1] == mj and np.array_equal(init3x3, bi3x3):
@@ -313,7 +314,7 @@ class TubePuzzle(object):
             fi, fj = fillable_expanded_type2[i]
             init3x3 = node.get3x3(mi, mj)
             goal3x3 = node.get3x3(fi, fj)
-            goal3x3[1,1] = init3x3[1,1]
+            goal3x3[1, 1] = init3x3[1, 1]
             flag = "done"
             for biij, bi3x3 in bil:
                 if biij[0] == mi and biij[1] == mj and np.array_equal(init3x3, bi3x3):
@@ -337,8 +338,8 @@ class TubePuzzle(object):
             movable_expanded_type2_list.append([mi, mj])
             fillable_expanded_type2_list.append([fi, fj])
 
-        movableeles = movable_expanded_type1_list+movable_expanded_type2_list
-        fillableeles = fillable_expanded_type1_list+fillable_expanded_type2_list
+        movableeles = movable_expanded_type1_list + movable_expanded_type2_list
+        fillableeles = fillable_expanded_type1_list + fillable_expanded_type2_list
 
         return np.array(movableeles), np.array(fillableeles)
 
@@ -417,7 +418,7 @@ class TubePuzzle(object):
                 #     continue
                 tmpelearray = copy.deepcopy(self.closelist[-1])
                 tmpelearray.parent = self.closelist[-1]
-                tmpelearray.gs = self.closelist[-1].gs+1
+                tmpelearray.gs = self.closelist[-1].gs + 1
                 tmpelearray[fi][fj] = tmpelearray[mi][mj]
                 tmpelearray[mi][mj] = 0
                 #  check if path is found
@@ -456,23 +457,24 @@ class TubePuzzle(object):
                     # not in openlist append and sort openlist
                     self.openlist.append(tmpelearray)
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     # down x, right y
-    elearray = np.array([[1,0,0,0,1,0,0,0,0,0],
-                         [0,0,0,0,0,0,0,2,0,2],
-                         [0,0,0,0,0,0,0,0,2,0],
-                         [1,0,0,0,0,0,0,0,2,2],
-                         [1,0,0,0,0,0,0,2,0,2]])
-    elearray = np.array([[0,0,0,0,0,0,0,0,0,0],
-                         [0,0,0,0,0,0,0,0,0,0],
-                         [2,2,0,2,1,0,0,0,0,0],
-                         [1,1,0,1,2,0,0,0,0,2],
-                         [0,2,0,0,0,0,0,0,0,2]])
-    elearray = np.array([[0,0,0,0,0,0,0,0,0,0],
-                         [0,0,0,2,2,2,2,0,0,0],
-                         [0,0,2,1,1,1,0,0,0,0],
-                         [0,0,2,1,2,2,0,0,0,0],
-                         [0,0,0,0,2,0,0,0,0,0]])
+    elearray = np.array([[1, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 2, 0, 2],
+                         [0, 0, 0, 0, 0, 0, 0, 0, 2, 0],
+                         [1, 0, 0, 0, 0, 0, 0, 0, 2, 2],
+                         [1, 0, 0, 0, 0, 0, 0, 2, 0, 2]])
+    elearray = np.array([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                         [2, 2, 0, 2, 1, 0, 0, 0, 0, 0],
+                         [1, 1, 0, 1, 2, 0, 0, 0, 0, 2],
+                         [0, 2, 0, 0, 0, 0, 0, 0, 0, 2]])
+    elearray = np.array([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 2, 2, 2, 2, 0, 0, 0],
+                         [0, 0, 2, 1, 1, 1, 0, 0, 0, 0],
+                         [0, 0, 2, 1, 2, 2, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 2, 0, 0, 0, 0, 0]])
     tp = TubePuzzle(elearray)
     # tp.getMovableIds(Node(state))
     # print(Node(state).fcost())

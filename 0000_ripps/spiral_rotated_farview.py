@@ -76,13 +76,12 @@ if __name__ == '__main__':
     planner = rrtc.RRTConnect(rbt_s)
     ee_s = cbtg.CobottaPipette()
 
-
     id_x = 6
     id_y = 3
     tip_pos, tip_rotmat = tip_rack.get_rack_hole_pose(id_x=id_x, id_y=id_y)
     z_offset = np.array([0, 0, .02])
     # base.change_campos_and_lookat_pos(cam_pos=[.3, .0, .12], lookat_pos=tip_pos+z_offset)
-    spiral_points = rm.gen_3d_equilateral_verts(pos=tip_pos+z_offset, rotmat=tip_rotmat)
+    spiral_points = rm.gen_3d_equilateral_verts(pos=tip_pos + z_offset, rotmat=tip_rotmat)
     print(spiral_points)
     pre_point = None
     for point in spiral_points:
@@ -103,13 +102,16 @@ if __name__ == '__main__':
         rbt_s.gen_meshmodel().attach_to(base)
 
     # rotated rack
-    tip_rack_rotated=tip_rack.copy()
+    tip_rack_rotated = tip_rack.copy()
     tip_rack_rotated.set_rgba([140 / 255, 110 / 255, 170 / 255, 1])
     # tip_rack_rotated.set_pose(pos=np.array([.25, 0.0, .003]), rotmat=rm.rotmat_from_axangle([0, 0, 1], np.pi / 2))
     # tip_rack_rotated.set_pose(pos=np.array([tip_pos[0], tip_pos[1],.003]), rotmat=rm.rotmat_from_axangle([0, 0, 1], np.pi / 2+np.pi/8))
     # tip_rack_rotated.set_pose(pos=np.array([tip_pos[0], tip_pos[1],.003])+rm.rotmat_from_axangle([0, 0, 1], 0).dot(np.array([.25, 0.0, .003])-np.array([tip_pos[0], tip_pos[1],.003])), rotmat=rm.rotmat_from_axangle([0, 0, 1], np.pi / 2))
     # tip_rack_rotated.set_pose(pos=np.array([tip_pos[0], tip_pos[1],.003])+rm.rotmat_from_axangle([0, 0, 1], np.pi/12).dot(np.array([.25, 0.0, .003])-np.array([tip_pos[0], tip_pos[1],.003])), rotmat=rm.rotmat_from_axangle([0, 0, 1], np.pi / 2+np.pi/12))
-    tip_rack_rotated.set_pose(pos=np.array([tip_pos[0], tip_pos[1],.003])+rm.rotmat_from_axangle([0, 0, 1], np.pi/6).dot(np.array([.25, 0.0, .003])-np.array([tip_pos[0], tip_pos[1],.003])), rotmat=rm.rotmat_from_axangle([0, 0, 1], np.pi / 2+np.pi/6))
+    tip_rack_rotated.set_pose(
+        pos=np.array([tip_pos[0], tip_pos[1], .003]) + rm.rotmat_from_axangle([0, 0, 1], np.pi / 6).dot(
+            np.array([.25, 0.0, .003]) - np.array([tip_pos[0], tip_pos[1], .003])),
+        rotmat=rm.rotmat_from_axangle([0, 0, 1], np.pi / 2 + np.pi / 6))
     tip_rack_rotated.attach_to(base)
     # gl_tcp_pos, gl_tcp_rotmat = rbt_s.get_gl_tcp(manipulator_name="arm")
     # gm.gen_circarrow(axis=-gl_tcp_rotmat[:,2], center=gl_tcp_pos+gl_tcp_rotmat[:,2]*.05, rgba=[1,.5,0,1], radius=.11, portion=.9, thickness=.007, sections=64, discretization=256, end='double', starting_vector=-gl_tcp_rotmat[:,0]).attach_to(base)

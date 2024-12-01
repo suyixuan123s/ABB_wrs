@@ -19,7 +19,7 @@ ground.set_pos(np.array([0, 0, -.51]))
 ground.attach_to(base)
 # object holder
 object_holder = cm.CollisionModel("objects/holder.stl")
-object_holder.set_rgba([.5,.5,.5,1])
+object_holder.set_rgba([.5, .5, .5, 1])
 object_holder_gl_pos = np.array([0.25, -.05, .05])
 object_holder_gl_rotmat = np.eye(3)
 obgl_start_homomat = rm.homomat_from_posrot(object_holder_gl_pos, object_holder_gl_rotmat)
@@ -71,6 +71,8 @@ conf_list, jawwidth_list, objpose_list = \
 robot_attached_list = []
 object_attached_list = []
 counter = [0]
+
+
 def update(robot_s,
            object_box,
            robot_path,
@@ -97,12 +99,13 @@ def update(robot_s,
     robot_attached_list.append(robot_meshmodel)
     obj_pose = obj_path[counter[0]]
     objb_copy = object_box.copy()
-    objb_copy.set_rgba([1,0,0,1])
+    objb_copy.set_rgba([1, 0, 0, 1])
     objb_copy.set_homomat(obj_pose)
     objb_copy.attach_to(base)
     object_attached_list.append(objb_copy)
     counter[0] += 1
     return task.again
+
 
 taskMgr.doMethodLater(0.01, update, "update",
                       extraArgs=[robot_s,

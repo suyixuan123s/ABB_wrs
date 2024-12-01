@@ -145,10 +145,10 @@ class RealSenseStreamer:
             v, t = points.get_vertices(), points.get_texture_coordinates()
             verts = np.asanyarray(v).view(np.float32).reshape(-1, 3)  # xyz
             texcoords = np.asanyarray(t).view(np.float32).reshape(-1, 2)  # uv
-            tex0 = np.rint(texcoords[:,0]*631).astype(np.int32)
-            tex1 = np.rint(texcoords[:,1]*479).astype(np.int32)
+            tex0 = np.rint(texcoords[:, 0] * 631).astype(np.int32)
+            tex1 = np.rint(texcoords[:, 1] * 479).astype(np.int32)
             color_array = np.asanyarray(color_frame.get_data())
-            rgb = color_array[tex0, tex1, :]#xyzrgb
+            rgb = color_array[tex0, tex1, :]  # xyzrgb
             return np.hstack((verts, rgb)), ts
         return None, None
 

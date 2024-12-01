@@ -30,19 +30,19 @@ class _BlocklyHandler(_BlocklyBase):
         self._tgpio_analog_callbacks = []
         self._cgpio_digital_callbacks = []
         self._cgpio_analog_callbacks = []
-    
+
     def _append_init_code(self, code):
         self._init_code_list.append(code)
 
     def _append_main_init_code(self, code, indent=0):
         self._main_init_code_list.append('{}{}'.format('    ' * indent, code))
-    
+
     def _append_main_code(self, code, indent=0):
         if self._is_main_run_code:
             self._main_run_code_list.append('{}{}'.format('    ' * (indent + 1), code))
         else:
             self._main_func_code_list.append('{}{}'.format('    ' * indent, code))
-    
+
     def _parse_variables(self):
         variables = self._get_nodes('variables')
         var_list = []
@@ -50,7 +50,7 @@ class _BlocklyHandler(_BlocklyBase):
             for variable in self._get_nodes('variable', root=var):
                 var_list.append(variable.text)
         return var_list
-    
+
     def _parse_block(self, root=None, indent=0, arg_map=None, **kwargs):
         blocks = self._get_nodes('block', root=root)
         for block in blocks:
@@ -71,7 +71,8 @@ class _BlocklyHandler(_BlocklyBase):
                 if func and callable(func):
                     if self._highlight_callback is not None:
                         if block.attrib['type'] in HIGHLIGHT_BLOCKS:
-                            self._append_main_code('highlight_callback(\'{}\')'.format(block.attrib['id']), indent=indent+2)
+                            self._append_main_code('highlight_callback(\'{}\')'.format(block.attrib['id']),
+                                                   indent=indent + 2)
                     try:
                         func(block, indent, arg_map=arg_map, **kwargs)
                     except Exception as e:
@@ -80,7 +81,7 @@ class _BlocklyHandler(_BlocklyBase):
                 else:
                     self._succeed = False
                     print('block {} can\'t convert to python code'.format(block.attrib['type']))
-    
+
     def _handle_set_speed(self, block, indent=0, arg_map=None):
         self._append_main_code('self._tcp_speed = {}'.format(self._get_field_value(block)), indent + 2)
 
@@ -117,12 +118,16 @@ class _BlocklyHandler(_BlocklyBase):
         fields = self._get_nodes('field', root=block)
         orientation = fields[0].text
         wait = fields[1].text == 'TRUE'
-        value = fields[2].text if orientation == 'forward' or orientation == 'left' or orientation == 'up' else '-{}'.format(fields[2].text)
+        value = fields[
+            2].text if orientation == 'forward' or orientation == 'left' or orientation == 'up' else '-{}'.format(
+            fields[2].text)
         param = 'x' if orientation == 'forward' or orientation == 'backward' else 'y' if orientation == 'left' or orientation == 'right' else 'z' if orientation == 'up' or orientation == 'down' else None
         if param is None:
             return
         radius = -1 if wait else 0
-        self._append_main_code('code = self._arm.set_position({}={}, radius={}, speed=self._tcp_speed, mvacc=self._tcp_acc, relative=True, wait={})'.format(param, value, radius, wait), indent + 2)
+        self._append_main_code(
+            'code = self._arm.set_position({}={}, radius={}, speed=self._tcp_speed, mvacc=self._tcp_acc, relative=True, wait={})'.format(
+                param, value, radius, wait), indent + 2)
         self._append_main_code('if not self._check_code(code, \'set_position\'):', indent + 2)
         self._append_main_code('    return', indent + 2)
 
@@ -135,7 +140,9 @@ class _BlocklyHandler(_BlocklyBase):
             values.append(float(field.text))
         radius = float(fields[-2].text)
         wait = fields[-1].text == 'TRUE'
-        self._append_main_code('code = self._arm.set_position(*{}, speed=self._tcp_speed, mvacc=self._tcp_acc, radius={}, wait={})'.format(values, radius, wait), indent + 2)
+        self._append_main_code(
+            'code = self._arm.set_position(*{}, speed=self._tcp_speed, mvacc=self._tcp_acc, radius={}, wait={})'.format(
+                values, radius, wait), indent + 2)
         self._append_main_code('if not self._check_code(code, \'set_position\'):', indent + 2)
         self._append_main_code('    return', indent + 2)
 
@@ -155,7 +162,9 @@ class _BlocklyHandler(_BlocklyBase):
         pose2 = []
         for field in fields:
             pose2.append(float(field.text))
-        self._append_main_code('code = self._arm.move_circle({}, {}, float({}) / 360 * 100, speed=self._tcp_speed, mvacc=self._tcp_acc, wait={})'.format(pose1, pose2, percent, wait), indent + 2)
+        self._append_main_code(
+            'code = self._arm.move_circle({}, {}, float({}) / 360 * 100, speed=self._tcp_speed, mvacc=self._tcp_acc, wait={})'.format(
+                pose1, pose2, percent, wait), indent + 2)
         self._append_main_code('if not self._check_code(code, \'move_circle\'):', indent + 2)
         self._append_main_code('    return', indent + 2)
 
@@ -167,7 +176,9 @@ class _BlocklyHandler(_BlocklyBase):
         for field in fields[:-1]:
             values.append(float(field.text))
         wait = fields[-1].text == 'TRUE'
-        self._append_main_code('code = self._arm.set_servo_angle(angle={}, speed=self._angle_speed, mvacc=self._angle_acc, wait={})'.format(values, wait), indent + 2)
+        self._append_main_code(
+            'code = self._arm.set_servo_angle(angle={}, speed=self._angle_speed, mvacc=self._angle_acc, wait={})'.format(
+                values, wait), indent + 2)
         self._append_main_code('if not self._check_code(code, \'set_servo_angle\'):', indent + 2)
         self._append_main_code('    return', indent + 2)
 
@@ -183,7 +194,9 @@ class _BlocklyHandler(_BlocklyBase):
         else:
             radius = None
         wait = fields[-1].text == 'TRUE'
-        self._append_main_code('code = self._arm.set_servo_angle(angle={}, speed=self._angle_speed, mvacc=self._angle_acc, wait={}, radius={})'.format(values, wait, radius), indent + 2)
+        self._append_main_code(
+            'code = self._arm.set_servo_angle(angle={}, speed=self._angle_speed, mvacc=self._angle_acc, wait={}, radius={})'.format(
+                values, wait, radius), indent + 2)
         self._append_main_code('if not self._check_code(code, \'set_servo_angle\'):', indent + 2)
         self._append_main_code('    return', indent + 2)
 
@@ -194,7 +207,9 @@ class _BlocklyHandler(_BlocklyBase):
             values.append(float(field.text))
         radius = float(fields[-2].text)
         wait = fields[-1].text == 'TRUE'
-        self._append_main_code('code = self._arm.set_position(*{}, speed=self._tcp_speed, mvacc=self._tcp_acc, radius={}, wait={})'.format(values, radius, wait), indent + 2)
+        self._append_main_code(
+            'code = self._arm.set_position(*{}, speed=self._tcp_speed, mvacc=self._tcp_acc, radius={}, wait={})'.format(
+                values, radius, wait), indent + 2)
         self._append_main_code('if not self._check_code(code, \'set_position\'):', indent + 2)
         self._append_main_code('    return', indent + 2)
 
@@ -204,7 +219,9 @@ class _BlocklyHandler(_BlocklyBase):
         for field in fields[:-1]:
             values.append(float(field.text))
         wait = fields[-1].text == 'TRUE'
-        self._append_main_code('code = self._arm.set_tool_position(*{}, speed=self._tcp_speed, mvacc=self._tcp_acc, wait={})'.format(values, wait), indent + 2)
+        self._append_main_code(
+            'code = self._arm.set_tool_position(*{}, speed=self._tcp_speed, mvacc=self._tcp_acc, wait={})'.format(
+                values, wait), indent + 2)
         self._append_main_code('if not self._check_code(code, \'set_position\'):', indent + 2)
         self._append_main_code('    return', indent + 2)
 
@@ -223,7 +240,9 @@ class _BlocklyHandler(_BlocklyBase):
         else:
             radius = None
         values = '[{}]'.format(','.join(values))
-        self._append_main_code('code = self._arm.set_servo_angle(angle={}, speed=self._angle_speed, mvacc=self._angle_acc, wait={}, radius={})'.format(values, wait, radius), indent + 2)
+        self._append_main_code(
+            'code = self._arm.set_servo_angle(angle={}, speed=self._angle_speed, mvacc=self._angle_acc, wait={}, radius={})'.format(
+                values, wait, radius), indent + 2)
         self._append_main_code('if not self._check_code(code, \'set_servo_angle\'):', indent + 2)
         self._append_main_code('    return', indent + 2)
 
@@ -237,7 +256,9 @@ class _BlocklyHandler(_BlocklyBase):
             values.append(val)
         radius = values.pop()
         values = '[{}]'.format(','.join(values))
-        self._append_main_code('code = self._arm.set_position(*{}, speed=self._tcp_speed, mvacc=self._tcp_acc, radius={}, wait={})'.format(values, radius, wait), indent + 2)
+        self._append_main_code(
+            'code = self._arm.set_position(*{}, speed=self._tcp_speed, mvacc=self._tcp_acc, radius={}, wait={})'.format(
+                values, radius, wait), indent + 2)
         self._append_main_code('if not self._check_code(code, \'set_position\'):', indent + 2)
         self._append_main_code('    return', indent + 2)
 
@@ -255,7 +276,9 @@ class _BlocklyHandler(_BlocklyBase):
         filename = self._get_node('field', root=block).text
         value = self._get_node('value', root=block)
         times = self._get_nodes('field', root=value, descendant=True)[0].text
-        self._append_main_code('code = self._arm.playback_trajectory(times={}, filename=\'{}\', wait=True)'.format(times, filename), indent + 2)
+        self._append_main_code(
+            'code = self._arm.playback_trajectory(times={}, filename=\'{}\', wait=True)'.format(times, filename),
+            indent + 2)
         self._append_main_code('if not self._check_code(code, \'playback_trajectory\'):', indent + 2)
         self._append_main_code('    return', indent + 2)
 
@@ -265,7 +288,11 @@ class _BlocklyHandler(_BlocklyBase):
         speed = fields[1].text
         value = self._get_node('value', root=block)
         times = self._get_nodes('field', root=value, descendant=True)[0].text
-        self._append_main_code('code = self._arm.playback_trajectory(times={}, filename=\'{}\', wait=True, double_speed={})'.format(times, filename, speed), indent + 2)
+        self._append_main_code(
+            'code = self._arm.playback_trajectory(times={}, filename=\'{}\', wait=True, double_speed={})'.format(times,
+                                                                                                                 filename,
+                                                                                                                 speed),
+            indent + 2)
         self._append_main_code('if not self._check_code(code, \'playback_trajectory\'):', indent + 2)
         self._append_main_code('    return', indent + 2)
 
@@ -295,9 +322,12 @@ class _BlocklyHandler(_BlocklyBase):
         expression = self._get_condition_expression(value, arg_map=arg_map)
         if msg:
             if self._highlight_callback is not None:
-                self._append_main_code('print({}.format({}), {})'.format(json.dumps(msg+'{}', ensure_ascii=False), expression, color), indent + 2)
+                self._append_main_code(
+                    'print({}.format({}), {})'.format(json.dumps(msg + '{}', ensure_ascii=False), expression, color),
+                    indent + 2)
             else:
-                self._append_main_code('print({}.format({}))'.format(json.dumps(msg+'{}', ensure_ascii=False), expression), indent + 2)
+                self._append_main_code(
+                    'print({}.format({}))'.format(json.dumps(msg + '{}', ensure_ascii=False), expression), indent + 2)
         else:
             if self._highlight_callback is not None:
                 self._append_main_code('print(\'{{}}\'.format({}), {})'.format(expression, color), indent + 2)
@@ -322,7 +352,8 @@ class _BlocklyHandler(_BlocklyBase):
         io = fields[0].text
         value = 0 if fields[1].text == 'LOW' else 1
         delay_sec = fields[2].text if len(fields) > 2 else 0
-        self._append_main_code('code = self._arm.set_tgpio_digital({}, {}, delay_sec={})'.format(io, value, delay_sec), indent + 2)
+        self._append_main_code('code = self._arm.set_tgpio_digital({}, {}, delay_sec={})'.format(io, value, delay_sec),
+                               indent + 2)
         self._append_main_code('if not self._check_code(code, \'set_tgpio_digital\'):', indent + 2)
         self._append_main_code('    return', indent + 2)
 
@@ -335,7 +366,8 @@ class _BlocklyHandler(_BlocklyBase):
         tol_r = fields[3].text
         io = fields[4].text
         value = 0 if fields[5].text == 'LOW' else 1
-        self._append_main_code('code = self._arm.set_tgpio_digital_with_xyz({}, {}, {}, {})'.format(io, value, xyz, tol_r), indent + 2)
+        self._append_main_code(
+            'code = self._arm.set_tgpio_digital_with_xyz({}, {}, {}, {})'.format(io, value, xyz, tol_r), indent + 2)
         self._append_main_code('if not self._check_code(code, \'set_tgpio_digital_with_xyz\'):', indent + 2)
         self._append_main_code('    return', indent + 2)
 
@@ -368,7 +400,8 @@ class _BlocklyHandler(_BlocklyBase):
             wait = False
         fields = self._get_nodes('field', root=block, name='delay')
         delay_sec = fields[0].text if len(fields) > 0 else 0
-        self._append_main_code('code = self._arm.set_suction_cup({}, wait={}, delay_sec={})'.format( on, wait, delay_sec), indent + 2)
+        self._append_main_code(
+            'code = self._arm.set_suction_cup({}, wait={}, delay_sec={})'.format(on, wait, delay_sec), indent + 2)
         self._append_main_code('if not self._check_code(code, \'set_suction_cup\'):', indent + 2)
         self._append_main_code('    return', indent + 2)
 
@@ -389,7 +422,8 @@ class _BlocklyHandler(_BlocklyBase):
         io = fields[0].text
         value = 0 if fields[1].text == 'LOW' else 1
         delay_sec = fields[2].text if len(fields) > 2 else 0
-        self._append_main_code('code = self._arm.set_cgpio_digital({}, {}, delay_sec={})'.format(io, value, delay_sec), indent + 2)
+        self._append_main_code('code = self._arm.set_cgpio_digital({}, {}, delay_sec={})'.format(io, value, delay_sec),
+                               indent + 2)
         self._append_main_code('if not self._check_code(code, \'set_cgpio_digital\'):', indent + 2)
         self._append_main_code('    return', indent + 2)
 
@@ -402,7 +436,8 @@ class _BlocklyHandler(_BlocklyBase):
         tol_r = fields[3].text
         io = fields[4].text
         value = 0 if fields[5].text == 'LOW' else 1
-        self._append_main_code('code = self._arm.set_cgpio_digital_with_xyz({}, {}, {}, {})'.format(io, value, xyz, tol_r), indent + 2)
+        self._append_main_code(
+            'code = self._arm.set_cgpio_digital_with_xyz({}, {}, {}, {})'.format(io, value, xyz, tol_r), indent + 2)
         self._append_main_code('if not self._check_code(code, \'set_cgpio_digital_with_xyz\'):', indent + 2)
         self._append_main_code('    return', indent + 2)
 
@@ -411,7 +446,8 @@ class _BlocklyHandler(_BlocklyBase):
         io = fields[0].text
         value = 0 if fields[1].text == 'LOW' else 1
         delay_sec = fields[2].text if len(fields) > 2 else 0
-        self._append_main_code('code = self._arm.set_cgpio_digital({}, {}, delay_sec={})'.format(io, value, delay_sec), indent + 2)
+        self._append_main_code('code = self._arm.set_cgpio_digital({}, {}, delay_sec={})'.format(io, value, delay_sec),
+                               indent + 2)
         self._append_main_code('if not self._check_code(code, \'set_suction_cup\'):', indent + 2)
         self._append_main_code('    return', indent + 2)
 
@@ -424,7 +460,8 @@ class _BlocklyHandler(_BlocklyBase):
         tol_r = fields[3].text
         io = fields[4].text
         value = 0 if fields[5].text == 'LOW' else 1
-        self._append_main_code('code = self._arm.set_cgpio_digital_with_xyz({}, {}, {}, {})'.format(io, value, xyz, tol_r), indent + 2)
+        self._append_main_code(
+            'code = self._arm.set_cgpio_digital_with_xyz({}, {}, {}, {})'.format(io, value, xyz, tol_r), indent + 2)
         self._append_main_code('if not self._check_code(code, \'set_cgpio_digital_with_xyz\'):', indent + 2)
         self._append_main_code('    return', indent + 2)
 
@@ -437,7 +474,8 @@ class _BlocklyHandler(_BlocklyBase):
         tol_r = fields[3].text
         io = fields[4].text
         value = fields[5].text
-        self._append_main_code('code = self._arm.set_cgpio_analog_with_xyz({}, {}, {}, {})'.format(io, value, xyz, tol_r), indent + 2)
+        self._append_main_code(
+            'code = self._arm.set_cgpio_analog_with_xyz({}, {}, {}, {})'.format(io, value, xyz, tol_r), indent + 2)
         self._append_main_code('if not self._check_code(code, \'set_cgpio_analog_with_xyz\'):', indent + 2)
         self._append_main_code('    return', indent + 2)
 
@@ -490,7 +528,9 @@ class _BlocklyHandler(_BlocklyBase):
         roll = fields[4].text
         pitch = fields[5].text
         yaw = fields[6].text
-        self._append_main_code('code = self._arm.set_tcp_offset([{}, {}, {}, {}, {}, {}], wait=True)'.format(x, y, z, roll, pitch, yaw), indent + 2)
+        self._append_main_code(
+            'code = self._arm.set_tcp_offset([{}, {}, {}, {}, {}, {}], wait=True)'.format(x, y, z, roll, pitch, yaw),
+            indent + 2)
         self._append_main_code('self._arm.set_state(0)', indent + 2)
         self._append_main_code('if not self._check_code(code, \'set_tcp_offset\'):', indent + 2)
         self._append_main_code('    return', indent + 2)
@@ -504,12 +544,14 @@ class _BlocklyHandler(_BlocklyBase):
         roll = fields[4].text
         pitch = fields[5].text
         yaw = fields[6].text
-        self._append_main_code('code = self._arm.set_world_offset([{}, {}, {}, {}, {}, {}], wait=True)'.format(x, y, z, roll, pitch, yaw), indent + 2)
+        self._append_main_code(
+            'code = self._arm.set_world_offset([{}, {}, {}, {}, {}, {}], wait=True)'.format(x, y, z, roll, pitch, yaw),
+            indent + 2)
         self._append_main_code('self._arm.set_state(0)', indent + 2)
         self._append_main_code('if not self._check_code(code, \'set_world_offset\'):', indent + 2)
         self._append_main_code('    return', indent + 2)
         self._append_main_code('time.sleep(0.5)', indent + 2)
-    
+
     def _handle_set_lite6_gripper(self, block, indent=0, arg_map=None):
         fields = self._get_nodes('field', root=block, name='trigger')
         op = fields[0].text.upper()
@@ -541,16 +583,19 @@ class _BlocklyHandler(_BlocklyBase):
             pos = self._get_nodes('field', root=values[0], descendant=True)[0].text
             speed = self._get_nodes('field', root=values[1], descendant=True)[0].text
             wait = self._get_nodes('field', root=values[2], descendant=True)[0].text == 'TRUE'
-        self._append_main_code('code = self._arm.set_gripper_position({}, wait={}, speed={}, auto_enable=True)'.format(pos, wait, speed), indent + 2)
+        self._append_main_code(
+            'code = self._arm.set_gripper_position({}, wait={}, speed={}, auto_enable=True)'.format(pos, wait, speed),
+            indent + 2)
         self._append_main_code('if not self._check_code(code, \'set_gripper_position\'):', indent + 2)
         self._append_main_code('    return', indent + 2)
-        
+
     def _handle_gripper_set_status(self, block, indent=0, arg_map=None):
         fields = self._get_nodes('field', root=block, name='status')
         status = True if fields[0].text == 'TRUE' else False
         fields = self._get_nodes('field', root=block, name='delay')
         delay_sec = fields[0].text if len(fields) > 0 else 0
-        self._append_main_code('code = self._arm.arm.set_gripper_status({}, delay_sec={})'.format(status, delay_sec), indent + 2)
+        self._append_main_code('code = self._arm.arm.set_gripper_status({}, delay_sec={})'.format(status, delay_sec),
+                               indent + 2)
         self._append_main_code('if not self._check_code(code, \'set_gripper_status\'):', indent + 2)
         self._append_main_code('    return', indent + 2)
 
@@ -567,11 +612,13 @@ class _BlocklyHandler(_BlocklyBase):
         fields = self._get_nodes('field', root=block, name='wait')
         wait = fields[0].text == 'TRUE' if fields and len(fields) > 0 else False
         if on:
-            self._append_main_code('code = self._arm.open_bio_gripper(speed={}, wait={})'.format(speed, wait), indent + 2)
+            self._append_main_code('code = self._arm.open_bio_gripper(speed={}, wait={})'.format(speed, wait),
+                                   indent + 2)
             self._append_main_code('if not self._check_code(code, \'open_bio_gripper\'):', indent + 2)
             self._append_main_code('    return', indent + 2)
         else:
-            self._append_main_code('code = self._arm.close_bio_gripper(speed={}, wait={})'.format(speed, wait), indent + 2)
+            self._append_main_code('code = self._arm.close_bio_gripper(speed={}, wait={})'.format(speed, wait),
+                                   indent + 2)
             self._append_main_code('if not self._check_code(code, \'close_bio_gripper\'):', indent + 2)
             self._append_main_code('    return', indent + 2)
 
@@ -592,7 +639,9 @@ class _BlocklyHandler(_BlocklyBase):
         force = int(fields[0].text) if fields and len(fields) > 0 else 0xFF
         fields = self._get_nodes('field', root=block, name='wait')
         wait = fields[0].text == 'TRUE' if fields and len(fields) > 0 else False
-        self._append_main_code('code = self._arm.robotiq_set_position({}, speed={}, force={}, wait={})'.format(pos, speed, force, wait), indent + 2)
+        self._append_main_code(
+            'code = self._arm.robotiq_set_position({}, speed={}, force={}, wait={})'.format(pos, speed, force, wait),
+            indent + 2)
         self._append_main_code('if not self._check_code(code, \'robotiq_set_position\'):', indent + 2)
         self._append_main_code('    return', indent + 2)
 
@@ -617,47 +666,58 @@ class _BlocklyHandler(_BlocklyBase):
             if gpio_type == 'tgpio_digital':
                 num = len(self._tgpio_digital_callbacks) + 1
                 name = 'tool_gpio_{}_digital_is_changed_callback_{}'.format(io, num)
-                self._append_main_code('# Define Tool GPIO-{} DIGITAL is {} callback'.format(io, trigger), indent=indent+1)
+                self._append_main_code('# Define Tool GPIO-{} DIGITAL is {} callback'.format(io, trigger),
+                                       indent=indent + 1)
             elif gpio_type == 'tgpio_analog':
                 num = len(self._tgpio_analog_callbacks) + 1
                 name = 'tool_gpio_{}_analog_is_changed_callback_{}'.format(io, num)
-                self._append_main_code('# Define Tool GPIO-{} ANALOG is changed callback'.format(io), indent=indent+1)
+                self._append_main_code('# Define Tool GPIO-{} ANALOG is changed callback'.format(io), indent=indent + 1)
             elif gpio_type == 'cgpio_digital':
                 num = len(self._cgpio_digital_callbacks) + 1
                 name = 'controller_gpio_{}_digital_is_changed_callback_{}'.format(io, num)
-                self._append_main_code('# Define Contoller GPIO-{} DIGITAL is {} callback'.format(io, trigger), indent=indent+1)
+                self._append_main_code('# Define Contoller GPIO-{} DIGITAL is {} callback'.format(io, trigger),
+                                       indent=indent + 1)
             elif gpio_type == 'cgpio_analog':
                 num = len(self._cgpio_analog_callbacks) + 1
                 name = 'controller_gpio_{}_analog_is_changed_callback_{}'.format(io, num)
-                self._append_main_code('# Define Contoller GPIO-{} ANALOG is changed callback'.format(io), indent=indent+1)
+                self._append_main_code('# Define Contoller GPIO-{} ANALOG is changed callback'.format(io),
+                                       indent=indent + 1)
             else:
                 self._is_main_run_code = True
                 return
-            self._append_main_code('def {}(self):'.format(name), indent=indent+1)
+            self._append_main_code('def {}(self):'.format(name), indent=indent + 1)
             statement = self._get_node('statement', root=block)
             if statement:
                 self._parse_block(statement, indent, arg_map=arg_map)
             else:
-                self._append_main_code('pass', indent=indent+3)
+                self._append_main_code('pass', indent=indent + 3)
             self._append_main_code('')
-            
+
             self._is_main_run_code = True
             if gpio_type == 'tgpio_digital':
                 self._tgpio_digital_callbacks.append(name)
-                self._append_main_code('self._tgpio_digital_callbacks.append({{\'io\': {}, \'trigger\': {}, \'op\': \'{}\', \'callback\': self.{}}})'.format(io, 1 if trigger == 'HIGH' else 0, '==', name), indent=indent+2)
+                self._append_main_code(
+                    'self._tgpio_digital_callbacks.append({{\'io\': {}, \'trigger\': {}, \'op\': \'{}\', \'callback\': self.{}}})'.format(
+                        io, 1 if trigger == 'HIGH' else 0, '==', name), indent=indent + 2)
             elif gpio_type == 'tgpio_analog':
                 op = OPS_MAP.get(trigger)
                 trigger = fields[2].text
                 self._tgpio_analog_callbacks.append(name)
-                self._append_main_code('self._tgpio_analog_callbacks.append({{\'io\': {}, \'trigger\': {}, \'op\': \'{}\', \'callback\': self.{}}})'.format(io, trigger, op, name), indent=indent+2)
+                self._append_main_code(
+                    'self._tgpio_analog_callbacks.append({{\'io\': {}, \'trigger\': {}, \'op\': \'{}\', \'callback\': self.{}}})'.format(
+                        io, trigger, op, name), indent=indent + 2)
             elif gpio_type == 'cgpio_digital':
                 self._cgpio_digital_callbacks.append(name)
-                self._append_main_code('self._cgpio_digital_callbacks.append({{\'io\': {}, \'trigger\': {}, \'op\': \'{}\', \'callback\': self.{}}})'.format(io, 1 if trigger == 'HIGH' else 0, '==', name), indent=indent+2)
+                self._append_main_code(
+                    'self._cgpio_digital_callbacks.append({{\'io\': {}, \'trigger\': {}, \'op\': \'{}\', \'callback\': self.{}}})'.format(
+                        io, 1 if trigger == 'HIGH' else 0, '==', name), indent=indent + 2)
             elif gpio_type == 'cgpio_analog':
                 op = OPS_MAP.get(trigger)
                 trigger = fields[2].text
                 self._cgpio_analog_callbacks.append(name)
-                self._append_main_code('self._cgpio_analog_callbacks.append({{\'io\': {}, \'trigger\': {}, \'op\': \'{}\', \'callback\': self.{}}})'.format(io, trigger, op, name), indent=indent+2)
+                self._append_main_code(
+                    'self._cgpio_analog_callbacks.append({{\'io\': {}, \'trigger\': {}, \'op\': \'{}\', \'callback\': self.{}}})'.format(
+                        io, trigger, op, name), indent=indent + 2)
 
     def _handle_event_gpio_digital(self, block, indent=0, arg_map=None):
         self.__handle_gpio_event('tgpio_digital', block, indent, arg_map=arg_map)
@@ -698,14 +758,14 @@ class _BlocklyHandler(_BlocklyBase):
                 args_str = ', '.join(map(lambda x: arg_map_[x], arg_list)).strip()
                 self._append_main_code('    def {}(self, {}):'.format(name, args_str), indent=indent)
             comment = self._get_node('comment', block).text
-            self._append_main_code('    """', indent=indent+1)
-            self._append_main_code('    {}'.format(comment), indent=indent+1)
-            self._append_main_code('    """', indent=indent+1)
+            self._append_main_code('    """', indent=indent + 1)
+            self._append_main_code('    {}'.format(comment), indent=indent + 1)
+            self._append_main_code('    """', indent=indent + 1)
             statement = self._get_node('statement', root=block)
             if statement:
                 self._parse_block(statement, indent, arg_map=arg_map_)
             else:
-                self._append_main_code('    pass', indent=indent+1)
+                self._append_main_code('    pass', indent=indent + 1)
             self._append_main_code('')
             self._funcs[field] = name
             return arg_map_
@@ -720,7 +780,7 @@ class _BlocklyHandler(_BlocklyBase):
         value = self._get_node('value', root=block)
         expression = self._get_condition_expression(value, arg_map=arg_map_)
         self._is_main_run_code = False
-        self._append_main_code('    return {}'.format(expression), indent=indent+1)
+        self._append_main_code('    return {}'.format(expression), indent=indent + 1)
         self._append_main_code('')
         self._is_main_run_code = True
 
@@ -735,11 +795,12 @@ class _BlocklyHandler(_BlocklyBase):
         args = self._get_nodes('arg', root=self._get_node('mutation', block))
         values = self._get_nodes('value', root=block)
         if args and values and len(args) == len(values):
-            self._append_main_code('self.{}({})'.format(name, ','.join([self._get_condition_expression(val, arg_map=arg_map) for val in values])), indent=indent+2)
+            self._append_main_code('self.{}({})'.format(name, ','.join(
+                [self._get_condition_expression(val, arg_map=arg_map) for val in values])), indent=indent + 2)
         else:
-            self._append_main_code('self.{}()'.format(name), indent=indent+2)
-        self._append_main_code('if not self.is_alive:', indent=indent+2)
-        self._append_main_code('    return', indent=indent+2)
+            self._append_main_code('self.{}()'.format(name), indent=indent + 2)
+        self._append_main_code('if not self.is_alive:', indent=indent + 2)
+        self._append_main_code('    return', indent=indent + 2)
 
         self._funcs[mutation] = name
 
@@ -750,11 +811,11 @@ class _BlocklyHandler(_BlocklyBase):
         self._is_main_run_code = False
         values = self._get_nodes('value', block)
         expression = self._get_condition_expression(values[0], arg_map=arg_map)
-        self._append_main_code('if {}:'.format(expression), indent=indent+2)
+        self._append_main_code('if {}:'.format(expression), indent=indent + 2)
         expression = self._get_condition_expression(values[1], arg_map=arg_map)
-        self._append_main_code('    return {}'.format(expression), indent=indent+2)
-        self._append_main_code('if not self.is_alive:', indent=indent+2)
-        self._append_main_code('    return', indent=indent+2)
+        self._append_main_code('    return {}'.format(expression), indent=indent + 2)
+        self._append_main_code('if not self.is_alive:', indent=indent + 2)
+        self._append_main_code('    return', indent=indent + 2)
         self._is_main_run_code = True
 
     def _handle_procedures_callreturn(self, block, indent=0, arg_map=None):
@@ -765,9 +826,9 @@ class _BlocklyHandler(_BlocklyBase):
         value = self._get_node('value', root=block)
         expression = self._get_condition_expression(value, arg_map=arg_map)
         if arg_map and field in arg_map:
-            self._append_main_code('{} = {}'.format(arg_map[field], expression), indent=indent+2)
+            self._append_main_code('{} = {}'.format(arg_map[field], expression), indent=indent + 2)
         else:
-            self._append_main_code('self._variables[\'{}\'] = {}'.format(field, expression), indent=indent+2)
+            self._append_main_code('self._variables[\'{}\'] = {}'.format(field, expression), indent=indent + 2)
 
     def _handle_math_change(self, block, indent=0, arg_map=None):
         field = self._get_node('field', block).text
@@ -776,96 +837,99 @@ class _BlocklyHandler(_BlocklyBase):
         # val = self._get_node('field', root=shadow).text
         val = self._get_block_val(value)
         if arg_map and field in arg_map:
-            self._append_main_code('{} += {}'.format(arg_map[field], val), indent=indent+2)
+            self._append_main_code('{} += {}'.format(arg_map[field], val), indent=indent + 2)
         else:
-            self._append_main_code('self._variables[\'{}\'] += {}'.format(field, val), indent=indent+2)
+            self._append_main_code('self._variables[\'{}\'] += {}'.format(field, val), indent=indent + 2)
 
     def _handle_controls_repeat_ext(self, block, indent=0, arg_map=None):
         value = self._get_node('value', root=block)
         times = self._get_block_val(value, arg_map=arg_map)
-        self._append_main_code('for i in range(int({})):'.format(times), indent=indent+2)
-        self._append_main_code('    if not self.is_alive:', indent=indent+2)
-        self._append_main_code('        break', indent=indent+2)
+        self._append_main_code('for i in range(int({})):'.format(times), indent=indent + 2)
+        self._append_main_code('    if not self.is_alive:', indent=indent + 2)
+        self._append_main_code('        break', indent=indent + 2)
         statement = self._get_node('statement', root=block)
         if statement:
             if self._loop_interval_sec > 0:
-                self._append_main_code('    t1 = time.monotonic()', indent=indent+2)
-            self._parse_block(statement, indent+1, arg_map=arg_map)
+                self._append_main_code('    t1 = time.monotonic()', indent=indent + 2)
+            self._parse_block(statement, indent + 1, arg_map=arg_map)
             if self._loop_interval_sec > 0:
                 # limit frequency
-                self._append_main_code('    interval = time.monotonic() - t1', indent=indent+2)
-                self._append_main_code('    if interval < {}:'.format(self._loop_interval_sec), indent=indent+2)
-                self._append_main_code('        time.sleep({} - interval)'.format(self._loop_interval_sec), indent=indent+2)
+                self._append_main_code('    interval = time.monotonic() - t1', indent=indent + 2)
+                self._append_main_code('    if interval < {}:'.format(self._loop_interval_sec), indent=indent + 2)
+                self._append_main_code('        time.sleep({} - interval)'.format(self._loop_interval_sec),
+                                       indent=indent + 2)
         else:
             if self._loop_interval_sec > 0:
-                self._append_main_code('    time.sleep({})'.format(self._loop_interval_sec), indent=indent+2)
+                self._append_main_code('    time.sleep({})'.format(self._loop_interval_sec), indent=indent + 2)
             else:
-                self._append_main_code('    pass', indent=indent+2)
+                self._append_main_code('    pass', indent=indent + 2)
 
     def _handle_controls_whileUntil(self, block, indent=0, arg_map=None):
         field = self._get_node('field', root=block)
         if field.text == 'WHILE':
             value = self._get_node('value', root=block)
             expression = self._get_condition_expression(value, arg_map=arg_map)
-            self._append_main_code('while self.is_alive and {}:'.format(expression), indent=indent+2)
+            self._append_main_code('while self.is_alive and {}:'.format(expression), indent=indent + 2)
         elif field.text == 'UNTIL':
             value = self._get_node('value', root=block)
             expression = self._get_condition_expression(value, arg_map=arg_map)
-            self._append_main_code('while self.is_alive and not {}:'.format(expression), indent=indent+2)
+            self._append_main_code('while self.is_alive and not {}:'.format(expression), indent=indent + 2)
         statement = self._get_node('statement', root=block)
         if statement:
             if self._loop_interval_sec > 0:
-                self._append_main_code('    t1 = time.monotonic()', indent=indent+2)
-            self._parse_block(statement, indent+1, arg_map=arg_map)
+                self._append_main_code('    t1 = time.monotonic()', indent=indent + 2)
+            self._parse_block(statement, indent + 1, arg_map=arg_map)
             if self._loop_interval_sec > 0:
                 # limit frequency
-                self._append_main_code('    interval = time.monotonic() - t1', indent=indent+2)
-                self._append_main_code('    if interval < {}:'.format(self._loop_interval_sec), indent=indent+2)
-                self._append_main_code('        time.sleep({} - interval)'.format(self._loop_interval_sec), indent=indent+2)
+                self._append_main_code('    interval = time.monotonic() - t1', indent=indent + 2)
+                self._append_main_code('    if interval < {}:'.format(self._loop_interval_sec), indent=indent + 2)
+                self._append_main_code('        time.sleep({} - interval)'.format(self._loop_interval_sec),
+                                       indent=indent + 2)
         else:
             if self._loop_interval_sec > 0:
-                self._append_main_code('    time.sleep({})'.format(self._loop_interval_sec), indent=indent+2)
+                self._append_main_code('    time.sleep({})'.format(self._loop_interval_sec), indent=indent + 2)
             else:
-                self._append_main_code('    pass', indent=indent+2)
+                self._append_main_code('    pass', indent=indent + 2)
 
     def _handle_loop_run_forever(self, block, indent=0, arg_map=None):
-        self._append_main_code('while self.is_alive:', indent=indent+2)
+        self._append_main_code('while self.is_alive:', indent=indent + 2)
         statement = self._get_node('statement', root=block)
         if statement:
             if self._loop_interval_sec > 0:
-                self._append_main_code('    t1 = time.monotonic()', indent=indent+2)
-            self._parse_block(statement, indent+1, arg_map=arg_map)
+                self._append_main_code('    t1 = time.monotonic()', indent=indent + 2)
+            self._parse_block(statement, indent + 1, arg_map=arg_map)
             if self._loop_interval_sec > 0:
                 # limit frequency
-                self._append_main_code('    interval = time.monotonic() - t1', indent=indent+2)
-                self._append_main_code('    if interval < {}:'.format(self._loop_interval_sec), indent=indent+2)
-                self._append_main_code('        time.sleep({} - interval)'.format(self._loop_interval_sec), indent=indent+2)
+                self._append_main_code('    interval = time.monotonic() - t1', indent=indent + 2)
+                self._append_main_code('    if interval < {}:'.format(self._loop_interval_sec), indent=indent + 2)
+                self._append_main_code('        time.sleep({} - interval)'.format(self._loop_interval_sec),
+                                       indent=indent + 2)
         else:
             if self._loop_interval_sec > 0:
-                self._append_main_code('    time.sleep({})'.format(self._loop_interval_sec), indent=indent+2)
+                self._append_main_code('    time.sleep({})'.format(self._loop_interval_sec), indent=indent + 2)
             else:
-                self._append_main_code('    pass', indent=indent+2)
+                self._append_main_code('    pass', indent=indent + 2)
 
     def _handle_loop_break(self, block, indent=0, arg_map=None):
-        self._append_main_code('break', indent=indent+2)
+        self._append_main_code('break', indent=indent + 2)
 
     def _handle_tool_comment(self, block, indent=0, arg_map=None):
         field = self._get_node('field', block)
-        self._append_main_code('# {}'.format(field.text), indent=indent+2)
+        self._append_main_code('# {}'.format(field.text), indent=indent + 2)
         statement = self._get_node('statement', block)
         if statement:
             self._parse_block(statement, indent, arg_map=arg_map)
 
     def _handle_tool_app_comment(self, block, indent=0, arg_map=None):
         field = self._get_node('field', block)
-        self._append_main_code('# [APP] {}'.format(field.text), indent=indent+2)
+        self._append_main_code('# [APP] {}'.format(field.text), indent=indent + 2)
         statement = self._get_node('statement', block)
         if statement:
             self._parse_block(statement, indent, arg_map=arg_map)
 
     def _handle_tool_remark(self, block, indent=0, arg_map=None):
         field = self._get_node('field', block)
-        self._append_main_code('# {}'.format(field.text), indent=indent+2)
+        self._append_main_code('# {}'.format(field.text), indent=indent + 2)
 
     def _handle_controls_if(self, block, indent=0, arg_map=None):
         values = self._get_nodes('value', root=block)
@@ -877,9 +941,9 @@ class _BlocklyHandler(_BlocklyBase):
             expression = self._get_condition_expression(value, arg_map=arg_map)
             if not has_if:
                 has_if = True
-                self._append_main_code('if {}:'.format(expression), indent=indent+2)
+                self._append_main_code('if {}:'.format(expression), indent=indent + 2)
             else:
-                self._append_main_code('elif {}:'.format(expression), indent=indent+2)
+                self._append_main_code('elif {}:'.format(expression), indent=indent + 2)
             old_indent = indent
             indent += 1
             statement = None
@@ -888,16 +952,16 @@ class _BlocklyHandler(_BlocklyBase):
                     statement = st
                     break
             if statement:
-                self._parse_block(statement, old_indent+1, arg_map=arg_map)
+                self._parse_block(statement, old_indent + 1, arg_map=arg_map)
             else:
-                self._append_main_code('    pass', indent=old_indent+2)
+                self._append_main_code('    pass', indent=old_indent + 2)
         for st in statements:
             if st.attrib['name'] == 'ELSE':
                 if has_if:
-                    self._append_main_code('else:', indent=old_indent+2)
+                    self._append_main_code('else:', indent=old_indent + 2)
                 self._parse_block(st, old_indent if not has_if else indent, arg_map=arg_map)
                 break
-    
+
     def _handle_set_line_track(self, block, indent=0, arg_map=None):
         fields = self._get_nodes('field', root=block)
         if fields is None:
@@ -909,10 +973,12 @@ class _BlocklyHandler(_BlocklyBase):
         pos = fields[0].text
         speed = fields[1].text
         wait = True
-        self._append_main_code('code = self._arm.set_linear_track_pos({}, speed={}, wait={}, auto_enable=True)'.format(pos, speed, wait), indent + 2)
+        self._append_main_code(
+            'code = self._arm.set_linear_track_pos({}, speed={}, wait={}, auto_enable=True)'.format(pos, speed, wait),
+            indent + 2)
         self._append_main_code('if not self._check_code(code, \'set_linear_track_pos\'):', indent + 2)
         self._append_main_code('    return', indent + 2)
-        
+
     def _handle_set_line_track_origin(self, block, indent=0, arg_map=None):
         self._append_main_code('code = self._arm.set_linear_track_back_origin(wait=True, auto_enable=True)', indent + 2)
         self._append_main_code('if not self._check_code(code, \'set_linear_track_back_origin\'):', indent + 2)

@@ -25,6 +25,7 @@ reflective_black = [74 / 255, 74 / 255, 74 / 255, 1]
 matt_purple = [204 / 255, 126 / 255, 177 / 255, 1]
 red = [236 / 255, 104 / 255, 28 / 255, 1]
 
+
 class Cup(object):
 
     def __init__(self):
@@ -199,7 +200,8 @@ cam_1.attach_to(base)
 rbt_s = rbt.XArm7(pos=np.array([.42, .3, 1.5]), rotmat=rm.rotmat_from_axangle([0, 1, 0], np.pi))
 goal_pos = np.array([.8, .4, .8])
 goal_rotmat = rm.rotmat_from_axangle([0, 1, 0], np.pi * 8 / 6)
-goal_rotmat = rm.rotmat_from_axangle([0,0,1], np.pi/6).dot(rm.rotmat_from_axangle(goal_rotmat[:,2], -np.pi/2).dot(goal_rotmat))
+goal_rotmat = rm.rotmat_from_axangle([0, 0, 1], np.pi / 6).dot(
+    rm.rotmat_from_axangle(goal_rotmat[:, 2], -np.pi / 2).dot(goal_rotmat))
 jnt_values = rbt_s.ik(tgt_pos=goal_pos, tgt_rotmat=goal_rotmat, max_niter=500)
 if jnt_values is not None:
     rbt_s.fk(jnt_values=jnt_values)
@@ -212,7 +214,7 @@ pos, rotmat = rbt_s.get_gl_tcp()
 r_rotmat = rotmat
 
 spray_host = cm.CollisionModel(initor="objects/airgun_host.stl")
-spray_host.set_rgba(rgba=[1,1,1,1])
+spray_host.set_rgba(rgba=[1, 1, 1, 1])
 spray_host.set_pose(pos, r_rotmat)
 spray_host.attach_to(base)
 

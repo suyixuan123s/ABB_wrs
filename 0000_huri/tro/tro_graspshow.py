@@ -21,6 +21,7 @@ import pickle
 import tro.tro_pickplaceplanner as ppp
 import manipulation.grip.yumiintegrated.yumiintegrated as yi
 
+
 def load_pickle_file_grip(model_name, root=None):
     """
 
@@ -35,10 +36,10 @@ def load_pickle_file_grip(model_name, root=None):
     if root is None:
         directory = "./"
     else:
-        directory = root+"/"
+        directory = root + "/"
 
     try:
-        data = pickle.load(open(directory+'tro_predefinedgrippings.pickle', 'rb'))
+        data = pickle.load(open(directory + 'tro_predefinedgrippings.pickle', 'rb'))
         for k, v in data.items():
             print(k, len(v))
         effect_grasps = data[model_name]
@@ -46,6 +47,7 @@ def load_pickle_file_grip(model_name, root=None):
     except:
         print("load failed, create new graqsp file or grasp first.")
         raise ValueError("File or data not found!")
+
 
 def load_pickle_file_suction(model_name, root=None):
     """
@@ -61,10 +63,10 @@ def load_pickle_file_suction(model_name, root=None):
     if root is None:
         directory = "./"
     else:
-        directory = root+"/"
+        directory = root + "/"
 
     try:
-        data = pickle.load(open(directory+'tro_predefinedsuctions.pickle', 'rb'))
+        data = pickle.load(open(directory + 'tro_predefinedsuctions.pickle', 'rb'))
         for k, v in data.items():
             print(k, len(v))
         effect_grasps = data[model_name]
@@ -73,23 +75,26 @@ def load_pickle_file_suction(model_name, root=None):
         print("load failed, create new graqsp file or grasp first.")
         raise ValueError("File or data not found!")
 
+
 if __name__ == '__main__':
     import manipulation.grip.freegrip as fg
     import environment.bulletcdhelper as bcd
 
-    base = pc.World(camp=[2000, -2000, 1500], lookatpos=[0, 0, 100], up=[0,-1,1], autocamrotate=False)
+    base = pc.World(camp=[2000, -2000, 1500], lookatpos=[0, 0, 100], up=[0, -1, 1], autocamrotate=False)
     hndfa = yi.YumiIntegratedFactory()
     objcm = cm.CollisionModel(objinit="../objects/" + "vacuumhead.stl")
     gp = fg.Freegrip(objinit="../objects/" + "vacuumhead.stl", hand=hndfa.genHand())
     bmc = bcd.MCMchecker(toggledebug=True)
 
     gp.segShow(base, togglesamples=False, togglenormals=False,
-                togglesamples_ref=False, togglenormals_ref=False,
-                togglesamples_refcls=False, togglenormals_refcls=False, alpha =1)
+               togglesamples_ref=False, togglenormals_ref=False,
+               togglesamples_refcls=False, togglenormals_refcls=False, alpha=1)
     predefinedgrasps = load_pickle_file_grip(objcm.name)
 
     counter = [0]
     hndnps = [None]
+
+
     def update(predefinedgrasps, counter, hndnps, bmc, objcm, task):
         if hndnps[0] != None:
             hndnps[0].removeNode()
@@ -105,8 +110,11 @@ if __name__ == '__main__':
         if iscollided:
             hndnps[0].setColor(.5, 0, 0, 1)
         print(iscollided)
-        counter[0]+=1
+        counter[0] += 1
         return task.again
+
+
     # objcm.reparentTo(base.render)
-    taskMgr.doMethodLater(.1, update, "update", extraArgs=[predefinedgrasps, counter, hndnps, bmc, objcm], appendTask = True)
+    taskMgr.doMethodLater(.1, update, "update", extraArgs=[predefinedgrasps, counter, hndnps, bmc, objcm],
+                          appendTask=True)
     base.run()

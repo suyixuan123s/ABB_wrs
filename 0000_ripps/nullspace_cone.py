@@ -23,7 +23,7 @@ if __name__ == '__main__':
     component_name = 'arm'
     robot_s = cbt.CobottaRIPPS()
     tgt_pos = np.array([0.25, .0, .15])
-    tgt_rotmat = rm.rotmat_from_axangle([0,1,0], math.pi/2).dot(rm.rotmat_from_axangle([0,0,1], 0))
+    tgt_rotmat = rm.rotmat_from_axangle([0, 1, 0], math.pi / 2).dot(rm.rotmat_from_axangle([0, 0, 1], 0))
     jnt_values = robot_s.ik(component_name=component_name, tgt_pos=tgt_pos, tgt_rotmat=tgt_rotmat)
     if jnt_values is None:
         gm.gen_frame(pos=tgt_pos, rotmat=tgt_rotmat).attach_to(base)
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     # base.run()
 
     gl_tcp = robot_s.get_gl_tcp(manipulator_name="arm")
-    task_rot = rm.rotmat_from_axangle([0,0,1], math.pi/6)
+    task_rot = rm.rotmat_from_axangle([0, 0, 1], math.pi / 6)
     j_rot = np.eye(6)
     # j_rot[3:,3:] = task_rot
     # gm.gen_frame(pos=tgt_pos, rotmat=task_rot.T).attach_to(base)
@@ -48,14 +48,14 @@ if __name__ == '__main__':
         print("-------- timestep = ", t, " --------")
         xa_jacob = j_rot.dot(robot_s.jacobian())
         # nullspace rotate
-        xa_z = rm.null_space(xa_jacob[[0,1,2,3,4], :])
+        xa_z = rm.null_space(xa_jacob[[0, 1, 2, 3, 4], :])
         cur_jnt_values = robot_s.get_jnt_values(component_name=component_name)
         cur_jnt_values -= np.ravel(xa_z[:, 0]) * ratio
         status = robot_s.fk(component_name=component_name, jnt_values=cur_jnt_values)
         for t_ext in range(0, 200, 1):
             xa_jacob = j_rot.dot(robot_s.jacobian())
-            xa_x = rm.null_space(xa_jacob[[0,1,2,4,5], :])
-            cur_jnt_values_ext = cur_jnt_values-np.ravel(xa_x[:, 0]) * ratio
+            xa_x = rm.null_space(xa_jacob[[0, 1, 2, 4, 5], :])
+            cur_jnt_values_ext = cur_jnt_values - np.ravel(xa_x[:, 0]) * ratio
             # for t_ext in range(0, 200, 20):
             #     cur_jnt_values -= np.ravel(xa_x[:, 0]) * ratio
             #     for t_ext in range(0, 200, 20):
@@ -70,6 +70,8 @@ if __name__ == '__main__':
                 pos, rotmat = robot_s.get_gl_tcp(manipulator_name=component_name)
                 gm.gen_frame(pos=pos, rotmat=rotmat).attach_to(base)
             robot_s.fk(component_name=component_name, jnt_values=cur_jnt_values)
+
+
     # path = path[::-1]
     # robot_s.fk(component_name=component_name,
     #            jnt_values=jnt_values)
@@ -112,6 +114,8 @@ if __name__ == '__main__':
         else:
             motioncounter[0] = 0
         return task.again
+
+
     rbtmnp = [None]
     motioncounter = [0]
     taskMgr.doMethodLater(0.1, update, "update",

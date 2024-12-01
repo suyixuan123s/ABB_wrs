@@ -33,10 +33,10 @@ class Kinodynamics(object):
                              [-self.linear_acc * self.time_interval, 0], \
                              [0, -self.angular_acc * self.time_interval], \
                              [0, self.angular_acc * self.time_interval], \
-                             [np.random.rand()*self.linear_acc * self.time_interval, 0], \
-                             [-np.random.rand()*self.linear_acc * self.time_interval, 0], \
-                             [0, -np.random.rand()*self.angular_acc * self.time_interval], \
-                             [0, np.random.rand()*self.angular_acc * self.time_interval]]
+                             [np.random.rand() * self.linear_acc * self.time_interval, 0], \
+                             [-np.random.rand() * self.linear_acc * self.time_interval, 0], \
+                             [0, -np.random.rand() * self.angular_acc * self.time_interval], \
+                             [0, np.random.rand() * self.angular_acc * self.time_interval]]
         current_speed = np.array([np.linalg.norm(state1[3:5]), state1[5]])
         min_value = 1e12
         return_result = None
@@ -46,10 +46,10 @@ class Kinodynamics(object):
             next_speed = current_speed + np.array(random_step)
             next_speed[0] = np.clip(next_speed[0], self.linear_speed_rng[0], self.linear_speed_rng[1])
             next_speed[1] = np.clip(next_speed[1], self.angular_speed_rng[0], self.angular_speed_rng[1])
-            next_angle = (state1[2] + next_speed[1])/2* self.time_interval
+            next_angle = (state1[2] + next_speed[1]) / 2 * self.time_interval
             next_annihilator = np.array([[np.cos(next_angle), np.sin(next_angle), 0], [0, 0, 1]])
             new_state_speed = next_speed.dot(next_annihilator)
-            new_state_conf = state1[:3] + (state1[3:]+new_state_speed)/2 * self.time_interval
+            new_state_conf = state1[:3] + (state1[3:] + new_state_speed) / 2 * self.time_interval
             new_state = np.hstack((new_state_conf, new_state_speed))
             temp_state_list.append(new_state)
             diff_value = self.metric(new_state, state2)
@@ -431,7 +431,6 @@ class RRTKinodynamic(object):
 if __name__ == '__main__':
     import robot_sim.robots.xybot.xybot as xyb
 
-
     # ====Search Path with RRT====
     obstacle_list = [
         ((5, 5), 3),
@@ -446,7 +445,8 @@ if __name__ == '__main__':
     robot_s = xyb.XYTBot()
     kds = Kinodynamics(time_interval=2)
     rrtkino_s = RRTKinodynamic(robot_s, kds)
-    path = rrtkino_s.plan(start_state=np.array([.0, .0, .0, .0, .0, .0]), goal_conf=np.array([6.0, 9.0, .0, .0, .0, .0]),
+    path = rrtkino_s.plan(start_state=np.array([.0, .0, .0, .0, .0, .0]),
+                          goal_conf=np.array([6.0, 9.0, .0, .0, .0, .0]),
                           obstacle_list=obstacle_list,
                           rand_rate=70, max_time=1000,
                           component_name='all', smoothing_iterations=0,

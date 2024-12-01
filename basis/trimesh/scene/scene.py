@@ -165,6 +165,7 @@ class Scene:
         from .viewer import SceneViewer
         def viewer():
             SceneViewer(self, **kwargs)
+
         if block:
             viewer()
         else:

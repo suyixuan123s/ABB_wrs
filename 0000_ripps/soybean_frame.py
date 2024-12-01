@@ -80,7 +80,7 @@ class Stem(object):
                                                                          self.jlc.jnts[link_id + 1]['gl_posq'] -
                                                                          self.jlc.jnts[link_id]['gl_posq']),
                                                                      thickness=base_thickness / (link_id + 1) ** (
-                                                                                 1 / 3),
+                                                                             1 / 3),
                                                                      sections=24)
 
     def fk(self, jnt_values):
@@ -124,7 +124,8 @@ for idx, x in enumerate(cup_pos_x[1::2]):
         print(id_all)
         main_stem_ndof = 5
         cup_p = np.array([x, y, cup_pos_z + .1])
-        main_stem = Stem(pos=cup_p, rotmat=rm.rotmat_from_axangle([0,0,1], math.pi/36*id_all), ndof=main_stem_ndof)
+        main_stem = Stem(pos=cup_p, rotmat=rm.rotmat_from_axangle([0, 0, 1], math.pi / 36 * id_all),
+                         ndof=main_stem_ndof)
         main_stem.fk(jnt_values=[math.pi / 36, math.pi / 36, 0, -math.pi / 36, -math.pi / 36, 0])
         main_stem.gen_meshmodel().attach_to(base)
         rotmat_list = gen_rotmat_list(2 ** main_stem_ndof)

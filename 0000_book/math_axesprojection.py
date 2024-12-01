@@ -65,25 +65,31 @@ pos_a = np.array([.15, .07, .05])
 pos_o = rotmat_a.dot(pos_a)
 
 # gm.gen_dashstick(pos_o, np.array([pos_o[0], pos_o[1], 0]), thickness=.001, rgba=[0,0,0,.3], lsolid=.005, lspace=.005).attach_to(base)
-gm.gen_stick(pos_o, np.array([pos_o[0], pos_o[1], 0]), thickness=.001, rgba=[0,0,0,.3]).attach_to(base)
-gm.gen_dashstick(np.array([pos_o[0], pos_o[1], 0]), np.array([pos_o[0], 0, 0]), thickness=.001, rgba=[0,0,0,.3], lsolid=.005, lspace=.005).attach_to(base)
+gm.gen_stick(pos_o, np.array([pos_o[0], pos_o[1], 0]), thickness=.001, rgba=[0, 0, 0, .3]).attach_to(base)
+gm.gen_dashstick(np.array([pos_o[0], pos_o[1], 0]), np.array([pos_o[0], 0, 0]), thickness=.001, rgba=[0, 0, 0, .3],
+                 lsolid=.005, lspace=.005).attach_to(base)
 
 # gm.gen_dashstick(pos_o, np.array([pos_o[0], 0, pos_o[2]]), thickness=.001, rgba=[0,0,0,.3], lsolid=.005, lspace=.005).attach_to(base)
-gm.gen_stick(pos_o, np.array([pos_o[0], 0, pos_o[2]]), thickness=.001, rgba=[0,0,0,.3]).attach_to(base)
-gm.gen_dashstick(np.array([pos_o[0], 0, pos_o[2]]), np.array([pos_o[0], 0, 0]), thickness=.001, rgba=[0,0,0,.3], lsolid=.005, lspace=.005).attach_to(base)
+gm.gen_stick(pos_o, np.array([pos_o[0], 0, pos_o[2]]), thickness=.001, rgba=[0, 0, 0, .3]).attach_to(base)
+gm.gen_dashstick(np.array([pos_o[0], 0, pos_o[2]]), np.array([pos_o[0], 0, 0]), thickness=.001, rgba=[0, 0, 0, .3],
+                 lsolid=.005, lspace=.005).attach_to(base)
 
 # gm.gen_dashstick(pos_o, np.array([pos_o[0], pos_o[1], 0]), thickness=.001, rgba=[0,0,0,.3], lsolid=.005, lspace=.005).attach_to(base)
-gm.gen_dashstick(np.array([pos_o[0], pos_o[1], 0]), np.array([0, pos_o[1], 0]), thickness=.001, rgba=[0,0,0,.3], lsolid=.005, lspace=.005).attach_to(base)
+gm.gen_dashstick(np.array([pos_o[0], pos_o[1], 0]), np.array([0, pos_o[1], 0]), thickness=.001, rgba=[0, 0, 0, .3],
+                 lsolid=.005, lspace=.005).attach_to(base)
 # gm.gen_dashstick(pos_o, np.array([0, pos_o[1], pos_o[2]]), thickness=.001, rgba=[0,0,0,.3], lsolid=.005, lspace=.005).attach_to(base)
-gm.gen_stick(pos_o, np.array([0, pos_o[1], pos_o[2]]), thickness=.001, rgba=[0,0,0,.3]).attach_to(base)
-gm.gen_dashstick(np.array([0, pos_o[1], pos_o[2]]), np.array([0, pos_o[1], 0]), thickness=.001, rgba=[0,0,0,.3], lsolid=.005, lspace=.005).attach_to(base)
+gm.gen_stick(pos_o, np.array([0, pos_o[1], pos_o[2]]), thickness=.001, rgba=[0, 0, 0, .3]).attach_to(base)
+gm.gen_dashstick(np.array([0, pos_o[1], pos_o[2]]), np.array([0, pos_o[1], 0]), thickness=.001, rgba=[0, 0, 0, .3],
+                 lsolid=.005, lspace=.005).attach_to(base)
 
 # gm.gen_dashstick(pos_o, np.array([pos_o[0], 0, pos_o[2]]), thickness=.001, rgba=[0,0,0,.3], lsolid=.005, lspace=.005).attach_to(base)
-gm.gen_dashstick(np.array([pos_o[0], 0, pos_o[2]]), np.array([0, 0, pos_o[2]]), thickness=.001, rgba=[0,0,0,.3], lsolid=.005, lspace=.005).attach_to(base)
+gm.gen_dashstick(np.array([pos_o[0], 0, pos_o[2]]), np.array([0, 0, pos_o[2]]), thickness=.001, rgba=[0, 0, 0, .3],
+                 lsolid=.005, lspace=.005).attach_to(base)
 # gm.gen_dashstick(pos_o, np.array([0, pos_o[1], pos_o[2]]), thickness=.001, rgba=[0,0,0,.3], lsolid=.005, lspace=.005).attach_to(base)
-gm.gen_dashstick(np.array([0, pos_o[1], pos_o[2]]), np.array([0, 0, pos_o[2]]), thickness=.001, rgba=[0,0,0,.3], lsolid=.005, lspace=.005).attach_to(base)
+gm.gen_dashstick(np.array([0, pos_o[1], pos_o[2]]), np.array([0, 0, pos_o[2]]), thickness=.001, rgba=[0, 0, 0, .3],
+                 lsolid=.005, lspace=.005).attach_to(base)
 # #
-gm.gen_sphere(pos=pos_o, radius=.005, rgba=[0,0,0,1]).attach_to(base)
+gm.gen_sphere(pos=pos_o, radius=.005, rgba=[0, 0, 0, 1]).attach_to(base)
 # gm.gen_dashstick(np.zeros(3), pos_o, thickness=.003, rgba=[.3, .3, .3, 1], lsolid=.01, lspace=.01).attach_to(base)
 gm.gen_stick(np.zeros(3), pos_o, thickness=.003, rgba=[.3, .3, .3, 1]).attach_to(base)
 

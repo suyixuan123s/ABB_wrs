@@ -75,7 +75,7 @@ def expand_adj(vertices, faces, face_normals, seed_face_id, rgt_ele_mat, sel_mat
     # boundary
     adj_faces = faces[adj_face_id_list]
     boundary_edges = extract_boundary(vertices, adj_faces)
-    return adj_face_id_list, boundary_edges, curvature, face_id_pair_for_curvature # todo list to nparray
+    return adj_face_id_list, boundary_edges, curvature, face_id_pair_for_curvature  # todo list to nparray
 
 
 def over_segmentation(objcm, max_normal_bias_angle=rm.math.pi / 12,
@@ -179,8 +179,8 @@ if __name__ == '__main__':
         tmp_gm.attach_to(base)
         tmp_gm.set_rgba(rm.random_rgba())
         # edge
-        edge_list = (np.array(seg_nested_edge_list[i])+offset_pos).tolist()
-        gm.gen_linesegs(edge_list, thickness=.05, rgba=[1,0,0,1]).attach_to(base)
+        edge_list = (np.array(seg_nested_edge_list[i]) + offset_pos).tolist()
+        gm.gen_linesegs(edge_list, thickness=.05, rgba=[1, 0, 0, 1]).attach_to(base)
         # seed segment
         tmp_trm = tg.extract_subtrimesh(bunnycm.objtrm, facet_seed_list[i], offset_pos)
         tmp_gm = gm.StaticGeometricModel(tmp_trm, btwosided=True)

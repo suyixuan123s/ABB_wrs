@@ -18,14 +18,17 @@ class Stem(object):
         self.pos = pos
         self.rotmat = rotmat
         self.jlc = jlc.JLChain(pos=pos, rotmat=rotmat, homeconf=np.zeros(ndof), name=name + "jlchain")
-        for i in range(1, self.jlc.ndof+1):
-            self.jlc.jnts[i]['loc_pos']=np.array([0,0, base_length/5])
-            self.jlc.jnts[i]['loc_motionax']=np.array([1,0,0])
+        for i in range(1, self.jlc.ndof + 1):
+            self.jlc.jnts[i]['loc_pos'] = np.array([0, 0, base_length / 5])
+            self.jlc.jnts[i]['loc_motionax'] = np.array([1, 0, 0])
         self.jlc.reinitialize()
         for link_id in range(self.jlc.ndof + 1):
             self.jlc.lnks[link_id]['collision_model'] = cm.gen_stick(spos=np.zeros(3),
-                                                                     epos=rotmat.T.dot(self.jlc.jnts[link_id + 1]['gl_posq']-self.jlc.jnts[link_id]['gl_posq']),
-                                                                     thickness=base_thickness/(link_id+1)**(1/3),
+                                                                     epos=rotmat.T.dot(
+                                                                         self.jlc.jnts[link_id + 1]['gl_posq'] -
+                                                                         self.jlc.jnts[link_id]['gl_posq']),
+                                                                     thickness=base_thickness / (link_id + 1) ** (
+                                                                                 1 / 3),
                                                                      sections=24)
 
     def fk(self, jnt_values):
@@ -45,22 +48,24 @@ class Stem(object):
         self_copy = copy.deepcopy(self)
         return self_copy
 
+
 def gen_rotmat_list(nsample=None):
     rotmats = rm.gen_icorotmats(icolevel=2,
                                 rotation_interval=math.radians(30),
-                                crop_normal=np.array([0,0,-1]),
+                                crop_normal=np.array([0, 0, -1]),
                                 crop_angle=np.pi / 3,
                                 toggle_flat=True)
     print(len(rotmats))
     return_rotmat = []
     for rotmat in rotmats:
-        if rm.angle_between_vectors(rotmat[:,0], np.array([0,0,-1]))<np.pi/3:
+        if rm.angle_between_vectors(rotmat[:, 0], np.array([0, 0, -1])) < np.pi / 3:
             return_rotmat.append(rotmat)
     nreturn = len(return_rotmat)
     print(len(return_rotmat))
-    if nsample is not None and nsample<nreturn:
-        return return_rotmat[0:nreturn:int(nreturn/nsample)]
+    if nsample is not None and nsample < nreturn:
+        return return_rotmat[0:nreturn:int(nreturn / nsample)]
     return return_rotmat
+
 
 main_stem_ndof = 5
 
@@ -69,14 +74,14 @@ main_stem = Stem(ndof=main_stem_ndof)
 main_stem.fk(jnt_values=[math.pi / 36, math.pi / 36, 0, -math.pi / 36, -math.pi / 36, 0])
 main_stem.gen_meshmodel().attach_to(base)
 
-rotmat_list =gen_rotmat_list(2**main_stem_ndof)
+rotmat_list = gen_rotmat_list(2 ** main_stem_ndof)
 
 for id, rotmat in enumerate(rotmat_list):
     # print(int(id +1) % 4)
     # print(int(id / 3+1) % (main_stem.jlc.ndof + 1))
     # stem1 = Stem(ndof=1, pos=main_stem.jlc.jnts[int(id / 3) % (main_stem.jlc.ndof + 1)+1]['gl_posq'], rotmat=rotmat, base_length=.2/ (id + 1) ** (1 / 2), base_thickness=.002)
     branch_pos = main_stem.jlc.jnts[int(id / main_stem_ndof) % (main_stem.jlc.ndof + 1) + 1]['gl_posq']
-    height = branch_pos[2]-main_stem.jlc.pos[2]
+    height = branch_pos[2] - main_stem.jlc.pos[2]
     print(height)
     branch = Stem(ndof=1, pos=branch_pos,
                   rotmat=rotmat, base_length=.1 / math.sqrt(height), base_thickness=.002)
@@ -88,7 +93,7 @@ for id, rotmat in enumerate(rotmat_list):
     sb_leaf.set_rgba(rgba=leaf_rgba)
     sbl = sb_leaf.copy()
     # sbl.set_scale(np.array([1,1,1])/(int(id/3)%(main_stem.jlc.ndof+1)+1))
-    sbl.set_scale(np.array([1,1,1]))
+    sbl.set_scale(np.array([1, 1, 1]))
     jnt_pos = branch.jlc.jnts[-1]['gl_posq']
     sbl.set_pos(jnt_pos)
     sbl.set_rotmat(rotmat)

@@ -15,6 +15,7 @@ if __name__ == '__main__':
     import os
     import slope as slope
     import motion.probabilistic.rrt_connect as rrtc
+
     # import robot_sim.manipulators.machinetool.machinetool_gripper as machine
     base = wd.World(cam_pos=[1, 1, .5], lookat_pos=[0, 0, .2])
     this_dir, this_filename = os.path.split(__file__)
@@ -34,7 +35,7 @@ if __name__ == '__main__':
     obj.set_pos(pos=np.array([0, 0, 1]))
     # obj.attach_to(base)
     table = cm.CollisionModel("objects/MTbase2.stl")
-    table.set_pos(pos = np.array([0.7,0.2,-0.82]))
+    table.set_pos(pos=np.array([0.7, 0.2, -0.82]))
     table.attach_to(base)
 
     workpiece_before = cm.CollisionModel("objects/workpiece_before.stl")
@@ -42,7 +43,7 @@ if __name__ == '__main__':
     workpiece_regrasp = cm.CollisionModel("objects/workpiece_before.stl")
 
     workpiece_regrasp.set_pos(pos=np.array([0.4, 0.1, 0.0]))
-    workpiece_regrasp.set_rpy(0, -57.47*np.pi/180, 0)
+    workpiece_regrasp.set_rpy(0, -57.47 * np.pi / 180, 0)
     # workpiece_regrasp.show_localframe()
     # workpiece_regrasp.attach_to(base)
 
@@ -54,23 +55,19 @@ if __name__ == '__main__':
     homo_workpiece_before = workpiece_before.get_homomat()
     # workpiece_before.attach_to(base)
 
-
-
-
     manipulator_name = "arm"
     component_name = "arm"
     robot_s = ur5e.UR5EConveyorBelt()
     robot_s.door_to(1)
     start_conf = robot_s.get_jnt_values(component_name=component_name)
-    start_tcp_pos, start_tcp_rot = robot_s.get_gl_tcp(manipulator_name = manipulator_name)
-
+    start_tcp_pos, start_tcp_rot = robot_s.get_gl_tcp(manipulator_name=manipulator_name)
 
     # robot_meshmodel = robot_s.gen_meshmodel(is_machine=True, is_robot=False).attach_to(base)
     robot_s.jaw_to(0.085)
 
-    workpiece_before.set_pos(pos=robot_s.machine.jaw_center_pos+ np.array([-0.06,0,0]))
-    workpiece_before.set_rotmat(rotmat=np.dot(robot_s.machine.jaw_center_rot, rm.rotmat_from_axangle(np.array([0,1,0]), np.pi/2)))
-
+    workpiece_before.set_pos(pos=robot_s.machine.jaw_center_pos + np.array([-0.06, 0, 0]))
+    workpiece_before.set_rotmat(
+        rotmat=np.dot(robot_s.machine.jaw_center_rot, rm.rotmat_from_axangle(np.array([0, 1, 0]), np.pi / 2)))
 
     # workpiece_after.attach_to(base)
     # base.run()
@@ -98,8 +95,6 @@ if __name__ == '__main__':
     goalpos_workpiece_before = workpiece_before.get_pos()
     goalhomo_workpiece_before = workpiece_before.get_homomat()
 
-
-
     robot_s.fk(component_name, start_conf)
     ppp_s = ppp.PickPlacePlanner(robot_s)
     # start_conf = robot_s.get_jnt_values(manipulator_name)
@@ -112,22 +107,24 @@ if __name__ == '__main__':
                                         start_conf=start_conf,
                                         end_conf=start_conf,
                                         obstacle_list=obstacle_list,
-                                        goal_homomat_list=[homo_workpiece_before, workpiece_regrasp.get_homomat(), goalhomo_workpiece_before ],
-                                        approach_direction_list=[None, None,  np.array([1, 0, 0])],
+                                        goal_homomat_list=[homo_workpiece_before, workpiece_regrasp.get_homomat(),
+                                                           goalhomo_workpiece_before],
+                                        approach_direction_list=[None, None, np.array([1, 0, 0])],
                                         approach_distance_list=[.20] * 3,
-                                        depart_direction_list=[np.array([0, 0, 1]), np.array([0, 0, 1]),np.array([-1, 0, 0])],
+                                        depart_direction_list=[np.array([0, 0, 1]), np.array([0, 0, 1]),
+                                                               np.array([-1, 0, 0])],
                                         depart_distance_list=[.20] * 3)
-    #===========================================
+    # ===========================================
 
     door_list_before = np.linspace(0, 1, 50)
     door_list2 = np.linspace(1, 1, 50)
-    door_list_before = np.concatenate((door_list_before, door_list2), axis = 0)
+    door_list_before = np.concatenate((door_list_before, door_list2), axis=0)
     chunck_list_before = np.linspace(0, 0, 50)
     chunck_list2 = np.linspace(0, 0.08, 50)
     chunck_list_before = np.concatenate((chunck_list_before, chunck_list2), axis=0)
 
 
-    def path_concatenater(door_list, chunck_list, jawwidth_list, objpose_list, conf_list, before_rbt = True):
+    def path_concatenater(door_list, chunck_list, jawwidth_list, objpose_list, conf_list, before_rbt=True):
         rbt_door = [door_list[-1] for i in range(len(conf_list))]
         rbt_chunck = [chunck_list[-1] for i in range(len(conf_list))]
 
@@ -143,26 +140,29 @@ if __name__ == '__main__':
 
         return door_list, chunck_list, conf_list, jawwidth_list, objpose_list
 
-    door_list, chunck_list, conf_list, jawwidth_list, objpose_list = path_concatenater(door_list_before, chunck_list_before, jawwidth_list, objpose_list, conf_list)
+
+    door_list, chunck_list, conf_list, jawwidth_list, objpose_list = path_concatenater(door_list_before,
+                                                                                       chunck_list_before,
+                                                                                       jawwidth_list, objpose_list,
+                                                                                       conf_list)
 
     door_list_after = np.linspace(1, -0.6, 50)
     door_list2 = np.linspace(-0.6, -0.6, 50)
-    door_list_after = np.concatenate((door_list_after, door_list2), axis = 0)
+    door_list_after = np.concatenate((door_list_after, door_list2), axis=0)
     chunck_list_after = np.linspace(0, 0, 50)
     chunck_list2 = np.linspace(0, 0, 50)
     chunck_list_after = np.concatenate((chunck_list_after, chunck_list2), axis=0)
 
-    door_list = np.concatenate((door_list, door_list_after), axis = 0)
+    door_list = np.concatenate((door_list, door_list_after), axis=0)
     chunck_list = np.concatenate((chunck_list, chunck_list_after), axis=0)
 
     conf_list_door = [conf_list[-1] for i in range(len(door_list_after))]
     jawwidth_list_door = [jawwidth_list[-1] for i in range(len(door_list_after))]
     objpose_list_door = [objpose_list[-1] for i in range(len(door_list_after))]
 
-    conf_list = np.concatenate((conf_list, conf_list_door), axis = 0)
+    conf_list = np.concatenate((conf_list, conf_list_door), axis=0)
     jawwidth_list = np.concatenate((jawwidth_list, jawwidth_list_door), axis=0)
     objpose_list = np.concatenate((objpose_list, objpose_list_door), axis=0)
-
 
     # # print(jawwidth_list)
     # door_list, chunck_list, conf_list, jawwidth_list, objpose_list = path_concatenater(door_list_after, chunck_list_after,

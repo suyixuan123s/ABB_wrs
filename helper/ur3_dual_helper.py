@@ -6,6 +6,7 @@ import motion.optimization_based.incremental_nik as inik
 import manipulation.pick_place_planner as ppp
 import visualization.panda.world as wd
 
+
 class UR3DualHelper(object):
 
     def __init__(self,

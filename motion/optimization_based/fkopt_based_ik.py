@@ -26,8 +26,8 @@ class FKOptBasedIK(object):
         self.x_err = []
         self.y_err = []
         self.z_err = []
-        self._xangle_limit = math.pi/360 # less than .5 degree
-        self._zangle_limit = math.pi/6
+        self._xangle_limit = math.pi / 360  # less than .5 degree
+        self._zangle_limit = math.pi / 6
         self._x_limit = 1e-6
         self._y_limit = 1e-6
         self._z_limit = 1e-6
@@ -40,16 +40,16 @@ class FKOptBasedIK(object):
     def _constraint_zangle(self, jnt_values):
         self.rbt.fk(jnt_values=jnt_values, component_name=self.jlc_name)
         gl_tcp_pos, gl_tcp_rotmat = self.rbt.get_gl_tcp(manipulator_name=self.jlc_name)
-        delta_angle = rm.angle_between_vectors(gl_tcp_rotmat[:,2], self.tgt_rotmat[:,2])
+        delta_angle = rm.angle_between_vectors(gl_tcp_rotmat[:, 2], self.tgt_rotmat[:, 2])
         self.zangle_err.append(delta_angle)
-        return self._zangle_limit-delta_angle
+        return self._zangle_limit - delta_angle
 
     def _constraint_xangle(self, jnt_values):
         self.rbt.fk(jnt_values=jnt_values, component_name=self.jlc_name)
         gl_tcp_pos, gl_tcp_rotmat = self.rbt.get_gl_tcp(manipulator_name=self.jlc_name)
-        delta_angle = rm.angle_between_vectors(gl_tcp_rotmat[:,0], self.tgt_rotmat[:,0])
+        delta_angle = rm.angle_between_vectors(gl_tcp_rotmat[:, 0], self.tgt_rotmat[:, 0])
         self.xangle_err.append(delta_angle)
-        return self._xangle_limit-delta_angle
+        return self._xangle_limit - delta_angle
 
     def _constraint_x(self, jnt_values):
         self.rbt.fk(jnt_values=jnt_values, component_name=self.jlc_name)
@@ -175,15 +175,16 @@ class FKOptBasedIK(object):
         # plth.plot_list(self.jnt_diff, title="jnts displacement")
         plth.plt.show()
 
+
 if __name__ == '__main__':
     import visualization.panda.world as wd
     import robot_sim.robots.yumi.yumi as ym
     import modeling.geometric_model as gm
 
     base = wd.World(cam_pos=[1.5, 0, 3], lookat_pos=[0, 0, .5])
-    component_name= 'rgt_arm'
+    component_name = 'rgt_arm'
     tgt_pos = np.array([.5, -.3, .3])
-    tgt_rotmat = rm.rotmat_from_axangle([0,1,0], math.pi/2)
+    tgt_rotmat = rm.rotmat_from_axangle([0, 1, 0], math.pi / 2)
     gm.gen_frame(pos=tgt_pos, rotmat=tgt_rotmat).attach_to(base)
     yumi_instance = ym.Yumi(enable_cc=True)
     oik = FKOptBasedIK(yumi_instance, component_name=component_name, toggle_debug=False)

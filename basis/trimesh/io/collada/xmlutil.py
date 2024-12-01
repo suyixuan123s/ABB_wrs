@@ -6,6 +6,7 @@ HAVE_LXML = False
 
 try:
     from lxml import etree
+
     HAVE_LXML = True
 except ImportError:
     from xml.etree import ElementTree as etree
@@ -38,21 +39,22 @@ except (NameError, KeyError):
 
 if HAVE_LXML:
     from lxml.builder import E, ElementMaker
-    
+
+
     def writeXML(xmlnode, fp):
         xmlnode.write(fp, pretty_print=True)
-else:    
+else:
     class ElementMaker(object):
         def __init__(self, namespace=None, nsmap=None):
             if namespace is not None:
                 self._namespace = '{' + namespace + '}'
             else:
                 self._namespace = None
-        
+
         def __call__(self, tag, *children, **attrib):
             if self._namespace is not None and tag[0] != '{':
                 tag = self._namespace + tag
-            
+
             elem = etree.Element(tag, attrib)
             for item in children:
                 if isinstance(item, dict):
@@ -67,15 +69,16 @@ else:
                 else:
                     raise TypeError("bad argument: %r" % item)
             return elem
-    
+
         def __getattr__(self, tag):
             return functools.partial(self, tag)
 
+
     E = ElementMaker()
-    
+
     if etree.VERSION[0:3] == '1.2':
-        #in etree < 1.3, this is a workaround for suppressing prefixes
-        
+        # in etree < 1.3, this is a workaround for suppressing prefixes
+
         def fixtag(tag, namespaces):
             import string
             # given a decorated tag (of the form {uri}tag), return prefixed
@@ -103,29 +106,32 @@ else:
                 prefix += ":"
             else:
                 prefix = ''
-                
+
             return "%s%s" % (prefix, tag), xmlns
-    
+
+
         etree.fixtag = fixtag
         etree._namespace_map[COLLADA_NS] = None
     else:
-        #For etree > 1.3, use register_namespace function
+        # For etree > 1.3, use register_namespace function
         etree.register_namespace('', COLLADA_NS)
 
+
     def indent(elem, level=0):
-        i = "\n" + level*"  "
+        i = "\n" + level * "  "
         if len(elem):
             if not elem.text or not elem.text.strip():
                 elem.text = i + "  "
             if not elem.tail or not elem.tail.strip():
                 elem.tail = i
             for elem in elem:
-                indent(elem, level+1)
+                indent(elem, level + 1)
             if not elem.tail or not elem.tail.strip():
                 elem.tail = i
         else:
             if level and (not elem.tail or not elem.tail.strip()):
                 elem.tail = i
+
 
     def writeXML(xmlnode, fp):
         indent(xmlnode.getroot())

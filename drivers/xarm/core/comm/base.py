@@ -68,7 +68,7 @@ class Port(threading.Thread):
     def flush(self, fromid=-1, toid=-1):
         if not self.connected:
             return -1
-        while not(self.rx_que.empty()):
+        while not (self.rx_que.empty()):
             self.rx_que.queue.clear()
         self.rx_parse.flush(fromid, toid)
         return 0
@@ -191,7 +191,9 @@ class Port(threading.Thread):
                                 continue
 
                         if convert.bytes_to_u32(buffer[0:4]) != size:
-                            logger.error('report data error, close, length={}, size={}'.format(convert.bytes_to_u32(buffer[0:4]), size))
+                            logger.error(
+                                'report data error, close, length={}, size={}'.format(convert.bytes_to_u32(buffer[0:4]),
+                                                                                      size))
                             break
 
                         # # buffer[494:502]
@@ -300,4 +302,3 @@ class Port(threading.Thread):
         #         self.heartbeat_thread.join()
         #     except:
         #         pass
-

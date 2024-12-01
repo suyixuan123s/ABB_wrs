@@ -5,9 +5,7 @@ Library for importing, exporting and doing simple operations on triangular meshe
 '''
 
 import numpy as np
-
 from copy import deepcopy
-
 from . import triangles
 from . import grouping
 from . import geometry
@@ -23,7 +21,6 @@ from . import convex
 from . import remesh
 from . import bounds
 from . import units
-
 from .io.export import export_mesh
 from .ray.ray_mesh import RayMeshIntersector, contains_points
 from .voxel import Voxel
@@ -1001,7 +998,7 @@ class Trimesh(object):
         author: weiwei
         date: 20210403
         """
-        assert(scaling[0] > 0 and scaling[1] > 0 and scaling[2] > 0)
+        assert (scaling[0] > 0 and scaling[1] > 0 and scaling[2] > 0)
         matrix = np.diag([scaling[0], scaling[1], scaling[2], 1])
         self.apply_transform(matrix)
 

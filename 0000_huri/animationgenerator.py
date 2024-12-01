@@ -3,7 +3,7 @@ import numpy as np
 import math
 
 
-def animationgen(rhx, numikmsmp, jawwidthmsmp, objmsmp, othersmsmp, sg_doestimateagain = [False]):
+def animationgen(rhx, numikmsmp, jawwidthmsmp, objmsmp, othersmsmp, sg_doestimateagain=[False]):
     """
     create an animation with space
 
@@ -28,7 +28,7 @@ def animationgen(rhx, numikmsmp, jawwidthmsmp, objmsmp, othersmsmp, sg_doestimat
     jawwidthmpactive = [jawwidthmsmp[0]]
     othermpactive = [othersmsmp[0]]
     notherobjcms = 1000
-    othersmnpani = [[None]*notherobjcms] #define a sequence that is long enough, max 1000 objects]
+    othersmnpani = [[None] * notherobjcms]  # define a sequence that is long enough, max 1000 objects]
     cleanuponlyflag = [False]
 
     def updatemotionpath(numikmpactive, jawwidthmpactive, objmpactive, othersmpactive, rbtmnp, objmnp, othersmnp,
@@ -72,15 +72,18 @@ def animationgen(rhx, numikmsmp, jawwidthmsmp, objmsmp, othersmsmp, sg_doestimat
             return task.again
         # base.win.saveScreenshot(Filename(str(motioncounter[0]) + '.jpg'))
         return task.again
+
     taskMgr.doMethodLater(0.01, updatemotionpath, "updatemotionpath",
                           extraArgs=[numikmpactive, jawwidthmpactive, objmpactive, othermpactive,
                                      rbtmnpani, objmnpani, othersmnpani, motionpathcounter, rhx, cleanuponlyflag],
                           appendTask=True)
 
     motionseccounter = [0]
+
     def updatemotionsection(numikmpactive, jawwidthmpactive, objmpactive, othermpactive,
                             numikmsmp, jawwidthmsmp, objmsmp, othersmsmp, rbtmnpani,
-                            objmnpani, othersmnpani, motionpathcounter, motionseccounter, rhx, sg_doestimateagain, task):
+                            objmnpani, othersmnpani, motionpathcounter, motionseccounter, rhx, sg_doestimateagain,
+                            task):
         if rhx.base.inputmgr.keymap['space'] is True:
             if motionseccounter[0] < len(objmsmp):
                 motionseccounter[0] = motionseccounter[0] + 1
@@ -94,21 +97,22 @@ def animationgen(rhx, numikmsmp, jawwidthmsmp, objmsmp, othersmsmp, sg_doestimat
                     motionpathcounter[0] = 0
                     taskMgr.doMethodLater(0.03, updatemotionpath, "updatemotionpath",
                                           extraArgs=[numikmpactive, jawwidthmpactive, objmpactive, othermpactive,
-                                                     rbtmnpani, objmnpani, othersmnpani, motionpathcounter, rhx, [False]],
+                                                     rbtmnpani, objmnpani, othersmnpani, motionpathcounter, rhx,
+                                                     [False]],
                                           appendTask=True)
                 # execute
-                exeseccntr = motionseccounter[0]-1
+                exeseccntr = motionseccounter[0] - 1
                 numikmp = numikmsmp[exeseccntr]
                 jawwidthmp = jawwidthmsmp[exeseccntr]
                 rgtjawwidth = jawwidthmp[0][0]
                 lftjawwidth = jawwidthmp[0][1]
                 if exeseccntr > 0:
-                    if not math.isclose(rgtjawwidth, jawwidthmsmp[exeseccntr-1][0][0]):
+                    if not math.isclose(rgtjawwidth, jawwidthmsmp[exeseccntr - 1][0][0]):
                         if rgtjawwidth < rhx.rgthndfa.jawwidthopen:
                             rhx.closegripperx(armname="rgt")
                         else:
                             rhx.opengripperx(armname="rgt")
-                    if not math.isclose(lftjawwidth, jawwidthmsmp[exeseccntr-1][0][1]):
+                    if not math.isclose(lftjawwidth, jawwidthmsmp[exeseccntr - 1][0][1]):
                         if lftjawwidth < rhx.lfthndfa.jawwidthopen:
                             rhx.closegripperx(armname="lft")
                         else:
@@ -136,10 +140,12 @@ def animationgen(rhx, numikmsmp, jawwidthmsmp, objmsmp, othersmsmp, sg_doestimat
     taskMgr.doMethodLater(0.04, updatemotionsection, "updatemotionsection",
                           extraArgs=[numikmpactive, jawwidthmpactive, objmpactive, othermpactive,
                                      numikmsmp, jawwidthmsmp, objmsmp, othersmsmp, rbtmnpani,
-                                     objmnpani, othersmnpani, motionpathcounter, motionseccounter, rhx, sg_doestimateagain],
+                                     objmnpani, othersmnpani, motionpathcounter, motionseccounter, rhx,
+                                     sg_doestimateagain],
                           appendTask=True)
 
-def animationgen_cont(rhx, numikmsmp, jawwidthmsmp, objmsmp, othersmsmp, sg_doestimateagain = [False]):
+
+def animationgen_cont(rhx, numikmsmp, jawwidthmsmp, objmsmp, othersmsmp, sg_doestimateagain=[False]):
     """
     create an animation with space
     _cont means there is no need for pressing "space"
@@ -165,7 +171,7 @@ def animationgen_cont(rhx, numikmsmp, jawwidthmsmp, objmsmp, othersmsmp, sg_does
     jawwidthmpactive = [jawwidthmsmp[0]]
     othermpactive = [othersmsmp[0]]
     notherobjcms = 1000
-    othersmnpani = [[None]*notherobjcms] #define a sequence that is long enough, max 1000 objects]
+    othersmnpani = [[None] * notherobjcms]  # define a sequence that is long enough, max 1000 objects]
     cleanuponlyflag = [False]
 
     def updatemotionpath(numikmpactive, jawwidthmpactive, objmpactive, othersmpactive, rbtmnp, objmnp, othersmnp,
@@ -209,15 +215,18 @@ def animationgen_cont(rhx, numikmsmp, jawwidthmsmp, objmsmp, othersmsmp, sg_does
             return task.again
         # base.win.saveScreenshot(Filename(str(motioncounter[0]) + '.jpg'))
         return task.again
+
     # taskMgr.doMethodLater(0.01, updatemotionpath, "updatemotionpath",
     #                       extraArgs=[numikmpactive, jawwidthmpactive, objmpactive, othermpactive,
     #                                  rbtmnpani, objmnpani, othersmnpani, motionpathcounter, rhx, cleanuponlyflag],
     #                       appendTask=True)
 
     motionseccounter = [0]
+
     def updatemotionsection(numikmpactive, jawwidthmpactive, objmpactive, othermpactive,
                             numikmsmp, jawwidthmsmp, objmsmp, othersmsmp, rbtmnpani,
-                            objmnpani, othersmnpani, motionpathcounter, motionseccounter, rhx, sg_doestimateagain, task):
+                            objmnpani, othersmnpani, motionpathcounter, motionseccounter, rhx, sg_doestimateagain,
+                            task):
         if motionseccounter[0] < len(objmsmp):
             motionseccounter[0] = motionseccounter[0] + 1
             # if motionseccounter[0] < len(objmsmp):
@@ -232,18 +241,18 @@ def animationgen_cont(rhx, numikmsmp, jawwidthmsmp, objmsmp, othersmsmp, sg_does
             #                                      rbtmnpani, objmnpani, othersmnpani, motionpathcounter, rhx, [False]],
             #                           appendTask=True)
             # execute
-            exeseccntr = motionseccounter[0]-1
+            exeseccntr = motionseccounter[0] - 1
             numikmp = numikmsmp[exeseccntr]
             jawwidthmp = jawwidthmsmp[exeseccntr]
             rgtjawwidth = jawwidthmp[0][0]
             lftjawwidth = jawwidthmp[0][1]
             if exeseccntr > 0:
-                if not math.isclose(rgtjawwidth, jawwidthmsmp[exeseccntr-1][0][0]):
+                if not math.isclose(rgtjawwidth, jawwidthmsmp[exeseccntr - 1][0][0]):
                     if rgtjawwidth < rhx.rgthndfa.jawwidthopen:
                         rhx.closegripperx(armname="rgt")
                     else:
                         rhx.opengripperx(armname="rgt")
-                if not math.isclose(lftjawwidth, jawwidthmsmp[exeseccntr-1][0][1]):
+                if not math.isclose(lftjawwidth, jawwidthmsmp[exeseccntr - 1][0][1]):
                     if lftjawwidth < rhx.lfthndfa.jawwidthopen:
                         rhx.closegripperx(armname="lft")
                     else:
@@ -271,5 +280,6 @@ def animationgen_cont(rhx, numikmsmp, jawwidthmsmp, objmsmp, othersmsmp, sg_does
     taskMgr.doMethodLater(0.04, updatemotionsection, "updatemotionsection",
                           extraArgs=[numikmpactive, jawwidthmpactive, objmpactive, othermpactive,
                                      numikmsmp, jawwidthmsmp, objmsmp, othersmsmp, rbtmnpani,
-                                     objmnpani, othersmnpani, motionpathcounter, motionseccounter, rhx, sg_doestimateagain],
+                                     objmnpani, othersmnpani, motionpathcounter, motionseccounter, rhx,
+                                     sg_doestimateagain],
                           appendTask=True)

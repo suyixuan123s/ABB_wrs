@@ -6,6 +6,7 @@ import drivers.rpc.hndcam.hndcam_pb2 as hcmsg
 import drivers.rpc.hndcam.hndcam_pb2_grpc as hcrpc
 import numpy as np
 
+
 class HndCamServer(hcrpc.CamServicer):
 
     def __init__(self):
@@ -83,6 +84,7 @@ class HndCamServer(hcrpc.CamServicer):
         fmbytes = np.ndarray.tobytes(frame)
         return hcmsg.CamImg(width=w, height=h, channel=nch, image=fmbytes)
 
+
 def serve():
     _ONE_DAY_IN_SECONDS = 60 * 60 * 24
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
@@ -95,6 +97,7 @@ def serve():
             time.sleep(_ONE_DAY_IN_SECONDS)
     except KeyboardInterrupt:
         server.stop(0)
+
 
 if __name__ == '__main__':
     serve()

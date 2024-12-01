@@ -5,7 +5,7 @@ import math
 import numpy as np
 
 base = wd.World(cam_pos=[1, 1, 1], lookat_pos=[0, 0, 0], toggle_debug=True)
-rotmat = rm.rotmat_from_euler(math.pi/3, -math.pi/6 , math.pi/3)
+rotmat = rm.rotmat_from_euler(math.pi / 3, -math.pi / 6, math.pi / 3)
 alpha, beta, gamma = rm._euler_from_matrix(rotmat, 'sxyx')
 
 frame_o = gm.gen_frame(length=.2)
@@ -31,12 +31,12 @@ frame_a.attach_to(base)
 rotmat = rm.rotmat_from_euler(alpha, beta, gamma, 'sxyx')
 frame_a = gm.gen_dashframe(length=.2, rotmat=rotmat)
 frame_a.attach_to(base)
-gm.gen_circarrow(axis=[1,0,0],
-                 portion = .9,
-                 center = [.1,0,0],
+gm.gen_circarrow(axis=[1, 0, 0],
+                 portion=.9,
+                 center=[.1, 0, 0],
                  radius=.03,
                  thickness=.003,
-                 rgba=[.3,.3,.3,1]).attach_to(base)
+                 rgba=[.3, .3, .3, 1]).attach_to(base)
 
 # print(rotmat)
 base.run()

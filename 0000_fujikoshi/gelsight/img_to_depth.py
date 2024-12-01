@@ -3,11 +3,13 @@ import pickle
 import numpy as np
 from scipy.fftpack import dst, idst
 
+
 def fishye_calib(img, para):
     K, D, DIM = para
     map1, map2 = cv2.fisheye.initUndistortRectifyMap(K, D, np.eye(3), K, DIM, cv2.CV_16SC2)
     undistorted_img = cv2.remap(img, map1, map2, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
     return undistorted_img
+
 
 class Lookuptable(object):
     def __init__(self, bins, GradMag, GradDir, GradX, GradY, Zeropoint, Scale, Pixmm, FrameSize):
@@ -20,6 +22,7 @@ class Lookuptable(object):
         self.Scale = Scale
         self.Pixmm = Pixmm
         self.FrameSize = FrameSize
+
 
 class ImageToDepth(object):
 
@@ -34,11 +37,11 @@ class ImageToDepth(object):
 
     def _init_frame(self, frame0, border):
         sigma = 50
-        f0 = cv2.GaussianBlur(frame0, (99,99), sigma)
+        f0 = cv2.GaussianBlur(frame0, (99, 99), sigma)
         height, width = frame0.shape[:2]
-        f0 = f0[border : height - border, border: width - border]
+        f0 = f0[border: height - border, border: width - border]
         frame0_ = frame0.astype('float32')
-        frame_ = frame0_[border : height - border, border: width - border]
+        frame_ = frame0_[border: height - border, border: width - border]
         dI = np.mean(f0 - frame_, 2)
         mask = (dI < 5).astype('uint8')
         mask = np.repeat(mask[:, :, np.newaxis], 3, axis=2)
@@ -49,8 +52,8 @@ class ImageToDepth(object):
     def _match_grd_bnz(self, LookupTable: Lookuptable, dI, f0, f01=None, validmask=None):
 
         def fix1(num):
-            num[num>1] = 1
-            num[num<0] = 0
+            num[num > 1] = 1
+            num[num < 0] = 0
             return num
 
         if f01 is None:
@@ -111,18 +114,18 @@ class ImageToDepth(object):
         gxx = np.zeros((ydim, xdim))
         gyy = np.zeros((ydim, xdim))
         f = np.zeros((ydim, xdim))
-        gyy[1:ydim, 0:xdim-1] = gy[1:ydim, 0:xdim-1]-gy[0:ydim-1, 0:xdim-1]
-        gxx[0:ydim-1, 1:xdim] = gx[0:ydim-1, 1:xdim]-gx[0:ydim-1, 0:xdim-1]
+        gyy[1:ydim, 0:xdim - 1] = gy[1:ydim, 0:xdim - 1] - gy[0:ydim - 1, 0:xdim - 1]
+        gxx[0:ydim - 1, 1:xdim] = gx[0:ydim - 1, 1:xdim] - gx[0:ydim - 1, 0:xdim - 1]
         f = gxx + gyy
         height, width = f.shape[:2]
-        f2 = f[1 : height - 1, 1: width - 1]
-        tt = dst(f2.T, type=1).T /2
-        f2sin = (dst(tt, type =1)/2)
-        x, y = np.meshgrid(np.arange(1, xdim-1), np.arange(1, ydim-1))
-        denom = (2*np.cos(np.pi * x/(xdim-1))-2) + (2*np.cos(np.pi*y/(ydim-1)) - 2)
-        f3 = f2sin/denom
-        tt = np.real(idst(f3, type=1, axis=0))/(f3.shape[0]+1)
-        img_tt = (np.real(idst(tt.T, type=1, axis=0))/(tt.T.shape[0]+1)).T
+        f2 = f[1: height - 1, 1: width - 1]
+        tt = dst(f2.T, type=1).T / 2
+        f2sin = (dst(tt, type=1) / 2)
+        x, y = np.meshgrid(np.arange(1, xdim - 1), np.arange(1, ydim - 1))
+        denom = (2 * np.cos(np.pi * x / (xdim - 1)) - 2) + (2 * np.cos(np.pi * y / (ydim - 1)) - 2)
+        f3 = f2sin / denom
+        tt = np.real(idst(f3, type=1, axis=0)) / (f3.shape[0] + 1)
+        img_tt = (np.real(idst(tt.T, type=1, axis=0)) / (tt.T.shape[0] + 1)).T
         img_direct = np.zeros((ydim, xdim))
         height, width = img_direct.shape[:2]
         img_direct[1: height - 1, 1: width - 1] = img_tt

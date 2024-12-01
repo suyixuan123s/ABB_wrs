@@ -46,9 +46,9 @@ if __name__ == '__main__':
     utils.search_reachable_configuration(rbt_s=rbt_s,
                                          ee_s=ee_s,
                                          component_name=component_name,
-                                         tgt_pos=pos+z_offset,
-                                         cone_axis=rotmat[:3,2],
-                                         cone_angle=np.pi/18,
+                                         tgt_pos=pos + z_offset,
+                                         cone_axis=rotmat[:3, 2],
+                                         cone_angle=np.pi / 18,
                                          rotation_interval=np.radians(22.5),
                                          obstacle_list=[frame_bottom],
                                          toggle_debug=True)

@@ -13,7 +13,6 @@ from ..utils import convert
 from .uxbus_cmd import UxbusCmd, lock_require
 from ..config.x_config import XCONF
 
-
 TX2_PROT_CON = 2  # tcp cmd prot
 TX2_PROT_HEAT = 1  # tcp heat prot
 TX2_BUS_FLAG_MIN = 1  # cmd序号 起始值
@@ -54,7 +53,7 @@ class UxbusCmdTcp(UxbusCmd):
             self.TX2_PROT_CON = prot_flag
             print('change prot_flag to {}'.format(self.prot_flag))
         return 0
-    
+
     def get_prot_flag(self):
         return self.prot_flag
 

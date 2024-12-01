@@ -6,12 +6,13 @@ import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader
 from torch.utils.tensorboard import SummaryWriter
 
+
 class IKDataSet(Dataset):
     def __init__(self, file, transform=None):
         # self.ik_frame = pd.read_csv(file)
-        self.ik_frame = np.load(file+".npy")
+        self.ik_frame = np.load(file + ".npy")
         self.transform = transform
-        _min_max = np.load(file+"_min_max.npy")
+        _min_max = np.load(file + "_min_max.npy")
         self.min = _min_max[0]
         self.max = _min_max[1]
 
@@ -24,7 +25,7 @@ class IKDataSet(Dataset):
         # xyzrpy = eval(self.ik_frame.loc[idx, 'xyzrpy'])
         # jnt_values = eval(self.ik_frame.loc[idx, 'jnt_values'])
         xyzrpy = self.ik_frame[idx][0]
-        xyzrpy = (xyzrpy-self.min)/(self.max-self.min) #normalize
+        xyzrpy = (xyzrpy - self.min) / (self.max - self.min)  # normalize
         jnt_values = self.ik_frame[idx][1]
         return torch.Tensor(xyzrpy), torch.Tensor(jnt_values)
 
@@ -42,9 +43,8 @@ class Net(nn.Module):
         # self.fc4_dropout = nn.Dropout(p=.05)
         # self.fc5 = nn.Linear(n_hidden//8, n_jnts)
         self.fc1 = nn.Linear(6, n_hidden)
-        self.fc2 = nn.Linear(n_hidden, n_hidden//2)
-        self.fc3 = nn.Linear(n_hidden//2, n_jnts)
-
+        self.fc2 = nn.Linear(n_hidden, n_hidden // 2)
+        self.fc3 = nn.Linear(n_hidden // 2, n_jnts)
 
     def forward(self, x):
         # x = self.fc1(x)
@@ -109,7 +109,6 @@ if __name__ == '__main__':
     device = torch.device('cpu')
     # device = (torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu'))
     # torch.set_default_tensor_type('torch.cuda.FloatTensor')
-
 
     model = Net(n_hidden=1000, n_jnts=6).to(device=device)
     learning_rate = 1e-3

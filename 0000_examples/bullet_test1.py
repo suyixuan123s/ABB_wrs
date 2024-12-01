@@ -93,6 +93,8 @@ def update(objmodel, bnlist, plotlist, task):
         modelcopy.attach_to(base)
         plotlist.append(modelcopy)
     return task.cont
+
+
 #
 #     # for bn in bnlist:
 #     #     if bn.isActive():

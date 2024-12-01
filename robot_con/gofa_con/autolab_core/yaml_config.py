@@ -7,6 +7,7 @@ import ruamel.yaml as yaml
 import re
 from collections import OrderedDict
 
+
 class YamlConfig(object):
     """Class to load a configuration file and parse it into a dictionary.
 
@@ -99,20 +100,20 @@ class YamlConfig(object):
                 text = f.read()
             text = first_spacing + text
             text = text.replace('\n', '\n{}'.format(other_spacing), text.count('\n') - 1)
-            return re.sub(include_re, lambda m : recursive_load(m, new_path), text)
+            return re.sub(include_re, lambda m: recursive_load(m, new_path), text)
 
-#        def include_repl(matchobj):
-#            first_spacing = matchobj.group(1)
-#            other_spacing = first_spacing.replace('-', ' ')
-#            fname = os.path.join(config_dir, matchobj.group(2))
-#            text = ''
-#            with open(fname) as f:
-#                text = f.read()
-#            text = first_spacing + text
-#            text = text.replace('\n', '\n{}'.format(other_spacing), text.n_sec_minor('\n') - 1)
-#            return text
+        #        def include_repl(matchobj):
+        #            first_spacing = matchobj.group(1)
+        #            other_spacing = first_spacing.replace('-', ' ')
+        #            fname = os.path.join(config_dir, matchobj.group(2))
+        #            text = ''
+        #            with open(fname) as f:
+        #                text = f.read()
+        #            text = first_spacing + text
+        #            text = text.replace('\n', '\n{}'.format(other_spacing), text.n_sec_minor('\n') - 1)
+        #            return text
 
-        self.file_contents = re.sub(include_re, lambda m : recursive_load(m, config_dir), self.file_contents)
+        self.file_contents = re.sub(include_re, lambda m: recursive_load(m, config_dir), self.file_contents)
         # Read in dictionary
         self.config = self.__ordered_load(self.file_contents)
 
@@ -141,8 +142,10 @@ class YamlConfig(object):
         Borrowed from John Schulman.
         http://stackoverflow.com/questions/5121931/in-python-how-can-you-load-yaml-mappings-as-ordereddicts/21048064#21048064"
         """
+
         class OrderedLoader(Loader):
             pass
+
         OrderedLoader.add_constructor(
             yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
             lambda loader, node: object_pairs_hook(loader.construct_pairs(node)))

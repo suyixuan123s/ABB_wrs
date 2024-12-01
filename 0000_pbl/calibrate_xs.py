@@ -39,8 +39,8 @@ class SensorHandler:
                     return None
                 image_xy = np.mean(np.mean(corners[0], axis=0), axis=0).astype(np.int16)
                 pcd_pnt = self.pkx.transform_color_xy_to_pcd_xyz(input_color_image_handle=color_image_handle,
-                                                            input_depth_image_handle=depth_image_handle,
-                                                            color_xy=image_xy)
+                                                                 input_depth_image_handle=depth_image_handle,
+                                                                 color_xy=image_xy)
                 self.pkx.image_release(depth_image_handle)
                 self.pkx.capture_release()
                 print(pcd_pnt)

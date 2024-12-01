@@ -6,6 +6,7 @@ import numpy as np
 
 from .rigid_transformations import RigidTransform
 
+
 def abs_angle_diff(v_i, v_j):
     """ 
     Returns the absolute value of the angle between two 3D vectors.
@@ -21,6 +22,7 @@ def abs_angle_diff(v_i, v_j):
     dot_prod = min(max(v_i.dot(v_j), -1), 1)
     angle_diff = np.arccos(dot_prod)
     return np.abs(angle_diff)
+
 
 # dictionary of linear_distance functions
 DistMetrics = {

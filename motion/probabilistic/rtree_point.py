@@ -1,13 +1,14 @@
 import numpy as np
 from rtree import index
 
+
 class RtreePoint():
 
     def __init__(self, dimension):
         p = index.Property()
         p.dimension = dimension
-        p.storage= index.RT_Memory
-        self._idx_rtp = index.Index(properties = p)
+        p.storage = index.RT_Memory
+        self._idx_rtp = index.Index(properties=p)
         self._dimension = dimension
 
     def insert(self, id, point):

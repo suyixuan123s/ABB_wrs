@@ -4,12 +4,14 @@ Author: Jacky Liang
 """
 from multiprocessing import Process, Queue
 from time import time
+
 try:
     from Queue import Empty
 except:
     from queue import Empty
 import logging, sys
 from setproctitle import setproctitle
+
 
 class _DataStreamSyncer(Process):
 
@@ -19,9 +21,9 @@ class _DataStreamSyncer(Process):
         self._tokens_q = tokens_q
 
         self._ok_qs = ok_qs
-        self._tokens = {key : False for key in self._ok_qs.keys()}
+        self._tokens = {key: False for key in self._ok_qs.keys()}
 
-        self._T = 1./frequency if frequency > 0 else 0
+        self._T = 1. / frequency if frequency > 0 else 0
         self._ok_start_time = None
         self._pause = False
 
@@ -83,8 +85,9 @@ class _DataStreamSyncer(Process):
                 logging.warn("Potential timeout! {} not yet returned within desired period!".format(timeout_names))
             return
         if self._T <= 0 or self._ok_start_time is None or \
-            time() - self._ok_start_time > self._T:
+                time() - self._ok_start_time > self._T:
             self._send_oks()
+
 
 class DataStreamSyncer:
 
@@ -136,7 +139,7 @@ class DataStreamSyncer:
             recorder._pause()
 
     def resume(self, reset_time=False):
-        self._cmds_q.put(("resume",reset_time))
+        self._cmds_q.put(("resume", reset_time))
         for recorder in self._data_stream_recorders:
             recorder._resume()
 

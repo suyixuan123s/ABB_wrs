@@ -47,7 +47,7 @@ def plan_contact_pairs(objcm,
 def plan_grasps(hnd_s,
                 objcm,
                 angle_between_contact_normals=math.radians(160),
-                openning_direction = 'loc_x',
+                openning_direction='loc_x',
                 rotation_interval=math.radians(22.5),
                 max_samples=100,
                 min_dist_between_sampled_contact_points=.005,
@@ -64,10 +64,11 @@ def plan_grasps(hnd_s,
     :param contact_offset: offset at the cotnact to avoid being closely in touch with object surfaces
     :return: a list [[jaw_width, gl_jaw_center_pos, pos, rotmat], ...]
     """
-    contact_pairs,contact_points = plan_contact_pairs(objcm,
-                                       max_samples=max_samples,
-                                       min_dist_between_sampled_contact_points=min_dist_between_sampled_contact_points,
-                                       angle_between_contact_normals=angle_between_contact_normals,toggle_sampled_points=True)
+    contact_pairs, contact_points = plan_contact_pairs(objcm,
+                                                       max_samples=max_samples,
+                                                       min_dist_between_sampled_contact_points=min_dist_between_sampled_contact_points,
+                                                       angle_between_contact_normals=angle_between_contact_normals,
+                                                       toggle_sampled_points=True)
     import modeling.geometric_model as gm
     for contact in contact_points:
         gm.gen_sphere(contact).attach_to(base)

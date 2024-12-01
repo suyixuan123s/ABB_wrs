@@ -1,12 +1,14 @@
 import copy
 import math
 import numpy as np
+from direct.task.TaskManagerGlobal import taskMgr
+
 import visualization.panda.world as wd
 import modeling.geometric_model as gm
 import modeling.collision_model as cm
 import grasping.planning.antipodal as gpa
 import robot_sim.end_effectors.gripper.dh60.dh60 as dh
-import robot_sim.robots.gofa5.gofa5 as gf5
+import robot_sim.robots.gofa5.GOFA5 as gf5
 import manipulation.pick_place_planner as ppp
 import motion.probabilistic.rrt_connect as rrtc
 import basis.robot_math as rm
@@ -20,29 +22,27 @@ if __name__ == '__main__':
     # rbt_s.gen_meshmodel().attach_to(base)
     manipulator_name = "arm"
     # start_conf = rbt_s.get_jnt_values(manipulator_name)
-    start_conf = np.array([0.0439823 , -0.53023103  ,1.05243354 , 0.0143117  , 1.55351757 , 1.57079633])
+    start_conf = np.array([0.0439823, -0.53023103, 1.05243354, 0.0143117, 1.55351757, 1.57079633])
     print(start_conf)
     hand_name = "hnd"
     # object
     objcm_name = "box"
     obj = cm.CollisionModel(f"objects/{objcm_name}.stl")
     obj.set_rgba([.9, .75, .35, 1])
-    obj.set_pos(np.array([.4,-.2,0.05]))
+    obj.set_pos(np.array([.4, -.2, 0.05]))
     obj.set_rotmat()
     obj.attach_to(base)
 
     # object_goal
     obj_goal = cm.CollisionModel(f"objects/{objcm_name}.stl")
     obj_goal.set_rgba([1, 1, 1, 1])
-    obj_goal.set_pos(np.array([.3,.4,0.05]))
+    obj_goal.set_pos(np.array([.3, .4, 0.05]))
     obj.set_rotmat()
     obj_goal.attach_to(base)
 
     gripper_s = dh.Dh60()
     # base.run()
     grasp_info_list = gpa.load_pickle_file(objcm_name, root=None, file_name='dh60_grasps.pickle')
-
-
 
     # for grasp_info in grasp_info_list:
     #     jaw_width, jaw_center_pos, jaw_center_rotmat, hnd_pos, hnd_rotmat = grasp_info
@@ -58,15 +58,14 @@ if __name__ == '__main__':
     #     gripper_s.fix_to(pos=pos,rotmat=hnd_rotmat)
     #     gripper_s.gen_meshmodel(rgba=[0, 1, 0, .1]).attach_to(base)
 
-
     start_pos = obj_goal.get_pos()
     start_rotmat = obj_goal.get_rotmat()
     start_homo = rm.homomat_from_posrot(start_pos, start_rotmat)
-    jnts_list=[]
+    jnts_list = []
     for grasp_info in grasp_info_list:
         jaw_width, jaw_center_pos, jaw_center_rotmat, hnd_pos, hnd_rotmat = grasp_info
-        jnts = rbt_s.ik(component_name="arm", tgt_pos=rm.homomat_transform_points(start_homo,jaw_center_pos),
-           tgt_rotmat=start_rotmat.dot(jaw_center_rotmat))
+        jnts = rbt_s.ik(component_name="arm", tgt_pos=rm.homomat_transform_points(start_homo, jaw_center_pos),
+                        tgt_rotmat=start_rotmat.dot(jaw_center_rotmat))
         jnts_list.append(jnts)
 
     rrtc_planner = rrtc.RRTConnect(rbt_s)
@@ -101,15 +100,13 @@ if __name__ == '__main__':
     #     arm.move_jntspace_path(path, speed_n=100)
     # arm.stop()
 
-    goal_pos =obj_goal.get_pos()
+    goal_pos = obj_goal.get_pos()
     goal_rotmat = obj.get_rotmat()
     # goal_jnt_values = rbt_s.ik(tgt_pos=goal_pos, tgt_rotmat=goal_rotmat)
     # rbt_s.fk(component_name="arm", jnt_values=goal_jnt_values)
     # rbt_s.gen_meshmodel().attach_to(base)
     rrtc_s = rrtc.RRTConnect(rbt_s)
     ppp_s = ppp.PickPlacePlanner(rbt_s)
-
-
 
     obgl_start_homomat = rm.homomat_from_posrot(start_pos, start_rotmat)
     obgl_goal_homomat = rm.homomat_from_posrot(goal_pos, goal_rotmat)

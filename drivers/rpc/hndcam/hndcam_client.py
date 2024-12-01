@@ -5,9 +5,10 @@ import drivers.rpc.hndcam.hndcam_pb2_grpc as hcrpc
 import numpy as np
 import cv2
 
+
 class HndCam(object):
 
-    def __init__(self, host = "localhost:18300"):
+    def __init__(self, host="localhost:18300"):
         self.__oldyaml = True
         if int(yaml.__version__[0]) >= 5:
             self.__oldyaml = False
@@ -54,8 +55,9 @@ class HndCam(object):
         re_img = np.reshape(re_img, (h, w, nch))
         return re_img
 
-if __name__=="__main__":
-    hcc = HndCam(host = "localhost:18300")
+
+if __name__ == "__main__":
+    hcc = HndCam(host="localhost:18300")
     imgx = hcc.getrc0img()
     cv2.imshow("name", imgx)
     cv2.waitKey(0)

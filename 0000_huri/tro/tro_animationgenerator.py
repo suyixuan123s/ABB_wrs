@@ -2,6 +2,7 @@ import copy
 import numpy as np
 import math
 
+
 def animationgen(rhx, numikmsmp, jawwidthmsmp, objmsmp, othersmsmp, sg_doestimateagain=[False]):
     """
     create an animation with space

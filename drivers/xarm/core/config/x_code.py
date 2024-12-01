@@ -280,7 +280,7 @@ GripperErrorCodeMap = {
             'title': '机械爪电流检测异常',
             'desc': '请通过控制器上的紧急停止按钮重启机械臂。如多次重启无效，请联系技术支持。',
         }
-      },
+    },
     11: {
         'en': {
             'title': 'Gripper Current Overlimit',
@@ -869,7 +869,6 @@ ControllerWarnCodeMap = {
     },
 }
 
-
 RobotiqErrorCodeMap = {
     0x05: {
         'en': {
@@ -983,7 +982,6 @@ RobotiqErrorCodeMap = {
     },
 }
 
-
 BioGripperErrorCodeMap = {
     0x0B: {
         'en': {
@@ -1027,7 +1025,7 @@ LinearTrackErrorCodeMap = {
             'title': '直线滑轨电流检测异常',
             'desc': '请重启控制器。如多次重启无效，请联系技术支持。',
         }
-      },
+    },
     11: {
         'en': {
             'title': 'Linear Motor Current Overlimit',

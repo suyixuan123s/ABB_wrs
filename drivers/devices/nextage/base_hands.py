@@ -5,6 +5,7 @@ author: weiwei, yan, osaka
 date: 20190417
 """
 
+
 class BaseHands(object):
     '''
     This class provides methods that are generic for the hands of
@@ -19,9 +20,9 @@ class BaseHands(object):
 
     _DIO_ASSIGN_ON = 1
     _DIO_ASSIGN_OFF = 0
-    _DIO_MASK = 0   # Masking value remains "0" regardless the design on the
-                    # robot_s; masking logic is defined in hrpsys, while robot_s
-                    # makers can decide DIO logic.
+    _DIO_MASK = 0  # Masking value remains "0" regardless the design on the
+    # robot_s; masking logic is defined in hrpsys, while robot_s
+    # makers can decide DIO logic.
 
     # DIO pin numbers. It's convenient to be overridden and renamed in the
     # derived classes to represent the specific purpose of each pin.

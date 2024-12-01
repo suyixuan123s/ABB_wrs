@@ -47,22 +47,22 @@ class BDBody(BulletRigidBodyNode):
             self.setAngularDamping(.3)
             if allow_deactivation:
                 self.setDeactivationEnabled(True)
-                self.setLinearSleepThreshold(.01*base.physics_scale)
-                self.setAngularSleepThreshold(.01*base.physics_scale)
+                self.setLinearSleepThreshold(.01 * base.physics_scale)
+                self.setAngularSleepThreshold(.01 * base.physics_scale)
             else:
                 self.setDeactivationEnabled(False)
             if allow_ccd:  # continuous collision detection
                 self.setCcdMotionThreshold(1e-7)
-                self.setCcdSweptSphereRadius(0.0005*base.physics_scale)
+                self.setCcdSweptSphereRadius(0.0005 * base.physics_scale)
             geom_np = initor.objpdnp.getChild(0).find("+GeomNode")
             geom = copy.deepcopy(geom_np.node().getGeom(0))
             vdata = geom.modifyVertexData()
             vertices = copy.deepcopy(np.frombuffer(vdata.modifyArrayHandle(0).getData(), dtype=np.float32))
-            vertices.shape=(-1,6)
-            vertices[:, :3]=vertices[:, :3]*base.physics_scale-self.com
+            vertices.shape = (-1, 6)
+            vertices[:, :3] = vertices[:, :3] * base.physics_scale - self.com
             vdata.modifyArrayHandle(0).setData(vertices.astype(np.float32).tobytes())
             geomtf = geom_np.getTransform()
-            geomtf = geomtf.setPos(geomtf.getPos()*base.physics_scale)
+            geomtf = geomtf.setPos(geomtf.getPos() * base.physics_scale)
             if cdtype == "triangles":
                 geombmesh = BulletTriangleMesh()
                 geombmesh.addGeom(geom)
@@ -75,13 +75,13 @@ class BDBody(BulletRigidBodyNode):
                 bulletshape.setMargin(1e-6)
                 self.addShape(bulletshape, geomtf)
             elif cdtype == 'box':
-                minx = min(vertices[:,0])
-                miny = min(vertices[:,1])
-                minz = min(vertices[:,2])
-                maxx = max(vertices[:,0])
-                maxy = max(vertices[:,1])
-                maxz = max(vertices[:,2])
-                pcd_box = CollisionBox(Point3(minx, miny, minz),Point3(maxx, maxy, maxz))
+                minx = min(vertices[:, 0])
+                miny = min(vertices[:, 1])
+                minz = min(vertices[:, 2])
+                maxx = max(vertices[:, 0])
+                maxy = max(vertices[:, 1])
+                maxz = max(vertices[:, 2])
+                pcd_box = CollisionBox(Point3(minx, miny, minz), Point3(maxx, maxy, maxz))
                 bulletshape = BulletBoxShape.makeFromSolid(pcd_box)
                 bulletshape.setMargin(1e-6)
                 self.addShape(bulletshape, geomtf)
@@ -102,26 +102,26 @@ class BDBody(BulletRigidBodyNode):
             self.setAngularDamping(.3)
             if allow_deactivation:
                 self.setDeactivationEnabled(True)
-                self.setLinearSleepThreshold(.01*base.physics_scale)
-                self.setAngularSleepThreshold(.01*base.physics_scale)
+                self.setLinearSleepThreshold(.01 * base.physics_scale)
+                self.setAngularSleepThreshold(.01 * base.physics_scale)
             else:
                 self.setDeactivationEnabled(False)
             if allow_ccd:
                 self.setCcdMotionThreshold(1e-7)
-                self.setCcdSweptSphereRadius(0.0005*base.physics_scale)
+                self.setCcdSweptSphereRadius(0.0005 * base.physics_scale)
             np_homomat = copy.deepcopy(initor.get_homomat())
-            np_homomat[:3,3] = np_homomat[:3,3]*base.physics_scale
+            np_homomat[:3, 3] = np_homomat[:3, 3] * base.physics_scale
             self.setTransform(TransformState.makeMat(dh.npmat4_to_pdmat4(np_homomat)))
             self.addShape(initor.getShape(0), initor.getShapeTransform(0))
 
     def get_pos(self):
         pdmat4 = self.getTransform().getMat()
         pdv3 = pdmat4.xformPoint(Vec3(-self.com[0], -self.com[1], -self.com[2]))
-        pos = dh.pdv3_to_npv3(pdv3)/base.physics_scale
+        pos = dh.pdv3_to_npv3(pdv3) / base.physics_scale
         return pos
 
     def set_pos(self, npvec3):
-        self.setPos(dh.pdv3_to_npv3(npvec3)*base.physics_scale)
+        self.setPos(dh.pdv3_to_npv3(npvec3) * base.physics_scale)
 
     def get_homomat(self):
         """
@@ -137,7 +137,7 @@ class BDBody(BulletRigidBodyNode):
         pd_com_pos = pd_homomat.xformPoint(Vec3(-self.com[0], -self.com[1], -self.com[2]))
         np_homomat = dh.pdmat4_to_npmat4(pd_homomat)
         np_com_pos = dh.pdv3_to_npv3(pd_com_pos)
-        np_homomat[:3, 3] = np_com_pos/base.physics_scale
+        np_homomat[:3, 3] = np_com_pos / base.physics_scale
         return np_homomat
 
     def set_homomat(self, homomat):
@@ -149,7 +149,7 @@ class BDBody(BulletRigidBodyNode):
         date: 2019?, 20201119
         """
         tmp_homomat = copy.deepcopy(homomat)
-        tmp_homomat[:3, 3] = tmp_homomat[:3,3]*base.physics_scale
+        tmp_homomat[:3, 3] = tmp_homomat[:3, 3] * base.physics_scale
         pos = rm.homomat_transform_points(tmp_homomat, self.com)
         rotmat = tmp_homomat[:3, :3]
         self.setTransform(TransformState.makeMat(dh.npv3mat3_to_pdmat4(pos, rotmat)))

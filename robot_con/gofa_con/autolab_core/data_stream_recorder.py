@@ -8,7 +8,8 @@ from joblib import dump, load
 from time import sleep, time
 from setproctitle import setproctitle
 
-_NULL = lambda : None
+_NULL = lambda: None
+
 
 def _caches_to_file(cache_path, start, end, name, cb, concat):
     start_time = time()
@@ -33,17 +34,20 @@ def _caches_to_file(cache_path, start, end, name, cb, concat):
         with open(finished_flag, 'a'):
             os.utime(finished_flag, None)
 
-    logging.debug("Finished saving data to {0}. Took {1}s".format(name, time()-start_time))
+    logging.debug("Finished saving data to {0}. Took {1}s".format(name, time() - start_time))
     cb()
+
 
 def _dump_cache(data, filename, name, i):
     dump(data, filename, 3)
     logging.debug("Finished saving cache for {0} block {1} to {2}".format(name, i, filename))
 
+
 def _dump_cb(data, filename, cb):
     dump(data, filename, 3)
     logging.debug("Finished saving data to {0}".format(filename))
     cb()
+
 
 class DataStreamRecorder(Process):
 
@@ -158,7 +162,9 @@ class DataStreamRecorder(Process):
             raise Exception("Cannot save cache if no cache path was specified.")
         logging.debug("Saving cache for {0} block {1}".format(self.name, self._cur_data_segment))
         data = self._extract_q(i)
-        p = Process(target=_dump_cache, args=(data, os.path.join(self._save_path, "{0}.jb".format(self._cur_data_segment)), self.name, self._cur_data_segment))
+        p = Process(target=_dump_cache, args=(
+        data, os.path.join(self._save_path, "{0}.jb".format(self._cur_data_segment)), self.name,
+        self._cur_data_segment))
         p.start()
         self._saving_ps.append(p)
 

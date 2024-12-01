@@ -8,8 +8,8 @@ import os
 import open3d as o3d
 
 # 定义文件路径
-stl_file_path = r"E:\ABB-Project\ABB_wrs\suyixuan\ABBB\ICP_GOFA5\meshes\blood_tube10.STL"
-point_cloud_directory = r"E:\ABB-Project\ABB_wrs\suyixuan\ABBB\ICP_GOFA5\point_cloud"
+stl_file_path = r"E:\ABB-Project\ABB_wrs\suyixuan\ABB\Task4_ICP_GOFA5\meshes\rack_5ml_green.STL"
+point_cloud_directory = r"E:\ABB-Project\ABB_wrs\suyixuan\ABB\Task4_ICP_GOFA5\point_cloud"
 
 # 读取STL文件
 mesh = o3d.io.read_triangle_mesh(stl_file_path)

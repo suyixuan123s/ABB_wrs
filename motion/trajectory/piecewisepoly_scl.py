@@ -158,7 +158,7 @@ class PiecewisePolyScl(object):
                 x_sel_vels = np.unique(samples_back_index_x[selection_vels[0]])
                 # print("spd ", x_sel_vels)
                 time_intervals[x_sel_vels] += .001 * (
-                            (1 / time_intervals[x_sel_vels]) / np.max(1 / time_intervals[x_sel_vels]))
+                        (1 / time_intervals[x_sel_vels]) / np.max(1 / time_intervals[x_sel_vels]))
             else:
                 break
             # if toggle_debug_fine:
@@ -219,7 +219,7 @@ class PiecewisePolyScl(object):
                 #     print(.001 * np.max(1 - ratio_selected_accs[indices]))
                 #     time_intervals[i] += .01 * np.max(1 - ratio_selected_accs[indices])
                 time_intervals[x_sel_accs] += .01 * (
-                            (1 / time_intervals[x_sel_accs]) / np.max(1 / time_intervals[x_sel_accs]))
+                        (1 / time_intervals[x_sel_accs]) / np.max(1 / time_intervals[x_sel_accs]))
                 # time_intervals[original_x_sel_vels] += .01 * (
                 #             (1 / time_intervals[original_x_sel_vels]) / np.max(1 / time_intervals[original_x_sel_vels]))
                 # print(original_x_sel_vels)

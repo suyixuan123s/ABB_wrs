@@ -7,8 +7,8 @@ from copy import deepcopy
 
 import numpy as np
 
-class URRTMonitor(threading.Thread):
 
+class URRTMonitor(threading.Thread):
     # Struct for revision of the UR controller giving 692 bytes
     rtstruct692 = struct.Struct('>d6d6d6d6d6d6d6d6d18d6d6d6dQ')
 
@@ -66,6 +66,7 @@ class URRTMonitor(threading.Thread):
                 return self._timestamp, self._qActual
             else:
                 return self._qActual
+
     getActual = q_actual
 
     def qd_actual(self, wait=False, timestamp=False):
@@ -87,6 +88,7 @@ class URRTMonitor(threading.Thread):
                 return self._timestamp, self._qTarget
             else:
                 return self._qTarget
+
     getTarget = q_target
 
     def tcf_pose(self, wait=False, timestamp=False, ctrlTimestamp=False):
@@ -104,6 +106,7 @@ class URRTMonitor(threading.Thread):
                 return ret
             else:
                 return tcf
+
     getTCF = tcf_pose
 
     def tcf_force(self, wait=False, timestamp=False):
@@ -118,6 +121,7 @@ class URRTMonitor(threading.Thread):
                 return self._timestamp, tcf_force
             else:
                 return tcf_force
+
     getTCFForce = tcf_force
 
     def __recv_rt_data(self):

@@ -56,7 +56,7 @@ if __name__ == '__main__':
         # print(collisionelearray)
         # print(renderingelearray)
         print(nodepresent.grid)
-        print(nodepresent.grid-nodenext.grid)
+        print(nodepresent.grid - nodenext.grid)
         collisiontbcmlist = lctr.gentubes(collisionelearray, tubestand_homomat=tshomomat)
 
         initpos_normalized = np.array(
@@ -72,7 +72,8 @@ if __name__ == '__main__':
 
         obscmlist = yhx.obscmlist + [tubestandcm] + collisiontbcmlist
         numikmsmp, jawwidthmsmp, objmsmp = ppplanner.findppmotion_symmetric(inithm, goalhm, armname=armname,
-                                                                            rbtinitarmjnts = [lastrgtarmjnts, lastlftarmjnts],
+                                                                            rbtinitarmjnts=[lastrgtarmjnts,
+                                                                                            lastlftarmjnts],
                                                                             finalstate="uo",
                                                                             obscmlist=obscmlist, userrt=False)
         if numikmsmp is None:

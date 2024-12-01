@@ -41,4 +41,3 @@ class SerialPort(Port):
         except Exception as e:
             logger.info('{} connect {}:{} failed, {}'.format(self.port_type, port, baud, e))
             self._connected = False
-

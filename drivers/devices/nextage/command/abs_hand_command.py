@@ -5,11 +5,13 @@ author: weiwei, yan, osaka
 date: 20190417
 """
 
+
 class AbsractHandCommand(object):
     """
     Following Command design pattern, this class represents an abstract
     command for hand classes of NEXTAGE OPEN.
     """
+
     # TODO: Unittest is needed!!DIO_V
 
     def __init__(self, hands, hand, dio_pins):

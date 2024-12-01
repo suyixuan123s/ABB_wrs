@@ -24,7 +24,7 @@ def view_point_cloud(file_path):
 # 用法示例
 if __name__ == "__main__":
     # 指定点云文件路径
-    file_path = r'E:\ABB\AI\Depth-Anything-V2\metric_depth\output1\color_image_20241024-191620.ply'
+    file_path = r'E:\ABB-Project\ABB_wrs\suyixuan\ABB\Task3_ICP_learning\point_cloud.ply'
 
     # 查看点云
     view_point_cloud(file_path)

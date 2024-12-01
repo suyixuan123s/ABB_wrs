@@ -21,7 +21,7 @@ robot_s.gen_meshmodel(toggle_tcpcs=True).attach_to(base)
 # base.run()
 seed_jnt_values = robot_s.get_jnt_values(component_name=component_name)
 for y in range(-5, 5):
-    tgt_pos = np.array([.3, y*.1, 1])
+    tgt_pos = np.array([.3, y * .1, 1])
     tgt_rotmat = rm.rotmat_from_euler(0, math.pi / 2, 0)
     gm.gen_frame(pos=tgt_pos, rotmat=tgt_rotmat).attach_to(base)
     tic = time.time()
@@ -32,7 +32,7 @@ for y in range(-5, 5):
                             toggle_debug=False,
                             seed_jnt_values=seed_jnt_values)
     toc = time.time()
-    print(f"time cost: {toc-tic}")
+    print(f"time cost: {toc - tic}")
     seed_jnt_values = jnt_values
     if jnt_values is not None:
         robot_s.fk(component_name=component_name, jnt_values=jnt_values)

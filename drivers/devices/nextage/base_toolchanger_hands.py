@@ -9,6 +9,7 @@ from robotconn.rpc.nxtrobot.nxtlib.base_hands import BaseHands
 from robotconn.rpc.nxtrobot.nxtlib.command import ToolchangerCommand
 from robotconn.rpc.nxtrobot.nxtlib.command import HandlightCommand
 
+
 class BaseToolchangerHands(BaseHands):
     """
     This class holds methods that are specific to the hands of NEXTAGE OPEN,
@@ -17,6 +18,7 @@ class BaseToolchangerHands(BaseHands):
     @deprecated: Since version 0.5.1, the functionality in this class is moved
                  to other BaseHands subclasses (e.g. Iros13Hands).
     """
+
     # TODO: Unittest is needed!!
 
     def __init__(self, parent):

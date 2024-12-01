@@ -8,6 +8,7 @@
 
 from serial.tools import list_ports
 
+
 def _dump_port(d):
     print('-' * 80)
     print('  device     : {}'.format(d.device))
@@ -15,6 +16,7 @@ def _dump_port(d):
     print('  product    : {}'.format(d.hwid))
     print('  description: {}'.format(d.hwid))
     print('-' * 80)
+
 
 def get_ports(is_dump=True):
     ports = []

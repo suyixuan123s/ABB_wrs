@@ -12,7 +12,7 @@ class NIK(object):
         self.jlc_object = self.rbt.manipulator_dict[component_name].jlc
         self.wln_ratio = wln_ratio
         # workspace bound
-        self.max_rng = 2.0 # meter
+        self.max_rng = 2.0  # meter
         # IK macros
         wt_pos = 0.628  # 0.628m->1 == 0.01->0.00628m
         wt_agl = 1 / (math.pi * math.pi)  # pi->1 == 0.01->0.18degree
@@ -20,19 +20,19 @@ class NIK(object):
         # maximum reach
         self.jnt_bounds = np.array(self.rbt.get_jnt_ranges(component_name))
         # extract min max for quick access
-        self.jmvmin = self.jnt_bounds[:,0]
-        self.jmvmax = self.jnt_bounds[:,1]
-        self.jmvrng = self.jmvmax-self.jmvmin
+        self.jmvmin = self.jnt_bounds[:, 0]
+        self.jmvmax = self.jnt_bounds[:, 1]
+        self.jmvrng = self.jmvmax - self.jmvmin
         self.jmvmin_threshhold = self.jmvmin + self.jmvrng * self.wln_ratio
         self.jmvmax_threshhold = self.jmvmax - self.jmvrng * self.wln_ratio
 
     def set_jlc(self, jlc_name):
-        self.component_name=jlc_name
+        self.component_name = jlc_name
         self.jnt_bounds = np.array(self.rbt.get_jnt_ranges(jlc_name))
         # extract min max for quick access
-        self.jmvmin = self.jnt_bounds[:,0]
-        self.jmvmax = self.jnt_bounds[:,1]
-        self.jmvrng = self.jmvmax-self.jmvmin
+        self.jmvmin = self.jnt_bounds[:, 0]
+        self.jmvmax = self.jnt_bounds[:, 1]
+        self.jmvrng = self.jmvmax - self.jmvmin
         self.jmvmin_threshhold = self.jmvmin + self.jmvrng * self.wln_ratio
         self.jmvmax_threshhold = self.jmvmax - self.jmvrng * self.wln_ratio
 
@@ -169,7 +169,8 @@ class NIK(object):
         for id in self.jlc_object.tgtjnts:
             if self.jlc_object.jnts[id]["type"] == 'revolute':
                 if self.jlc_object.jnts[id]['motion_rng'][1] - self.jlc_object.jnts[id]['motion_rng'][0] >= math.pi * 2:
-                    rm.regulate_angle(self.jlc_object.jnts[id]['motion_rng'][0], self.jlc_object.jnts[id]['motion_rng'][1],
+                    rm.regulate_angle(self.jlc_object.jnts[id]['motion_rng'][0],
+                                      self.jlc_object.jnts[id]['motion_rng'][1],
                                       self.jlc_object.jnts[id]["movement"])
             counter += 1
 
@@ -194,8 +195,9 @@ class NIK(object):
                     if jntvalues[counter] < self.jlc_object.jnts[id]['motion_rng'][0] or jntvalues[counter] > \
                             self.jlc_object.jnts[id]['motion_rng'][1]:
                         isdragged[counter] = 1
-                        jntvaluesdragged[counter] = (self.jlc_object.jnts[id]['motion_rng'][1] + self.jlc_object.jnts[id][
-                            'motion_rng'][0]) / 2
+                        jntvaluesdragged[counter] = (self.jlc_object.jnts[id]['motion_rng'][1] +
+                                                     self.jlc_object.jnts[id][
+                                                         'motion_rng'][0]) / 2
             elif self.jlc_object.jnts[id]["type"] == 'prismatic':  # prismatic
                 print("Drag prismatic")
                 if jntvalues[counter] < self.jlc_object.jnts[id]['motion_rng'][0] or jntvalues[counter] > \
@@ -268,7 +270,7 @@ class NIK(object):
             errnorm_rot = np.linalg.norm(err_rot)
             # if errnorm_rot < math.pi/6:
             #     err_rot = np.zeros(3)
-                # errnorm_rot = 0
+            # errnorm_rot = 0
             errnorm = err.T.dot(ws_wtdiagmat).dot(err)
             # err = .05 / errnorm * err if errnorm > .05 else err
             if errnorm > errnormmax:
@@ -276,7 +278,7 @@ class NIK(object):
             if toggle_debug:
                 print(errnorm_pos, errnorm_rot, errnorm)
                 ajpath.append(self.jlc_object.get_jnt_values())
-            if errnorm_pos < 1e-6 and errnorm_rot < math.pi/6:
+            if errnorm_pos < 1e-6 and errnorm_rot < math.pi / 6:
                 if toggle_debug:
                     fig = plt.figure()
                     axbefore = fig.add_subplot(411)
@@ -339,7 +341,7 @@ class NIK(object):
                     # strecthingcoeff = -2*math.pow(errnorm / errnormmax, 3)+3*math.pow(errnorm / errnormmax, 2)
                     # print("stretching ", strecthingcoeff)
                     # dampercoeff = (strecthingcoeff + .1) * 1e-6  # a non-zero regulation coefficient
-                    dampercoeff = 1e-3*errnorm + 1e-6  # a non-zero regulation coefficient
+                    dampercoeff = 1e-3 * errnorm + 1e-6  # a non-zero regulation coefficient
                     # -- lft moore-penrose inverse --
                     ## jtj = armjac.T.dot(armjac)
                     ## regulator = regcoeff*np.identity(jtj.shape[0])
@@ -436,9 +438,9 @@ if __name__ == '__main__':
     base = wd.World(cam_pos=[1.5, 0, 3], lookat_pos=[0, 0, .5])
     gm.gen_frame().attach_to(base)
     yumi_instance = ym.Yumi(enable_cc=True)
-    component_name= 'rgt_arm'
+    component_name = 'rgt_arm'
     tgt_pos = np.array([.5, -.3, .3])
-    tgt_rotmat = rm.rotmat_from_axangle([0,1,0], math.pi/2)
+    tgt_rotmat = rm.rotmat_from_axangle([0, 1, 0], math.pi / 2)
     gm.gen_frame(pos=tgt_pos, rotmat=tgt_rotmat).attach_to(base)
     niksolver = NIK(yumi_instance, component_name='rgt_arm')
     tic = time.time()
@@ -455,4 +457,3 @@ if __name__ == '__main__':
     toc = time.time()
     print(result, toc - tic)
     base.run()
-

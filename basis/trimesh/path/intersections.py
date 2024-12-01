@@ -1,7 +1,8 @@
 import numpy as np
 
-from ..util      import three_dimensionalize, unitize
+from ..util import three_dimensionalize, unitize
 from ..constants import tol_path as tol
+
 
 def line_line(origins, directions):
     '''
@@ -26,23 +27,23 @@ def line_line(origins, directions):
                   else:          None
     '''
 
-    is_2D, origins    = three_dimensionalize(origins)
+    is_2D, origins = three_dimensionalize(origins)
     is_2D, directions = three_dimensionalize(directions)
-    directions        = unitize(directions)
+    directions = unitize(directions)
 
     if np.sum(np.abs(np.diff(directions, axis=0))) < tol.zero:
         return False, None
 
     # using notation from docstring
     q_0, p_0 = origins
-    v,   u   = directions
-    w        = p_0 - q_0
-    
+    v, u = directions
+    w = p_0 - q_0
+
     # the normal of the plane given by the two direction vectors
-    plane_normal  = unitize(np.cross(u, v))
+    plane_normal = unitize(np.cross(u, v))
     # vectors perpendicular to the two lines
     v_perp = unitize(np.cross(v, plane_normal))
- 
+
     # if the vector from origin to origin is on the plane given by
     # the direction vector, the dot product with the plane normal
     # should be within floating point error of zero
@@ -51,10 +52,9 @@ def line_line(origins, directions):
         return False, None
 
     # value of parameter s where intersection occurs
-    s_I = (np.dot(-v_perp, w) / 
-           np.dot( v_perp, u))
+    s_I = (np.dot(-v_perp, w) /
+           np.dot(v_perp, u))
     # plug back into the equation of the line to find the point
-    intersection = p_0 + s_I*u
+    intersection = p_0 + s_I * u
 
-    return True, intersection[:(3-is_2D)]
-
+    return True, intersection[:(3 - is_2D)]

@@ -22,7 +22,7 @@ from . import polygons
 from . import primitive
 from .common import DaeObject, E, tag
 from .common import DaeIncompleteError, DaeBrokenRefError, \
-        DaeMalformedError, DaeUnsupportedError
+    DaeMalformedError, DaeUnsupportedError
 from .xmlutil import etree as ElementTree
 
 
@@ -30,7 +30,7 @@ class Geometry(DaeObject):
     """A class containing the data coming from a COLLADA <geometry> tag"""
 
     def __init__(self, collada, id, name, sourcebyid, primitives=None,
-            xmlnode=None, double_sided=False):
+                 xmlnode=None, double_sided=False):
         """Create a geometry instance
 
           :param collada.Collada collada:
@@ -87,8 +87,8 @@ class Geometry(DaeObject):
             for srcid, src in self.sourceById.items():
                 sourcenodes.append(src.xmlnode)
                 if verticesnode is None:
-                    #pick first source to be in the useless <vertices> tag
-                    verticesnode = E.vertices(E.input(semantic='POSITION', source="#%s"%srcid),
+                    # pick first source to be in the useless <vertices> tag
+                    verticesnode = E.vertices(E.input(semantic='POSITION', source="#%s" % srcid),
                                               id=srcid + '-vertices')
             meshnode = E.mesh(*sourcenodes)
             meshnode.append(verticesnode)
@@ -168,7 +168,7 @@ class Geometry(DaeObject):
         return polygons.Polygons(inputdict, materialid, indices)
 
     @staticmethod
-    def load( collada, localscope, node ):
+    def load(collada, localscope, node):
         id = node.get("id") or ""
         name = node.get("name") or ""
         meshnode = node.find(collada.tag('mesh'))
@@ -176,7 +176,7 @@ class Geometry(DaeObject):
             raise DaeUnsupportedError('Unknown geometry node')
         sourcebyid = {}
         sources = []
-        sourcenodes = node.findall('%s/%s'%(collada.tag('mesh'), collada.tag('source')))
+        sourcenodes = node.findall('%s/%s' % (collada.tag('mesh'), collada.tag('source')))
         for sourcenode in sourcenodes:
             ch = source.Source.load(collada, {}, sourcenode)
             sources.append(ch)
@@ -193,8 +193,8 @@ class Geometry(DaeObject):
                 if not semantic or not inputsource or not inputsource.startswith('#'):
                     raise DaeIncompleteError('Bad input definition inside vertices')
                 inputnodes[semantic] = sourcebyid.get(inputsource[1:])
-            if (not verticesnode.get('id') or len(inputnodes)==0 or
-                not 'POSITION' in inputnodes):
+            if (not verticesnode.get('id') or len(inputnodes) == 0 or
+                    not 'POSITION' in inputnodes):
                 raise DaeIncompleteError('Bad vertices definition in mesh')
             sourcebyid[verticesnode.get('id')] = inputnodes
             vertexsource = verticesnode.get('id')
@@ -206,21 +206,23 @@ class Geometry(DaeObject):
                 val = int(double_sided_node.text)
                 if val == 1:
                     double_sided = True
-            except ValueError: pass
+            except ValueError:
+                pass
 
         _primitives = []
         for subnode in meshnode:
             if subnode.tag == collada.tag('polylist'):
-                _primitives.append( polylist.Polylist.load( collada, sourcebyid, subnode ) )
+                _primitives.append(polylist.Polylist.load(collada, sourcebyid, subnode))
             elif subnode.tag in (collada.tag('triangles'), collada.tag('tristrips'), collada.tag('trifans')):
-                _primitives.append( triangleset.TriangleSet.load( collada, sourcebyid, subnode ) )
+                _primitives.append(triangleset.TriangleSet.load(collada, sourcebyid, subnode))
             elif subnode.tag == collada.tag('lines'):
-                _primitives.append( lineset.LineSet.load( collada, sourcebyid, subnode ) )
+                _primitives.append(lineset.LineSet.load(collada, sourcebyid, subnode))
             elif subnode.tag == collada.tag('polygons'):
-                _primitives.append( polygons.Polygons.load( collada, sourcebyid, subnode ) )
-            elif subnode.tag != collada.tag('source') and subnode.tag != collada.tag('vertices') and subnode.tag != collada.tag('extra'):
+                _primitives.append(polygons.Polygons.load(collada, sourcebyid, subnode))
+            elif subnode.tag != collada.tag('source') and subnode.tag != collada.tag(
+                    'vertices') and subnode.tag != collada.tag('extra'):
                 raise DaeUnsupportedError('Unknown geometry tag %s' % subnode.tag)
-        geom = Geometry(collada, id, name, sourcebyid, _primitives, xmlnode=node, double_sided=double_sided )
+        geom = Geometry(collada, id, name, sourcebyid, _primitives, xmlnode=node, double_sided=double_sided)
         return geom
 
     def save(self):
@@ -235,16 +237,16 @@ class Geometry(DaeObject):
         deletenodes = []
         for oldsrcnode in meshnode.findall(tag('source')):
             if oldsrcnode not in [src.xmlnode
-                    for src in self.sourceById.values()
-                    if isinstance(src, source.Source)]:
+                                  for src in self.sourceById.values()
+                                  if isinstance(src, source.Source)]:
                 deletenodes.append(oldsrcnode)
         for d in deletenodes:
             meshnode.remove(d)
 
-        #Look through primitives to find a vertex source
+        # Look through primitives to find a vertex source
         vnode = self.xmlnode.find(tag('mesh')).find(tag('vertices'))
 
-        #delete any inputs in vertices tag that no longer exist and find the vertex input
+        # delete any inputs in vertices tag that no longer exist and find the vertex input
         delete_inputs = []
         for input_node in vnode.findall(tag('input')):
             if input_node.get('semantic') == 'POSITION':
@@ -265,7 +267,7 @@ class Geometry(DaeObject):
         vert_src = vnode.get('id')
         vert_ref = input_vnode.get('source')[1:]
 
-        if not(vert_src in vert_sources or vert_ref in vert_sources) and len(vert_sources) > 0:
+        if not (vert_src in vert_sources or vert_ref in vert_sources) and len(vert_sources) > 0:
             if vert_ref in self.sourceById and vert_ref in vert_sources:
                 new_source = vert_ref
             else:
@@ -274,7 +276,7 @@ class Geometry(DaeObject):
             input_vnode.set('source', '#' + new_source)
             vnode.set('id', new_source + '-vertices')
 
-        #any source references in primitives that are pointing to the
+        # any source references in primitives that are pointing to the
         # same source that the vertices tag is pointing to to instead
         # point to the vertices id
         vert_src = vnode.get('id')
@@ -326,7 +328,7 @@ class Geometry(DaeObject):
         return str(self)
 
 
-class BoundGeometry( object ):
+class BoundGeometry(object):
     """A geometry bound to a transform matrix and material mapping.
         This gets created when a geometry is instantiated in a scene.
         Do not create this manually."""
@@ -352,7 +354,7 @@ class BoundGeometry( object ):
         the bound geometry. Each value returned will be of base type
         :class:`collada.primitive.BoundPrimitive`"""
         for p in self._primitives:
-            boundp = p.bind( self.matrix, self.materialnodebysymbol )
+            boundp = p.bind(self.matrix, self.materialnodebysymbol)
             yield boundp
 
     def __str__(self):
@@ -360,4 +362,3 @@ class BoundGeometry( object ):
 
     def __repr__(self):
         return str(self)
-

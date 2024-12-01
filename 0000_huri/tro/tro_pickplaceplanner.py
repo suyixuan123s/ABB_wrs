@@ -5,6 +5,7 @@ import os
 import math
 from utiltools.thirdparty import p3dhelper as p3dh
 
+
 class PickPlacePlanner(object):
     def __init__(self, obj, rhx):
         """
@@ -103,12 +104,14 @@ class PickPlacePlanner(object):
                     isobjcollided = False  # for future use
                     if (not isrbtcollided) and (not isobjcollided):
                         if toggledebug:
-                            rbtmg.genmnp(rbt, drawhand=False, togglejntscoord=False, toggleendcoord=False, rgbargt=[0, 1, 0, .5]).reparentTo(
+                            rbtmg.genmnp(rbt, drawhand=False, togglejntscoord=False, toggleendcoord=False,
+                                         rgbargt=[0, 1, 0, .5]).reparentTo(
                                 self.rhx.base.render)
                         availablegraspsatinit.append(idpre)
                     elif (not isobjcollided):
                         if toggledebug:
-                            rbtmg.genmnp(rbt, drawhand=False, togglejntscoord=False, toggleendcoord=False, rgbargt=[1, 0, 1, .5]).reparentTo(
+                            rbtmg.genmnp(rbt, drawhand=False, togglejntscoord=False, toggleendcoord=False,
+                                         rgbargt=[1, 0, 1, .5]).reparentTo(
                                 self.rhx.base.render)
                 else:
                     ikfailedgraspsnum += 1
@@ -167,7 +170,8 @@ class PickPlacePlanner(object):
                         if (not isrbtcollided) and (not isobjcollided):
                             tmpresult.append(idavailableinit)
                             if toggledebug:
-                                rbtmg.genmnp(rbt, togglejntscoord=False, toggleendcoord=False, rgbalft=[0, 1, 0, .5]).reparentTo(
+                                rbtmg.genmnp(rbt, togglejntscoord=False, toggleendcoord=False,
+                                             rgbalft=[0, 1, 0, .5]).reparentTo(
                                     self.rhx.base.render)
                         elif (not isobjcollided):
                             if toggledebug:
@@ -288,12 +292,14 @@ class PickPlacePlanner(object):
                     isobjcollided = False  # for future use
                     if (not isrbtcollided) and (not isobjcollided):
                         if toggledebug:
-                            rbtmg.genmnp(rbt, drawhand=False, togglejntscoord=False, toggleendcoord=False, rgbargt=[0, 1, 0, .5]).reparentTo(
+                            rbtmg.genmnp(rbt, drawhand=False, togglejntscoord=False, toggleendcoord=False,
+                                         rgbargt=[0, 1, 0, .5]).reparentTo(
                                 self.rhx.base.render)
                         availablegraspsatinit.append(idpre)
                     elif (not isobjcollided):
                         if toggledebug:
-                            rbtmg.genmnp(rbt, drawhand=False, togglejntscoord=False, toggleendcoord=False, rgbargt=[1, 0, 1, .5]).reparentTo(
+                            rbtmg.genmnp(rbt, drawhand=False, togglejntscoord=False, toggleendcoord=False,
+                                         rgbargt=[1, 0, 1, .5]).reparentTo(
                                 self.rhx.base.render)
                 else:
                     ikfailedgraspsnum += 1
@@ -363,7 +369,8 @@ class PickPlacePlanner(object):
                             if (not isrbtcollided) and (not isobjcollided):
                                 tmpresult.append(idavailableinit)
                                 if toggledebug:
-                                    rbtmg.genmnp(rbt, togglejntscoord=False, toggleendcoord=False, rgbalft=[0, 1, 0, .5]).reparentTo(
+                                    rbtmg.genmnp(rbt, togglejntscoord=False, toggleendcoord=False,
+                                                 rgbalft=[0, 1, 0, .5]).reparentTo(
                                         self.rhx.base.render)
                             elif (not isobjcollided):
                                 if toggledebug:
@@ -777,12 +784,12 @@ class PickPlacePlanner(object):
         return [None, None, None]
 
     def findppmotion(self, objinithomomat, objgoalhomomat, obscmlist=[], symmetricaxis=None, nangles=9,
-                       armname='rgt', rbtinitarmjnts=None, rbtgoalarmjnts=None, finalstate="io",
-                       primitivedirection_init_forward=None, primitivedirection_init_backward=None,
-                       primitivedistance_init_foward=150, premitivedistance_init_backward=150,
-                       primitivedirection_final_forward=None, primitivedirection_final_backward=None,
-                       primitivedistance_final_foward=150, premitivedistance_final_backward=150, userrt=True,
-                       toggledebug=False):
+                     armname='rgt', rbtinitarmjnts=None, rbtgoalarmjnts=None, finalstate="io",
+                     primitivedirection_init_forward=None, primitivedirection_init_backward=None,
+                     primitivedistance_init_foward=150, premitivedistance_init_backward=150,
+                     primitivedirection_final_forward=None, primitivedirection_final_backward=None,
+                     primitivedistance_final_foward=150, premitivedistance_final_backward=150, userrt=True,
+                     toggledebug=False):
         """
         this function performs findsharedgrasps and genppmotion in a loop
 
@@ -864,7 +871,8 @@ class PickPlacePlanner(object):
                     isobjcollided = False  # for future use
                     if (not isrbtcollided) and (not isobjcollided):
                         if toggledebug:
-                            rbtmg.genmnp(rbt, drawhand=False, togglejntscoord=False, toggleendcoord=False, rgbargt=[0, 1, 0, .5]).reparentTo(
+                            rbtmg.genmnp(rbt, drawhand=False, togglejntscoord=False, toggleendcoord=False,
+                                         rgbargt=[0, 1, 0, .5]).reparentTo(
                                 self.rhx.base.render)
                             pass
                         # if not toggle_debug:
@@ -872,7 +880,8 @@ class PickPlacePlanner(object):
                         availablegraspsatinit.append(idpre)
                     elif (not isobjcollided):
                         if toggledebug:
-                            rbtmg.genmnp(rbt, drawhand=False, togglejntscoord=False, toggleendcoord=False, rgbargt=[1, 0, 1, .5]).reparentTo(
+                            rbtmg.genmnp(rbt, drawhand=False, togglejntscoord=False, toggleendcoord=False,
+                                         rgbargt=[1, 0, 1, .5]).reparentTo(
                                 self.rhx.base.render)
                             pass
                 else:

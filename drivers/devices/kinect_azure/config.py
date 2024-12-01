@@ -2,7 +2,7 @@ import drivers.devices.kinect_azure._k4a as _k4a
 
 
 class Config(object):
-    
+
     def __init__(self,
                  color_format=_k4a.K4A_IMAGE_FORMAT_COLOR_BGRA32,
                  color_resolution=_k4a.K4A_COLOR_RESOLUTION_1080P,

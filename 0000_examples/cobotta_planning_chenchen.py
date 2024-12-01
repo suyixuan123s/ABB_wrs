@@ -23,10 +23,10 @@ if __name__ == '__main__':
     # jnt_values = robot_s.ik(tgt_pos=tgt_pos, tgt_rotmat=tgt_rotmat)
     # robot_s.gen_meshmodel(rgba=(1, 0, 0, 1)).attach_to(base)
     # base.run()
-    jnt_values = start_conf + np.array([-0.5, -0.5, 0.5,0.5, 0.5, 0.5])
+    jnt_values = start_conf + np.array([-0.5, -0.5, 0.5, 0.5, 0.5, 0.5])
     robot_s.fk(component_name="arm", jnt_values=jnt_values)
     start_conf1 = robot_s.get_gl_tcp("arm")[0]
-    print('姿态',start_conf1)
+    print('姿态', start_conf1)
     robot_s.gen_meshmodel(rgba=(1, 0, 0, 1)).attach_to(base)
     # base.run()
 

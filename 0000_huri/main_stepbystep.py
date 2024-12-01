@@ -12,6 +12,8 @@ if __name__ == '__main__':
     lctr = loc.Locator()
 
     sg_doestimateagain = [True]
+
+
     def start(yhx, lctr, sg_doestimateagain, task):
         # print("do we estimate again ", sg_doestimateagain)
         if not sg_doestimateagain[0]:
@@ -54,7 +56,7 @@ if __name__ == '__main__':
             collisionelearray[initij[0], initij[1]] = 0
             renderingelearray = copy.deepcopy(nodepresent.grid)
             print(nodepresent.grid)
-            print(nodepresent.grid-nodenext.grid)
+            print(nodepresent.grid - nodenext.grid)
             collisiontbcmlist = lctr.gentubes(collisionelearray, tubestand_homomat=tshomomat)
             renderingtbcmlist = lctr.gentubes(renderingelearray, tubestand_homomat=tshomomat)
 
@@ -96,6 +98,8 @@ if __name__ == '__main__':
             othersmsmpall += othersmsmp
         anime.animationgen(yhx, numikmsmpall, jawwidthmsmpall, objmsmpall, othersmsmpall, sg_doestimateagain)
         return task.again
+
+
     taskMgr.doMethodLater(0.04, start, "start", extraArgs=[yhx, lctr, sg_doestimateagain], appendTask=True)
     yhx.base.run()
     # counter = [0]

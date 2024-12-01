@@ -19,17 +19,17 @@ class PcdGrab(object):
             self.bgpcd4 = pickle.load(open("../databackground/tro_bgpcddepthlow4.pkl", "rb"))
             self.sensorhomomat = pickle.load(open("../datacalibration/calibmat.pkl", "rb"))
         else:
-            self.bgdepth1 = pickle.load(open(directory+"/databackground/tro_bgdepthlow1.pkl", "rb"))
-            self.bgpcd1 = pickle.load(open(directory+"/databackground/tro_bgpcddepthlow1.pkl", "rb"))
-            self.bgdepth2 = pickle.load(open(directory+"/databackground/tro_bgdepthlow2.pkl", "rb"))
-            self.bgpcd2 = pickle.load(open(directory+"/databackground/tro_bgpcddepthlow2.pkl", "rb"))
-            self.bgdepth3 = pickle.load(open(directory+"/databackground/tro_bgdepthlow3.pkl", "rb"))
-            self.bgpcd3 = pickle.load(open(directory+"/databackground/tro_bgpcddepthlow3.pkl", "rb"))
-            self.bgdepth4 = pickle.load(open(directory+"/databackground/tro_bgdepthlow4.pkl", "rb"))
-            self.bgpcd4 = pickle.load(open(directory+"/databackground/tro_bgpcddepthlow4.pkl", "rb"))
-            self.sensorhomomat = pickle.load(open(directory+"/datacalibration/calibmat.pkl", "rb"))
+            self.bgdepth1 = pickle.load(open(directory + "/databackground/tro_bgdepthlow1.pkl", "rb"))
+            self.bgpcd1 = pickle.load(open(directory + "/databackground/tro_bgpcddepthlow1.pkl", "rb"))
+            self.bgdepth2 = pickle.load(open(directory + "/databackground/tro_bgdepthlow2.pkl", "rb"))
+            self.bgpcd2 = pickle.load(open(directory + "/databackground/tro_bgpcddepthlow2.pkl", "rb"))
+            self.bgdepth3 = pickle.load(open(directory + "/databackground/tro_bgdepthlow3.pkl", "rb"))
+            self.bgpcd3 = pickle.load(open(directory + "/databackground/tro_bgpcddepthlow3.pkl", "rb"))
+            self.bgdepth4 = pickle.load(open(directory + "/databackground/tro_bgdepthlow4.pkl", "rb"))
+            self.bgpcd4 = pickle.load(open(directory + "/databackground/tro_bgpcddepthlow4.pkl", "rb"))
+            self.sensorhomomat = pickle.load(open(directory + "/datacalibration/calibmat.pkl", "rb"))
 
-    def capturecorrectedpcd(self, pxc, ncapturetimes=1, id = 1):
+    def capturecorrectedpcd(self, pxc, ncapturetimes=1, id=1):
         """
         capture a poind cloud and transform it from its sensor frame to global frame
 
@@ -48,7 +48,6 @@ class PcdGrab(object):
         elif id == 4:
             bgdepth = self.bgdepth4
 
-
         objpcdmerged = None
         for i in range(ncapturetimes):
             pxc.triggerframe()
@@ -59,7 +58,7 @@ class PcdGrab(object):
             substracteddepth = substracteddepth.clip(50, 600)
             substracteddepth[substracteddepth == 50] = 0
             substracteddepth[substracteddepth == 600] = 0
-            substracteddepth[:100, :] = 0 # 300, 1700 for high resolution
+            substracteddepth[:100, :] = 0  # 300, 1700 for high resolution
             substracteddepth[1000:, :] = 0
             substracteddepth[:, :100] = 0
             substracteddepth[:, 1000:] = 0
@@ -91,6 +90,7 @@ class PcdGrab(object):
 
         return rm.homotransformpointarray(self.sensorhomomat, pcdarray)
 
+
 if __name__ == '__main__':
     import robothelper
     import utiltools.misc.p3dhtils as p3dh
@@ -102,31 +102,31 @@ if __name__ == '__main__':
     pg = PcdGrab()
     rhx = robothelper.RobotHelperX(usereal=True, startworld=True)
     eepos = np.array([400, 0, 200])
-    eerot=np.array([[1,0,0],[0,0,-1],[0,1,0]]).T
-    armjnts= rhx.movetoposrot(eepos = eepos, eerot=eerot, armname="rgt")
+    eerot = np.array([[1, 0, 0], [0, 0, -1], [0, 1, 0]]).T
+    armjnts = rhx.movetoposrot(eepos=eepos, eerot=eerot, armname="rgt")
     rhx.movetox(armjnts, "rgt")
-    nppcd1 = pg.capturecorrectedpcd(pxc=rhx.pxc, id=1)-eepos
-    eerot2 = np.dot(rm.rodrigues([0,1,0], 90), eerot)
-    armjnts= rhx.movetoposrot(eepos=eepos, eerot=eerot2, armname="rgt")
+    nppcd1 = pg.capturecorrectedpcd(pxc=rhx.pxc, id=1) - eepos
+    eerot2 = np.dot(rm.rodrigues([0, 1, 0], 90), eerot)
+    armjnts = rhx.movetoposrot(eepos=eepos, eerot=eerot2, armname="rgt")
     rhx.movetox(armjnts, "rgt")
-    nppcd2 = pg.capturecorrectedpcd(pxc=rhx.pxc, id=2)-eepos
-    eerot3 = np.dot(rm.rodrigues([0,1,0], 180), eerot)
-    armjnts= rhx.movetoposrot(eepos=eepos, eerot=eerot3, armname="rgt")
+    nppcd2 = pg.capturecorrectedpcd(pxc=rhx.pxc, id=2) - eepos
+    eerot3 = np.dot(rm.rodrigues([0, 1, 0], 180), eerot)
+    armjnts = rhx.movetoposrot(eepos=eepos, eerot=eerot3, armname="rgt")
     rhx.movetox(armjnts, "rgt")
-    nppcd3 = pg.capturecorrectedpcd(pxc=rhx.pxc, id=3)-eepos
-    eerot4 = np.dot(rm.rodrigues([0,1,0], 270), eerot)
-    armjnts= rhx.movetoposrot(eepos=eepos, eerot=eerot4, armname="rgt")
+    nppcd3 = pg.capturecorrectedpcd(pxc=rhx.pxc, id=3) - eepos
+    eerot4 = np.dot(rm.rodrigues([0, 1, 0], 270), eerot)
+    armjnts = rhx.movetoposrot(eepos=eepos, eerot=eerot4, armname="rgt")
     rhx.movetox(armjnts, "rgt")
-    nppcd4 = pg.capturecorrectedpcd(pxc=rhx.pxc, id=4)-eepos
+    nppcd4 = pg.capturecorrectedpcd(pxc=rhx.pxc, id=4) - eepos
 
     mergednppcd = nppcd4
-    mergedlistnrmls = [[0,0,1]]*len(mergednppcd)
+    mergedlistnrmls = [[0, 0, 1]] * len(mergednppcd)
     mergednppcd = o3dh.merge_pcd(mergednppcd, nppcd1, rm.rodrigues([0, 1, 0], 270), posmat2=np.zeros(3))
-    mergedlistnrmls += [[-1,0,0]]*len(nppcd1)
+    mergedlistnrmls += [[-1, 0, 0]] * len(nppcd1)
     mergednppcd = o3dh.merge_pcd(mergednppcd, nppcd2, rm.rodrigues([0, 1, 0], 180), posmat2=np.zeros(3))
-    mergedlistnrmls += [[0,0,-1]]*len(nppcd2)
+    mergedlistnrmls += [[0, 0, -1]] * len(nppcd2)
     mergednppcd = o3dh.merge_pcd(mergednppcd, nppcd3, rm.rodrigues([0, 1, 0], 90), posmat2=np.zeros(3))
-    mergedlistnrmls += [[1,0,0]]*len(nppcd3)
+    mergedlistnrmls += [[1, 0, 0]] * len(nppcd3)
     mergednppcdnrmls = np.array(mergedlistnrmls)
     mergednppcd += eepos
     p3dpcd = p3dh.genpointcloudnodepath(mergednppcd, pntsize=1.57)
@@ -158,7 +158,8 @@ if __name__ == '__main__':
         # else:
         #     reconstructedmeshobjcm.setColor(1,1,1,1)
 
-        freegriptst = fg.Freegrip(reconstructedmeshobjcm, yifa.genHand(), faceangle=.9, segangle=.9, refine1min=7, togglebcdcdebug=True, useoverlap=True)
+        freegriptst = fg.Freegrip(reconstructedmeshobjcm, yifa.genHand(), faceangle=.9, segangle=.9, refine1min=7,
+                                  togglebcdcdebug=True, useoverlap=True)
         # geom = None
         facetsizes = []
         for i, faces in enumerate(freegriptst.facets):
@@ -209,5 +210,3 @@ if __name__ == '__main__':
             # hand.setjawwidth(freegriptst.gripjawwidth_planned[i])
             # hand.reparentTo(rhx.base.render)
     rhx.show()
-
-

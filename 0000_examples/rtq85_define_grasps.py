@@ -9,7 +9,7 @@ if __name__ == '__main__':
     base = wd.World(cam_pos=[.5, .5, .3], lookat_pos=[0, 0, 0])
     gripper_s = rtq85.Robotiq85(enable_cc=True)
     objcm = cm.CollisionModel("./objects/bunnysim.stl")
-    objcm.set_pos(np.array([.5,-.3,1.2]))
+    objcm.set_pos(np.array([.5, -.3, 1.2]))
     objcm.attach_to(base)
     objcm.show_localframe()
     grasp_info_list = gau.define_grasp_with_rotation(gripper_s,

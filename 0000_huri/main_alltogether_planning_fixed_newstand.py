@@ -9,7 +9,8 @@ if __name__ == '__main__':
     yhx.closegripperx(armname="lft")
     yhx.opengripperx(armname="rgt")
     yhx.opengripperx(armname="lft")
-    lctr = locfixed.LocatorFixed(homomatfilename_start="rightfixture_light_homomat1", homomatfilename_goal="rightfixture_light_homomat2")
+    lctr = locfixed.LocatorFixed(homomatfilename_start="rightfixture_light_homomat1",
+                                 homomatfilename_goal="rightfixture_light_homomat2")
 
     armname = "rgt"
     ppplanner_tb = ppp.PickPlacePlanner(lctr.tubebigcm, yhx)
@@ -17,13 +18,15 @@ if __name__ == '__main__':
 
     objpcd = lctr.capturecorrectedpcd(yhx.pxc)
     elearray, eleconfidencearray = lctr.findtubes(lctr.tubestandhomomat_start, objpcd, toggledebug=False)
-    yhx.p3dh.genframe(pos=lctr.tubestandhomomat_start[:3, 3], rotmat=lctr.tubestandhomomat_start[:3, :3]).reparentTo(yhx.base.render)
-    tubestandcmlist = [lctr.gentubestand(homomat=lctr.tubestandhomomat_start), lctr.gentubestand(homomat=lctr.tubestandhomomat_goal, rgba = np.array([0.1, .5, .7, 1.]))]
+    yhx.p3dh.genframe(pos=lctr.tubestandhomomat_start[:3, 3], rotmat=lctr.tubestandhomomat_start[:3, :3]).reparentTo(
+        yhx.base.render)
+    tubestandcmlist = [lctr.gentubestand(homomat=lctr.tubestandhomomat_start),
+                       lctr.gentubestand(homomat=lctr.tubestandhomomat_goal, rgba=np.array([0.1, .5, .7, 1.]))]
 
     nrow = elearray.shape[0]
     ncol = elearray.shape[1]
     # expand state
-    elearray_ext = np.zeros((nrow*2, ncol))
+    elearray_ext = np.zeros((nrow * 2, ncol))
     elearray_ext[:nrow, :] = elearray[:, :]
 
     tpobj = tp.TubePuzzle(elearray_ext)
@@ -60,7 +63,7 @@ if __name__ == '__main__':
             goalijlocal = (goalijglobal[0][0], goalijglobal[1][0])
             tubestandhomomat_goal = lctr.tubestandhomomat_start
         else:
-            goalijlocal = (goalijglobal[0][0]-nrow, goalijglobal[1][0])
+            goalijlocal = (goalijglobal[0][0] - nrow, goalijglobal[1][0])
             tubestandhomomat_goal = lctr.tubestandhomomat_goal
         collisionelearray = copy.deepcopy(nodepresent.grid)
         collisionelearray[initij[0], initij[1]] = 0
@@ -69,7 +72,7 @@ if __name__ == '__main__':
         # print(collisionelearray)
         # print(renderingelearray)
         print(nodepresent.grid)
-        print(nodepresent.grid-nodenext.grid)
+        print(nodepresent.grid - nodenext.grid)
         collisiontbcmlist = lctr.gentubes(collisionelearray[:nrow, :], tubestand_homomat=lctr.tubestandhomomat_start)
         # collisiontbcmlist = [lctr.gentubeandstandboxcm(homomat=lctr.tubestandhomomat_start)]
         # collisiontbcmlist[0].reparentTo(yhx.base.render)
@@ -81,21 +84,23 @@ if __name__ == '__main__':
         inithm = copy.deepcopy(lctr.tubestandhomomat_start)
         inithm[:3, 3] = initpos
         goalpos_normalized = np.array(
-            [lctr.tubeholecenters[goalijlocal[0], goalijlocal[1]][0], lctr.tubeholecenters[goalijlocal[0], goalijlocal[1]][1], 10])
+            [lctr.tubeholecenters[goalijlocal[0], goalijlocal[1]][0],
+             lctr.tubeholecenters[goalijlocal[0], goalijlocal[1]][1], 10])
         goalpos = rm.homotransformpoint(tubestandhomomat_goal, goalpos_normalized)
         goalhm = copy.deepcopy(tubestandhomomat_goal)
         goalhm[:3, 3] = goalpos
 
         obscmlist = yhx.obscmlist + tubestandcmlist + collisiontbcmlist
         numikmsmp, jawwidthmsmp, objmsmp = ppplanner.findppmotion_symmetric(inithm, goalhm, armname=armname,
-                                                                            rbtinitarmjnts = [lastrgtarmjnts, lastlftarmjnts],
+                                                                            rbtinitarmjnts=[lastrgtarmjnts,
+                                                                                            lastlftarmjnts],
                                                                             finalstate="uo", obscmlist=obscmlist,
                                                                             nangles=5, userrt=True,
                                                                             primitivedistance_init_foward=150,
                                                                             premitivedistance_init_backward=150,
                                                                             primitivedistance_final_foward=150,
                                                                             premitivedistance_final_backward=150,
-                                                                            toggledebug = False)
+                                                                            toggledebug=False)
         ## for toggle_debug, check the collisions between the hand and the tubes
         # for tbcm in collisiontbcmlist:
         #     tbcm.reparentTo(yhx.base.render)
@@ -110,8 +115,8 @@ if __name__ == '__main__':
             weightarray = np.zeros_like(nodepresent.grid)
             for id, onebadarray in enumerate(badarraylist):
                 if np.array_equal(onebadarray, tmpelearray):
-                    weightarray[badstartgoals[id][0][0], badstartgoals[id][0][1]] = id+1
-                    weightarray[badstartgoals[id][1][0], badstartgoals[id][1][1]] = id+1
+                    weightarray[badstartgoals[id][0][0], badstartgoals[id][0][1]] = id + 1
+                    weightarray[badstartgoals[id][1][0], badstartgoals[id][1][1]] = id + 1
             path = tpobj.atarSearch(weightarray)
             print("###weight_array", weightarray)
             i = 0
@@ -146,8 +151,10 @@ if __name__ == '__main__':
         for idms in range(len(numikmsmp)):
             othersmp = []
             for idmp in range(len(numikmsmp[idms])):
-                renderingtbcmlist = lctr.gentubes(renderingelearray[:nrow, :], tubestand_homomat=lctr.tubestandhomomat_start)
-                renderingtbcmlist += lctr.gentubes(renderingelearray[nrow:, :], tubestand_homomat=lctr.tubestandhomomat_goal)
+                renderingtbcmlist = lctr.gentubes(renderingelearray[:nrow, :],
+                                                  tubestand_homomat=lctr.tubestandhomomat_start)
+                renderingtbcmlist += lctr.gentubes(renderingelearray[nrow:, :],
+                                                   tubestand_homomat=lctr.tubestandhomomat_goal)
                 othersmp.append(tubestandcmlist + renderingtbcmlist)
             othersmsmp.append(othersmp)
         othersmsmpall += othersmsmp

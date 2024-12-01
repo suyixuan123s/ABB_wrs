@@ -14,12 +14,13 @@ class BlocklyTool(_BlocklyHandler):
         super(BlocklyTool, self).__init__(xml_path)
         self._is_converted = False
         self._codes = []
-    
+
     @property
     def codes(self):
         return '\n'.join(self._codes)
 
-    def to_python(self, path=None, arm=None, init=True, wait_seconds=1, mode=0, state=0, error_exit=True, stop_exit=True, **kwargs):
+    def to_python(self, path=None, arm=None, init=True, wait_seconds=1, mode=0, state=0, error_exit=True,
+                  stop_exit=True, **kwargs):
         if not self._is_converted:
             # highlight_callback: only use pack to run blockly in studio
             self._highlight_callback = kwargs.get('highlight_callback', None)
@@ -36,7 +37,8 @@ class BlocklyTool(_BlocklyHandler):
             self._init_robot_main_run_codes()
             self._parse_block()
             self._finish_robot_main_run_codes(error_exit, stop_exit)
-            self._init_robot_main_class_codes(init=init, wait_seconds=wait_seconds, mode=mode, state=state, error_exit=error_exit, stop_exit=stop_exit)
+            self._init_robot_main_class_codes(init=init, wait_seconds=wait_seconds, mode=mode, state=state,
+                                              error_exit=error_exit, stop_exit=stop_exit)
             self._init_main_codes(arm=arm, is_exec=kwargs.get('is_exec', False))
             self._codes.extend(self._init_code_list)
             self._codes.extend(self._main_init_code_list)
@@ -81,7 +83,7 @@ class BlocklyTool(_BlocklyHandler):
         self._append_main_code('    # Robot Main Run', indent=-1)
         self._append_main_code('    def run(self):', indent=-1)
         self._append_main_code('        try:', indent=-1)
-    
+
     def _finish_robot_main_run_codes(self, error_exit=True, stop_exit=True):
         # catch exception and release callback
         self._append_main_code('        except Exception as e:', indent=-1)
@@ -93,18 +95,23 @@ class BlocklyTool(_BlocklyHandler):
         #     if stop_exit:
         #         self._append_main_code('            self._arm.release_state_changed_callback(self._state_changed_callback)', indent=-1)
         if self._listen_tgpio_digital or self._listen_tgpio_analog or self._listen_cgpio_state \
-            or len(self._tgpio_digital_callbacks) or len(self._tgpio_analog_callbacks) or len(self._cgpio_digital_callbacks) or len(self._cgpio_analog_callbacks):
+                or len(self._tgpio_digital_callbacks) or len(self._tgpio_analog_callbacks) or len(
+            self._cgpio_digital_callbacks) or len(self._cgpio_analog_callbacks):
             self._append_main_code('        # Event Loop', indent=-1)
             self._append_main_code('        while self.is_alive:', indent=-1)
             self._append_main_code('            time.sleep(0.5)', indent=-1)
         self._append_main_code('        self.alive = False', indent=-1)
         if stop_exit or error_exit:
             if error_exit:
-                self._append_main_code('        self._arm.release_error_warn_changed_callback(self._error_warn_changed_callback)', indent=-1)
+                self._append_main_code(
+                    '        self._arm.release_error_warn_changed_callback(self._error_warn_changed_callback)',
+                    indent=-1)
             if stop_exit:
-                self._append_main_code('        self._arm.release_state_changed_callback(self._state_changed_callback)', indent=-1)
+                self._append_main_code('        self._arm.release_state_changed_callback(self._state_changed_callback)',
+                                       indent=-1)
         self._append_main_code('        if hasattr(self._arm, \'release_count_changed_callback\'):', indent=-1)
-        self._append_main_code('            self._arm.release_count_changed_callback(self._count_changed_callback)', indent=-1)
+        self._append_main_code('            self._arm.release_count_changed_callback(self._count_changed_callback)',
+                               indent=-1)
 
     def _init_robot_main_class_codes(self, init=True, wait_seconds=1, mode=0, state=0, error_exit=True, stop_exit=True):
         self._append_main_init_code('class RobotMain(object):')
@@ -117,7 +124,7 @@ class BlocklyTool(_BlocklyHandler):
         self._append_main_init_code('        self._angle_speed = 20')
         self._append_main_init_code('        self._angle_acc = 500')
         self._append_main_init_code('        self._variables = {}'.format({var: 0 for var in self._parse_variables()}))
-        self._append_main_init_code('        self._robot_init()')            
+        self._append_main_init_code('        self._robot_init()')
         if len(self._tgpio_digital_callbacks):
             self._append_main_init_code('        self._tgpio_digital_callbacks = []')
         if len(self._tgpio_analog_callbacks):
@@ -129,23 +136,29 @@ class BlocklyTool(_BlocklyHandler):
         if self._listen_cgpio_state or len(self._cgpio_digital_callbacks) or len(self._cgpio_analog_callbacks):
             self._append_main_init_code('        self._cgpio_state = None')
 
-        if len(self._tgpio_digital_callbacks) or len(self._tgpio_analog_callbacks) or len(self._cgpio_digital_callbacks) or len(self._cgpio_analog_callbacks):
+        if len(self._tgpio_digital_callbacks) or len(self._tgpio_analog_callbacks) or len(
+                self._cgpio_digital_callbacks) or len(self._cgpio_analog_callbacks):
             self._append_main_init_code('        self._callback_in_thread = kwargs.get(\'callback_in_thread\', True)')
             self._append_main_init_code('        self._callback_que = queue.Queue()')
 
         if self._listen_tgpio_digital or self._listen_tgpio_analog or self._listen_cgpio_state \
-            or len(self._tgpio_digital_callbacks) or len(self._tgpio_analog_callbacks) or len(self._cgpio_digital_callbacks) or len(self._cgpio_analog_callbacks):
-            self._append_main_init_code('        gpio_t = threading.Thread(target=self._listen_gpio_thread, daemon=True)')
+                or len(self._tgpio_digital_callbacks) or len(self._tgpio_analog_callbacks) or len(
+            self._cgpio_digital_callbacks) or len(self._cgpio_analog_callbacks):
+            self._append_main_init_code(
+                '        gpio_t = threading.Thread(target=self._listen_gpio_thread, daemon=True)')
             self._append_main_init_code('        gpio_t.start()')
 
-        if len(self._tgpio_digital_callbacks) or len(self._tgpio_analog_callbacks) or len(self._cgpio_digital_callbacks) or len(self._cgpio_analog_callbacks):
-            self._append_main_init_code('        callback_t = threading.Thread(target=self._event_callback_handle_thread, daemon=True)')
+        if len(self._tgpio_digital_callbacks) or len(self._tgpio_analog_callbacks) or len(
+                self._cgpio_digital_callbacks) or len(self._cgpio_analog_callbacks):
+            self._append_main_init_code(
+                '        callback_t = threading.Thread(target=self._event_callback_handle_thread, daemon=True)')
             self._append_main_init_code('        callback_t.start()')
         self._append_main_init_code('')
 
         self.__define_callback_thread_func()
         self.__define_listen_gpio_thread_func()
-        self.__define_robot_init_func(init=init, wait_seconds=wait_seconds, mode=mode, state=state, error_exit=error_exit, stop_exit=stop_exit)
+        self.__define_robot_init_func(init=init, wait_seconds=wait_seconds, mode=mode, state=state,
+                                      error_exit=error_exit, stop_exit=stop_exit)
         self.__define_error_warn_changed_callback_func(error_exit=error_exit)
         self.__define_state_changed_callback_func(stop_exit=stop_exit)
         self.__define_count_changed_callback_func()
@@ -165,15 +178,17 @@ class BlocklyTool(_BlocklyHandler):
             self._append_main_init_code('                if n % (i - 1) == 0 or n % (i + 1) == 0:')
             self._append_main_init_code('                    return False')
             self._append_main_init_code('            return True')
-            self._append_main_init_code('        return n == 2 or n == 3 or (n > 1 and n % 2 != 0 and n % 3 != 0 and _is_prime())\n')
-    
+            self._append_main_init_code(
+                '        return n == 2 or n == 3 or (n > 1 and n % 2 != 0 and n % 3 != 0 and _is_prime())\n')
+
     def __define_cgpio_digitals_is_matchs_bin_func(self):
         # Define Funciton: cgpio_digitals_is_matchs_bin
         if self._define_bin_matchs_func:
             self._append_main_init_code('    def _cgpio_digitals_is_matchs_bin(self, bin_val):')
             self._append_main_init_code('        if self._cgpio_state is None:')
             self._append_main_init_code('            return True')
-            self._append_main_init_code('        digitals_bin = \'\'.join(map(str, [self._cgpio_state[3] >> i & 0x0001 if self._cgpio_state[10][i] in [0, 255] else 1 for i in range(len(self._cgpio_state[10]))]))')
+            self._append_main_init_code(
+                '        digitals_bin = \'\'.join(map(str, [self._cgpio_state[3] >> i & 0x0001 if self._cgpio_state[10][i] in [0, 255] else 1 for i in range(len(self._cgpio_state[10]))]))')
             self._append_main_init_code('        length = min(len(digitals_bin), len(bin_val))')
             self._append_main_init_code('        bin_val_ = bin_val[::-1]')
             self._append_main_init_code('        for i in range(length):')
@@ -183,12 +198,14 @@ class BlocklyTool(_BlocklyHandler):
 
     def __define_callback_thread_func(self):
         # Define callback thread function
-        if  len(self._tgpio_digital_callbacks) or len(self._tgpio_analog_callbacks) or len(self._cgpio_digital_callbacks) or len(self._cgpio_analog_callbacks):
+        if len(self._tgpio_digital_callbacks) or len(self._tgpio_analog_callbacks) or len(
+                self._cgpio_digital_callbacks) or len(self._cgpio_analog_callbacks):
             self._append_main_init_code('    def _event_callback_handle_thread(self):')
             self._append_main_init_code('        while self.alive:')
             self._append_main_init_code('            try:')
             self._append_main_init_code('                callback = self._callback_que.get(timeout=1)')
-            self._append_main_init_code('                callback() if not self._callback_in_thread else threading.Thread(target=callback, daemon=True).start()')
+            self._append_main_init_code(
+                '                callback() if not self._callback_in_thread else threading.Thread(target=callback, daemon=True).start()')
             self._append_main_init_code('            except queue.Empty:')
             self._append_main_init_code('                pass')
             self._append_main_init_code('            except Exception as e:')
@@ -197,8 +214,9 @@ class BlocklyTool(_BlocklyHandler):
     def __define_listen_gpio_thread_func(self):
         # Define listen gpio thread function
         if self._listen_tgpio_digital or self._listen_tgpio_analog or self._listen_cgpio_state \
-            or len(self._tgpio_digital_callbacks) or len(self._tgpio_analog_callbacks) or len(self._cgpio_digital_callbacks) or len(self._cgpio_analog_callbacks):
-            
+                or len(self._tgpio_digital_callbacks) or len(self._tgpio_analog_callbacks) or len(
+            self._cgpio_digital_callbacks) or len(self._cgpio_analog_callbacks):
+
             self._append_main_init_code('    def _listen_gpio_thread(self):')
             if self._listen_tgpio_digital or len(self._tgpio_digital_callbacks):
                 self._append_main_init_code('        _, values = self._arm.get_tgpio_digital()')
@@ -209,7 +227,8 @@ class BlocklyTool(_BlocklyHandler):
             if self._listen_cgpio_state or len(self._cgpio_digital_callbacks) or len(self._cgpio_analog_callbacks):
                 self._append_main_init_code('        _, values = self._arm.get_cgpio_state()')
             if self._listen_cgpio_state or len(self._cgpio_digital_callbacks):
-                self._append_main_init_code('        cgpio_digitals = [values[3] >> i & 0x0001 if values[10][i] in [0, 255] else 1 for i in range(len(values[10]))] if _ == 0 else [0] * 16')
+                self._append_main_init_code(
+                    '        cgpio_digitals = [values[3] >> i & 0x0001 if values[10][i] in [0, 255] else 1 for i in range(len(values[10]))] if _ == 0 else [0] * 16')
             if self._listen_cgpio_state or len(self._cgpio_analog_callbacks):
                 self._append_main_init_code('        cgpio_analogs = [values[6], values[7]] if _ == 0 else [0] * 2')
 
@@ -219,7 +238,8 @@ class BlocklyTool(_BlocklyHandler):
                 self._append_main_init_code('            if _ == 0 and tgpio_digitals is not None:')
                 self._append_main_init_code('                for item in self._tgpio_digital_callbacks:')
                 self._append_main_init_code('                    for io in range(2):')
-                self._append_main_init_code('                        if item[\'io\'] == io and eval(\'{} {} {}\'.format(values[io], item[\'op\'], item[\'trigger\'])) and not eval(\'{} {} {}\'.format(tgpio_digitals[io], item[\'op\'], item[\'trigger\'])):')
+                self._append_main_init_code(
+                    '                        if item[\'io\'] == io and eval(\'{} {} {}\'.format(values[io], item[\'op\'], item[\'trigger\'])) and not eval(\'{} {} {}\'.format(tgpio_digitals[io], item[\'op\'], item[\'trigger\'])):')
                 self._append_main_init_code('                            self._callback_que.put(item[\'callback\'])')
                 self._append_main_init_code('            tgpio_digitals = values if _ == 0 else tgpio_digitals')
             if self._listen_tgpio_digital or len(self._tgpio_analog_callbacks):
@@ -227,28 +247,34 @@ class BlocklyTool(_BlocklyHandler):
                 self._append_main_init_code('            if _ == 0 and tgpio_analogs is not None:')
                 self._append_main_init_code('                for item in self._tgpio_analog_callbacks:')
                 self._append_main_init_code('                    for io in range(2):')
-                self._append_main_init_code('                        if item[\'io\'] == io and eval(\'{} {} {}\'.format(values[io], item[\'op\'], item[\'trigger\'])) and not eval(\'{} {} {}\'.format(tgpio_analogs[io], item[\'op\'], item[\'trigger\'])):')
+                self._append_main_init_code(
+                    '                        if item[\'io\'] == io and eval(\'{} {} {}\'.format(values[io], item[\'op\'], item[\'trigger\'])) and not eval(\'{} {} {}\'.format(tgpio_analogs[io], item[\'op\'], item[\'trigger\'])):')
                 self._append_main_init_code('                            self._callback_que.put(item[\'callback\'])')
                 self._append_main_init_code('            tgpio_analogs = values if _ == 0 else tgpio_analogs')
 
-            if not self._listen_cgpio_state and len(self._cgpio_digital_callbacks) == 0 and len(self._cgpio_analog_callbacks) == 0:
+            if not self._listen_cgpio_state and len(self._cgpio_digital_callbacks) == 0 and len(
+                    self._cgpio_analog_callbacks) == 0:
                 self._append_main_init_code('            time.sleep(0.01)\n')
                 return
 
             self._append_main_init_code('            _, values = self._arm.get_cgpio_state()')
-            self._append_main_init_code('            if _ == 0 and self._cgpio_state is not None and self._cgpio_state != values:')
+            self._append_main_init_code(
+                '            if _ == 0 and self._cgpio_state is not None and self._cgpio_state != values:')
             if self._listen_cgpio_state or len(self._cgpio_digital_callbacks):
-                self._append_main_init_code('                digitals = [values[3] >> i & 0x0001 if values[10][i] in [0, 255] else 1 for i in range(len(values[10]))]')
+                self._append_main_init_code(
+                    '                digitals = [values[3] >> i & 0x0001 if values[10][i] in [0, 255] else 1 for i in range(len(values[10]))]')
                 self._append_main_init_code('                for item in self._cgpio_digital_callbacks:')
                 self._append_main_init_code('                    for io in range(len(digitals)):')
-                self._append_main_init_code('                        if item[\'io\'] == io and eval(\'{} {} {}\'.format(digitals[io], item[\'op\'], item[\'trigger\'])) and not eval(\'{} {} {}\'.format(cgpio_digitals[io], item[\'op\'], item[\'trigger\'])):')
+                self._append_main_init_code(
+                    '                        if item[\'io\'] == io and eval(\'{} {} {}\'.format(digitals[io], item[\'op\'], item[\'trigger\'])) and not eval(\'{} {} {}\'.format(cgpio_digitals[io], item[\'op\'], item[\'trigger\'])):')
                 self._append_main_init_code('                            self._callback_que.put(item[\'callback\'])')
                 self._append_main_init_code('                cgpio_digitals = digitals')
             if self._listen_cgpio_state or len(self._cgpio_analog_callbacks):
                 self._append_main_init_code('                analogs = [values[6], values[7]]')
                 self._append_main_init_code('                for item in self._cgpio_analog_callbacks:')
                 self._append_main_init_code('                    for io in range(len(analogs)):')
-                self._append_main_init_code('                        if item[\'io\'] == io and eval(\'{} {} {}\'.format(analogs[io], item[\'op\'], item[\'trigger\'])) and not eval(\'{} {} {}\'.format(cgpio_analogs[io], item[\'op\'], item[\'trigger\'])):')
+                self._append_main_init_code(
+                    '                        if item[\'io\'] == io and eval(\'{} {} {}\'.format(analogs[io], item[\'op\'], item[\'trigger\'])) and not eval(\'{} {} {}\'.format(cgpio_analogs[io], item[\'op\'], item[\'trigger\'])):')
                 self._append_main_init_code('                            self._callback_que.put(item[\'callback\'])')
                 self._append_main_init_code('                cgpio_analogs = analogs')
             self._append_main_init_code('            self._cgpio_state = values if _ == 0 else self._cgpio_state')
@@ -267,12 +293,15 @@ class BlocklyTool(_BlocklyHandler):
         if wait_seconds > 0:
             self._append_main_init_code('        time.sleep({})'.format(wait_seconds))
         if error_exit:
-            self._append_main_init_code('        self._arm.register_error_warn_changed_callback(self._error_warn_changed_callback)')
+            self._append_main_init_code(
+                '        self._arm.register_error_warn_changed_callback(self._error_warn_changed_callback)')
         if stop_exit:
-            self._append_main_init_code('        self._arm.register_state_changed_callback(self._state_changed_callback)')
-        
+            self._append_main_init_code(
+                '        self._arm.register_state_changed_callback(self._state_changed_callback)')
+
         self._append_main_init_code('        if hasattr(self._arm, \'register_count_changed_callback\'):')
-        self._append_main_init_code('            self._arm.register_count_changed_callback(self._count_changed_callback)')
+        self._append_main_init_code(
+            '            self._arm.register_count_changed_callback(self._count_changed_callback)')
         self._append_main_init_code('')
 
     def __define_error_warn_changed_callback_func(self, error_exit=True):
@@ -283,8 +312,9 @@ class BlocklyTool(_BlocklyHandler):
             self._append_main_init_code('        if data and data[\'error_code\'] != 0:')
             self._append_main_init_code('            self.alive = False')
             self._append_main_init_code('            self.pprint(\'err={}, quit\'.format(data[\'error_code\']))')
-            self._append_main_init_code('            self._arm.release_error_warn_changed_callback(self._error_warn_changed_callback)\n')
-    
+            self._append_main_init_code(
+                '            self._arm.release_error_warn_changed_callback(self._error_warn_changed_callback)\n')
+
     def __define_state_changed_callback_func(self, stop_exit=True):
         # Define state changed callback
         if stop_exit:
@@ -293,7 +323,8 @@ class BlocklyTool(_BlocklyHandler):
             self._append_main_init_code('        if data and data[\'state\'] == 4:')
             self._append_main_init_code('            self.alive = False')
             self._append_main_init_code('            self.pprint(\'state=4, quit\')')
-            self._append_main_init_code('            self._arm.release_state_changed_callback(self._state_changed_callback)\n')
+            self._append_main_init_code(
+                '            self._arm.release_state_changed_callback(self._state_changed_callback)\n')
 
     def __define_count_changed_callback_func(self):
         # Define count changed callback
@@ -308,8 +339,8 @@ class BlocklyTool(_BlocklyHandler):
         self._append_main_init_code('        try:')
         self._append_main_init_code('            stack_tuple = traceback.extract_stack(limit=2)[0]')
         self._append_main_init_code('            print(\'[{}][{}] {}\'.format('
-                                                'time.strftime(\'%Y-%m-%d %H:%M:%S\', time.localtime(time.time())), '
-                                                'stack_tuple[1], \' \'.join(map(str, args))))')
+                                    'time.strftime(\'%Y-%m-%d %H:%M:%S\', time.localtime(time.time())), '
+                                    'stack_tuple[1], \' \'.join(map(str, args))))')
         self._append_main_init_code('        except:')
         self._append_main_init_code('            print(*args, **kwargs)\n')
 
@@ -334,7 +365,8 @@ class BlocklyTool(_BlocklyHandler):
         # self._append_main_init_code('            self.pprint(\'{{}}, code={{}}, connected={{}}, state={{}}, error={{}}\'.format(label, code, self._arm.connected, self._arm.state, self._arm.error_code))')
         self._append_main_init_code('            ret1 = self._arm.get_state()')
         self._append_main_init_code('            ret2 = self._arm.get_err_warn_code()')
-        self._append_main_init_code('            self.pprint(\'{}, code={}, connected={}, state={}, error={}, ret1={}. ret2={}\'.format(label, code, self._arm.connected, self._arm.state, self._arm.error_code, ret1, ret2))')
+        self._append_main_init_code(
+            '            self.pprint(\'{}, code={}, connected={}, state={}, error={}, ret1={}. ret2={}\'.format(label, code, self._arm.connected, self._arm.state, self._arm.error_code, ret1, ret2))')
         self._append_main_init_code('        return self.is_alive\n')
 
     def _init_main_codes(self, arm=None, is_exec=False):
@@ -345,7 +377,8 @@ class BlocklyTool(_BlocklyHandler):
             indent = 0
         else:
             indent = -1
-        self._append_main_code('RobotMain.pprint(\'xArm-Python-SDK Version:{}\'.format(version.__version__))', indent=indent)
+        self._append_main_code('RobotMain.pprint(\'xArm-Python-SDK Version:{}\'.format(version.__version__))',
+                               indent=indent)
         if arm is None:
             self._append_main_code('arm = XArmAPI(sys.argv[1], baud_checkset=False)', indent=indent)
         elif isinstance(arm, str):

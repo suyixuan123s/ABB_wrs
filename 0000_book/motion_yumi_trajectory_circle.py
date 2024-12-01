@@ -25,13 +25,13 @@ if __name__ == "__main__":
                                                               end_rotmat,
                                                               radius=radius,
                                                               toggle_tcp_list=True)
-    for i in range(len(tcp_list)-1):
+    for i in range(len(tcp_list) - 1):
         spos = tcp_list[i][0]
         srotmat = tcp_list[i][1]
-        epos = tcp_list[i+1][0]
-        erotmat = tcp_list[i+1][1]
+        epos = tcp_list[i + 1][0]
+        erotmat = tcp_list[i + 1][1]
         print(spos, epos)
-        gm.gen_dasharrow(spos, epos, thickness=.01, rgba=[1,0,0,1]).attach_to(base)
+        gm.gen_dasharrow(spos, epos, thickness=.01, rgba=[1, 0, 0, 1]).attach_to(base)
         gm.gen_mycframe(epos, erotmat, alpha=.7).attach_to(base)
     # robot_s.fk(hnd_name, jnt_values_list[1])
     # robot_s.gen_meshmodel(toggle_tcpcs=False, rgba=[.7,.3,.3,.57]).attach_to(base)
@@ -44,7 +44,7 @@ if __name__ == "__main__":
     # base.run()
     x = np.arange(len(jnt_values_list))
     print(x)
-    plt.figure(figsize=(10,5))
+    plt.figure(figsize=(10, 5))
     plt.plot(x, jnt_values_list, '-o')
     plt.xticks(x)
     plt.show()

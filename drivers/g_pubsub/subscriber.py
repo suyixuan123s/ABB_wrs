@@ -12,9 +12,11 @@ subscriber = pubsub_v1.SubscriberClient()
 # in the form `projects/{project_id}/subscriptions/{subscription_id}`
 subscription_path = subscriber.subscription_path(project_id, subscription_id)
 
+
 def callback(message):
     print(f"Received {message}.")
     message.ack()
+
 
 streaming_pull_future = subscriber.subscribe(subscription_path, callback=callback)
 print(f"Listening for messages on {subscription_path}..\n")

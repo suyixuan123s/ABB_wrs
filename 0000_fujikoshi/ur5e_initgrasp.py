@@ -14,6 +14,7 @@ if __name__ == '__main__':
     import manipulation.pick_place_planner as ppp
 
     import motion.probabilistic.rrt_connect as rrtc
+
     # import robot_sim.manipulators.machinetool.machinetool_gripper as machine
     base = wd.World(cam_pos=[1, 1, .5], lookat_pos=[0, 0, .2])
     # gm.gen_frame(length=.5, thickness=.05,).attach_to(base)
@@ -23,7 +24,7 @@ if __name__ == '__main__':
     obj.set_pos(pos=np.array([0, 0, 1]))
     # obj.attach_to(base)
     table = cm.CollisionModel("objects/MTbase2.stl")
-    table.set_pos(pos = np.array([0.7,0.2,-0.82]))
+    table.set_pos(pos=np.array([0.7, 0.2, -0.82]))
     table.attach_to(base)
 
     workpiece_before = cm.CollisionModel("objects/workpiece_before.stl")
@@ -31,13 +32,10 @@ if __name__ == '__main__':
 
     workpiece_before.set_pos(pos=np.array([0.4, 0.1, 0.0]))
     workpiece_before.show_localframe()
-    workpiece_before.set_rgba(np.array([62/255,241/255,0,1]))
+    workpiece_before.set_rgba(np.array([62 / 255, 241 / 255, 0, 1]))
     # workpiece_before.set_rpy(np.pi,0,0)
     # homo_workpiece_before = workpiece_before.get_homomat()
     workpiece_before.attach_to(base)
-
-
-
 
     manipulator_name = "arm"
     component_name = "arm"
@@ -45,8 +43,7 @@ if __name__ == '__main__':
     robot_s.door_to(1)
     start_conf = robot_s.get_jnt_values(component_name=component_name)
     # start_tcp = robot_s.fk( component_name="arm" , jnt_values=start_conf)
-    start_tcp_pos, start_tcp_rot = robot_s.get_gl_tcp(manipulator_name = manipulator_name)
-
+    start_tcp_pos, start_tcp_rot = robot_s.get_gl_tcp(manipulator_name=manipulator_name)
 
     robot_meshmodel = robot_s.gen_meshmodel(is_machine=True, is_robot=True)
     robot_s.jaw_to(0.085)
@@ -54,20 +51,20 @@ if __name__ == '__main__':
     # robot_s.fk("arm", pose)
     # robot_s.is_collided()
 
+    workpiece_before.set_pos(pos=robot_s.machine.jaw_center_pos + np.array([-0.06, 0, 0]))
+    workpiece_before.set_rotmat(
+        rotmat=np.dot(robot_s.machine.jaw_center_rot, rm.rotmat_from_axangle(np.array([0, 1, 0]), np.pi / 2)))
 
-    workpiece_before.set_pos(pos=robot_s.machine.jaw_center_pos+ np.array([-0.06,0,0]))
-    workpiece_before.set_rotmat(rotmat=np.dot(robot_s.machine.jaw_center_rot, rm.rotmat_from_axangle(np.array([0,1,0]), np.pi/2)))
-
-    homo_workpiece_before=workpiece_before.get_homomat()
+    homo_workpiece_before = workpiece_before.get_homomat()
     rotmat_workpiece_before = workpiece_before.get_rotmat()
     # workpiece_after.attach_to(base)
 
     # #-----------------
     for id, item in enumerate(original_grasp_info_list):
-        if id%3 ==0:
+        if id % 3 == 0:
             jnts = robot_s.ik(component_name=component_name,
-                           tgt_pos=rm.homomat_transform_points(homo_workpiece_before, item[1]),
-                           tgt_rotmat=np.dot(rotmat_workpiece_before, item[2]))
+                              tgt_pos=rm.homomat_transform_points(homo_workpiece_before, item[1]),
+                              tgt_rotmat=np.dot(rotmat_workpiece_before, item[2]))
             if jnts is not None:
                 robot_s.fk(component_name, jnts)
                 robot_s.jaw_to(hnd_name='hnd', jawwidth=item[0])
@@ -77,9 +74,8 @@ if __name__ == '__main__':
                     break
             else:
                 robot_s.hnd.grip_at_with_jcpose(rm.homomat_transform_points(homo_workpiece_before, item[1]),
-                                         np.dot(rotmat_workpiece_before, item[2]), item[0])
+                                                np.dot(rotmat_workpiece_before, item[2]), item[0])
                 # robot_s.hnd.gen_meshmodel(rgba=(1,0,0,0.1)).attach_to(base)
-
 
     # for item in original_grasp_info_list:
     #     jnts = robot_s.ik(component_name=component_name,
@@ -94,8 +90,6 @@ if __name__ == '__main__':
     goalpos_workpiece_before = workpiece_before.get_pos()
     goalhomo_workpiece_before = workpiece_before.get_homomat()
 
-
-
     robot_s.fk(component_name, start_conf)
     ppp_s = ppp.PickPlacePlanner(robot_s)
     # start_conf = robot_s.get_jnt_values(manipulator_name)
@@ -108,13 +102,13 @@ if __name__ == '__main__':
                                         start_conf=start_conf,
                                         end_conf=start_conf,
                                         obstacle_list=obstacle_list,
-                                        goal_homomat_list=[homo_workpiece_before, goalhomo_workpiece_before ],
+                                        goal_homomat_list=[homo_workpiece_before, goalhomo_workpiece_before],
                                         approach_direction_list=[None, np.array([1, 0, 0])],
                                         approach_distance_list=[.20] * 2,
                                         depart_direction_list=[np.array([0, 0, 1]), np.array([-1, 0, 0])],
                                         depart_distance_list=[.20] * 2)
-    #===========================================
-    #++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    # ===========================================
+    # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
     # rrtc_planner = rrtc.RRTConnect(robot_s)
     # for item in original_grasp_info_list[200:]:
     #     # jaw_width, jaw_center_pos, jaw_center_rotmat, hnd_pos, hnd_rotmat = grasp_info
@@ -133,7 +127,7 @@ if __name__ == '__main__':
     #             robot_s.gen_meshmodel(rgba=(0, 1, 0, 1)).attach_to(base)
     #             robot_path = path
     #             break
-    #+++++++++++++++++++++++++++++++++
+    # +++++++++++++++++++++++++++++++++
     # base.run()
     # jnts_values = robot_s.ik(component_name, )
     print(jawwidth_list)
@@ -142,6 +136,7 @@ if __name__ == '__main__':
     object_attached_list = []
     counter = [0]
     machine_attached_list = []
+
 
     def update(robot_s,
                object_box,
@@ -178,8 +173,6 @@ if __name__ == '__main__':
         objb_copy.set_homomat(obj_pose)
         objb_copy.attach_to(base)
         object_attached_list.append(objb_copy)
-
-
 
         counter[0] += 1
         return task.again

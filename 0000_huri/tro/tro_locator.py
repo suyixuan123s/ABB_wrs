@@ -6,6 +6,7 @@ import utiltools.thirdparty.p3dhelper as p3dh
 import numpy as np
 import environment.collisionmodel as cm
 
+
 class TLocator(object):
 
     def __init__(self, directory=None):
@@ -21,17 +22,19 @@ class TLocator(object):
             self.bgdepth = pickle.load(open("./databackground/bgdepth.pkl", "rb"))
             self.bgpcd = pickle.load(open("./databackground/bgpcd.pkl", "rb"))
             self.sensorhomomat = pickle.load(open("./datacalibration/calibmat.pkl", "rb"))
-            self.srcpcdnp = pickle.load(open("./dataobjtemplate/"+srcpcdfilename, "rb"))# tstpcd, tube stand template
-            self.srccm = cm.CollisionModel("./objects/"+srcmeshfilename)
+            self.srcpcdnp = pickle.load(
+                open("./dataobjtemplate/" + srcpcdfilename, "rb"))  # tstpcd, tube stand template
+            self.srccm = cm.CollisionModel("./objects/" + srcmeshfilename)
         else:
-            self.bgdepth = pickle.load(open(directory+"/databackground/bgdepth.pkl", "rb"))
-            self.bgpcd = pickle.load(open(directory+"/databackground/bgpcd.pkl", "rb"))
-            self.sensorhomomat = pickle.load(open(directory+"/datacalibration/calibmat.pkl", "rb"))
-            self.srcpcdnp = pickle.load(open(directory+"/dataobjtemplate/"+srcpcdfilename, "rb"))# tstpcd, tube stand template
-            self.srccm = cm.CollisionModel(directory+"/objects/"+srcmeshfilename)
+            self.bgdepth = pickle.load(open(directory + "/databackground/bgdepth.pkl", "rb"))
+            self.bgpcd = pickle.load(open(directory + "/databackground/bgpcd.pkl", "rb"))
+            self.sensorhomomat = pickle.load(open(directory + "/datacalibration/calibmat.pkl", "rb"))
+            self.srcpcdnp = pickle.load(
+                open(directory + "/dataobjtemplate/" + srcpcdfilename, "rb"))  # tstpcd, tube stand template
+            self.srccm = cm.CollisionModel(directory + "/objects/" + srcmeshfilename)
 
         # for compatibility with locatorfixed
-        self.objhomomat =  None
+        self.objhomomat = None
 
     def findobj(self, tgtpcdnp, toggledebug=False):
         """
@@ -51,7 +54,7 @@ class TLocator(object):
 
         # 20200425 cluster is further included
         pcdarraylist, _ = o3dh.cluster_pcd(tgtpcdnp)
-        tgtpcdnp = max(pcdarraylist, key = lambda x:len(x))
+        tgtpcdnp = max(pcdarraylist, key=lambda x: len(x))
         # for pcdarray in pcdarraylist:
         #     rgb = np.random.rand(3)
         #     rgba = np.array([rgb[0], rgb[1], rgb[2], 1])
@@ -61,11 +64,11 @@ class TLocator(object):
         # base.run()
 
         inlinnerrmse, homomat = o3dh.registration_ptpt(self.srcpcdnp, tgtpcdnp, toggledebug=toggledebug)
-        self.tubestandhomomat =  homomat
+        self.tubestandhomomat = homomat
 
         return copy.deepcopy(homomat)
 
-    def capturecorrectedpcd(self, pxc, ncapturetimes = 1):
+    def capturecorrectedpcd(self, pxc, ncapturetimes=1):
         """
         capture a poind cloud and transform it from its sensor frame to global frame
 
@@ -96,7 +99,7 @@ class TLocator(object):
                 objpcdmerged = np.vstack((objpcdmerged, objpcd))
 
         # further crop x
-        objpcdmerged = objpcdmerged[objpcdmerged[:,0]>200]
+        objpcdmerged = objpcdmerged[objpcdmerged[:, 0] > 200]
 
         return objpcdmerged
 
@@ -125,7 +128,7 @@ class TLocator(object):
 
         objcm = copy.deepcopy(self.srccm)
         objcm.set_homomat(homomat)
-        objcm.setColor(.5,.5,.5,1)
+        objcm.setColor(.5, .5, .5, 1)
 
         return objcm
 
@@ -145,11 +148,10 @@ if __name__ == '__main__':
     pcdnp.reparentTo(yhx.base.render)
     yhx.base.run()
 
-
     # homomat = loc.findtubestand_match(objpcdmerged, toggle_debug=True)
 
     elearray, eleconfidencearray = loc.findtubes(homomat, objpcd, toggledebug=False)
-    yhx.p3dh.genframe(pos=homomat[:3,3], rotmat=homomat[:3,:3]).reparentTo(yhx.base.render)
+    yhx.p3dh.genframe(pos=homomat[:3, 3], rotmat=homomat[:3, :3]).reparentTo(yhx.base.render)
     rbtnp = yhx.rbtmesh.genmnp(yhx.robot_s)
     rbtnp.reparentTo(yhx.base.render)
     pcdnp = p3dh.genpointcloudnodepath(objpcd, pntsize=5)

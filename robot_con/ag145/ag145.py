@@ -3,7 +3,7 @@ from time import sleep
 
 
 class Ag145driver():
-    def __init__(self, port = 'com3', baudrate = 115200, force = 100, speed = 100):
+    def __init__(self, port='com3', baudrate=115200, force=100, speed=100):
         port = port
         baudrate = baudrate
         initstate = 0

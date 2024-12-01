@@ -10,7 +10,7 @@ import motion.probabilistic.rrt_connect as rrtc
 base = wd.World(cam_pos=[4, -1, 2], lookat_pos=[0, 0, 0])
 gm.gen_frame().attach_to(base)
 # object
-object_box = cm.gen_box(extent=[.15,.15,.15])
+object_box = cm.gen_box(extent=[.15, .15, .15])
 object_box.set_pos(np.array([.4, .3, .4]))
 object_box.set_rgba([.5, .7, .3, 1])
 object_box.attach_to(base)
@@ -41,6 +41,8 @@ for pose in path[1:-2]:
 
 robot_attached_list = []
 counter = [0]
+
+
 def update(robot_s, path, robot_attached_list, counter, task):
     if counter[0] >= len(path):
         counter[0] = 0
@@ -53,8 +55,9 @@ def update(robot_s, path, robot_attached_list, counter, task):
     robot_meshmodel = robot_s.gen_meshmodel()
     robot_meshmodel.attach_to(base)
     robot_attached_list.append(robot_meshmodel)
-    counter[0]+=1
+    counter[0] += 1
     return task.again
+
 
 taskMgr.doMethodLater(0.01, update, "update",
                       extraArgs=[robot_s, path[1:-1:3], robot_attached_list, counter],

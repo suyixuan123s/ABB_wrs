@@ -13,8 +13,8 @@ tostring = etree.tostring
 class TestMaterial(unittest.TestCase):
 
     def setUp(self):
-        self.dummy = collada.Collada(aux_file_loader = self.image_dummy_loader,
-                validate_output=True)
+        self.dummy = collada.Collada(aux_file_loader=self.image_dummy_loader,
+                                     validate_output=True)
 
         self.dummy_cimage = collada.material.CImage("yourcimage", "./whatever.tga", self.dummy)
         self.cimage = collada.material.CImage("mycimage", "./whatever.tga", self.dummy)
@@ -25,15 +25,15 @@ class TestMaterial(unittest.TestCase):
 
     def test_effect_saving(self):
         effect = collada.material.Effect("myeffect", [], "phong",
-                       emission = (0.1, 0.2, 0.3, 1.0),
-                       ambient = (0.4, 0.5, 0.6, 1.0),
-                       diffuse = (0.7, 0.8, 0.9, 0.5),
-                       specular = (0.3, 0.2, 0.1, 1.0),
-                       shininess = 0.4,
-                       reflective = (0.7, 0.6, 0.5, 1.0),
-                       reflectivity = 0.8,
-                       transparent = (0.2, 0.4, 0.6, 1.0),
-                       transparency = 0.9)
+                                         emission=(0.1, 0.2, 0.3, 1.0),
+                                         ambient=(0.4, 0.5, 0.6, 1.0),
+                                         diffuse=(0.7, 0.8, 0.9, 0.5),
+                                         specular=(0.3, 0.2, 0.1, 1.0),
+                                         shininess=0.4,
+                                         reflective=(0.7, 0.6, 0.5, 1.0),
+                                         reflectivity=0.8,
+                                         transparent=(0.2, 0.4, 0.6, 1.0),
+                                         transparency=0.9)
 
         self.assertEqual(effect.id, "myeffect")
         self.assertEqual(effect.shininess, 0.4)
@@ -64,7 +64,7 @@ class TestMaterial(unittest.TestCase):
         effect.save()
 
         loaded_effect = collada.material.Effect.load(self.dummy, {},
-                                    fromstring(tostring(effect.xmlnode)))
+                                                     fromstring(tostring(effect.xmlnode)))
 
         self.assertEqual(loaded_effect.id, "youreffect")
         self.assertEqual(loaded_effect.shininess, 7.0)
@@ -102,7 +102,7 @@ class TestMaterial(unittest.TestCase):
         self.assertIsNotNone(str(cimage))
 
     def test_cimage_data_loading(self):
-        data_dir = os.path.join(os.path.dirname(os.path.realpath( __file__ )), "data")
+        data_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data")
         texture_file_path = os.path.join(data_dir, "duckCM.tga")
         self.assertTrue(os.path.isfile(texture_file_path), "Could not find data/duckCM.tga file for testing")
 
@@ -113,20 +113,20 @@ class TestMaterial(unittest.TestCase):
         cimage = collada.material.CImage("mycimage", "./whatever.tga", self.dummy)
         image_data = cimage.data
         self.assertEqual(len(image_data), 786476)
-        
+
         try:
             from PIL import Image as pil
         except ImportError:
             pil = None
-            
+
         if pil is not None:
             pil_image = cimage.pilimage
-            self.assertTupleEqual(pil_image.size, (512,512))
+            self.assertTupleEqual(pil_image.size, (512, 512))
             self.assertEqual(pil_image.format, "TGA")
 
             numpy_uints = cimage.uintarray
             self.assertTupleEqual(numpy_uints.shape, (512, 512, 3))
-    
+
             numpy_floats = cimage.floatarray
             self.assertTupleEqual(numpy_uints.shape, (512, 512, 3))
 
@@ -153,8 +153,9 @@ class TestMaterial(unittest.TestCase):
         <format>A8R8G8B8</format>
         </surface>
         """
-        self.assertRaises(collada.DaeIncompleteError, collada.material.Surface.load, self.dummy, {}, fromstring(surface1))
-        
+        self.assertRaises(collada.DaeIncompleteError, collada.material.Surface.load, self.dummy, {},
+                          fromstring(surface1))
+
         surface2 = """
         <newparam xmlns="http://www.collada.org/2005/11/COLLADASchema" sid="file1-surface">
         <surface xmlns="http://www.collada.org/2005/11/COLLADASchema" type="2D">
@@ -163,8 +164,9 @@ class TestMaterial(unittest.TestCase):
         </surface>
         </newparam>
         """
-        self.assertRaises(collada.DaeBrokenRefError, collada.material.Surface.load, self.dummy, {}, fromstring(surface2))
-        
+        self.assertRaises(collada.DaeBrokenRefError, collada.material.Surface.load, self.dummy, {},
+                          fromstring(surface2))
+
         surface3 = """
         <newparam xmlns="http://www.collada.org/2005/11/COLLADASchema" sid="file1-surface">
         <surface xmlns="http://www.collada.org/2005/11/COLLADASchema" type="2D">
@@ -173,7 +175,8 @@ class TestMaterial(unittest.TestCase):
         </surface>
         </newparam>
         """
-        self.assertRaises(collada.DaeBrokenRefError, collada.material.Surface.load, self.dummy, {}, fromstring(surface3))
+        self.assertRaises(collada.DaeBrokenRefError, collada.material.Surface.load, self.dummy, {},
+                          fromstring(surface3))
 
     def test_sampler2d_saving(self):
         cimage = collada.material.CImage("mycimage", "./whatever.tga", self.dummy)
@@ -196,7 +199,8 @@ class TestMaterial(unittest.TestCase):
         sampler2d.save()
 
         loaded_sampler2d = collada.material.Sampler2D.load(self.dummy,
-                                {'yoursurface':other_surface}, fromstring(tostring(sampler2d.xmlnode)))
+                                                           {'yoursurface': other_surface},
+                                                           fromstring(tostring(sampler2d.xmlnode)))
         self.assertEqual(loaded_sampler2d.id, "yoursampler2d")
         self.assertEqual(loaded_sampler2d.surface.id, "yoursurface")
         self.assertEqual(loaded_sampler2d.minfilter, "QUADRATIC_MIPMAP_WHAT")
@@ -217,7 +221,7 @@ class TestMaterial(unittest.TestCase):
         map.save()
 
         loaded_map = collada.material.Map.load(self.dummy,
-                            {'yoursampler2d': other_sampler2d}, fromstring(tostring(map.xmlnode)))
+                                               {'yoursampler2d': other_sampler2d}, fromstring(tostring(map.xmlnode)))
         self.assertEqual(map.sampler.id, "yoursampler2d")
         self.assertEqual(map.texcoord, "TEX1")
 
@@ -225,16 +229,16 @@ class TestMaterial(unittest.TestCase):
         surface = collada.material.Surface("mysurface", self.cimage)
         sampler2d = collada.material.Sampler2D("mysampler2d", surface)
         effect = collada.material.Effect("myeffect", [surface, sampler2d], "phong",
-                       emission = (0.1, 0.2, 0.3, 1.0),
-                       ambient = (0.4, 0.5, 0.6, 1.0),
-                       diffuse = (0.7, 0.8, 0.9, 1.0),
-                       specular = (0.3, 0.2, 0.1, 1.0),
-                       shininess = 0.4,
-                       reflective = (0.7, 0.6, 0.5, 1.0),
-                       reflectivity = 0.8,
-                       transparent = (0.2, 0.4, 0.6, 1.0),
-                       transparency = 0.9,
-                       opaque_mode = OPAQUE_MODE.A_ONE)
+                                         emission=(0.1, 0.2, 0.3, 1.0),
+                                         ambient=(0.4, 0.5, 0.6, 1.0),
+                                         diffuse=(0.7, 0.8, 0.9, 1.0),
+                                         specular=(0.3, 0.2, 0.1, 1.0),
+                                         shininess=0.4,
+                                         reflective=(0.7, 0.6, 0.5, 1.0),
+                                         reflectivity=0.8,
+                                         transparent=(0.2, 0.4, 0.6, 1.0),
+                                         transparency=0.9,
+                                         opaque_mode=OPAQUE_MODE.A_ONE)
 
         other_cimage = collada.material.CImage("yourcimage", "./whatever.tga", self.dummy)
         other_surface = collada.material.Surface("yoursurface", other_cimage)
@@ -262,17 +266,17 @@ class TestMaterial(unittest.TestCase):
 
     def test_rgbzero(self):
         effect = collada.material.Effect("myeffect", [], "phong",
-                       opaque_mode = OPAQUE_MODE.RGB_ZERO)
-        
+                                         opaque_mode=OPAQUE_MODE.RGB_ZERO)
+
         self.assertEqual(effect.opaque_mode, OPAQUE_MODE.RGB_ZERO)
         self.assertEqual(effect.transparency, 0.0)
         effect.save()
-        
+
         loaded_effect = collada.material.Effect.load(self.dummy, {}, fromstring(tostring(effect.xmlnode)))
         self.assertEqual(loaded_effect.opaque_mode, OPAQUE_MODE.RGB_ZERO)
-        
+
         effect = collada.material.Effect("myeffect", [], "phong")
-        
+
         self.assertEqual(effect.opaque_mode, OPAQUE_MODE.A_ONE)
         self.assertEqual(effect.transparency, 1.0)
         effect.save()
@@ -295,6 +299,6 @@ class TestMaterial(unittest.TestCase):
         self.assertEqual(loaded_mat.name, "yourmat")
         self.assertEqual(loaded_mat.effect.id, self.othereffect.id)
 
+
 if __name__ == '__main__':
     unittest.main()
-

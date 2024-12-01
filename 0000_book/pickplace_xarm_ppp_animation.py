@@ -20,7 +20,7 @@ object_box = cm.gen_box(extent=[.02, .06, .7], rgba=[.7, .5, .3, .7])
 # object_box_gl_pos = np.array([.3, -.4, .35])
 # object_box_gl_rotmat = np.eye(3)
 object_box_gl_pos = np.array([.6, .2, .35])
-object_box_gl_rotmat = rm.rotmat_from_euler(0,0,math.pi/2)
+object_box_gl_rotmat = rm.rotmat_from_euler(0, 0, math.pi / 2)
 obgl_start_homomat = rm.homomat_from_posrot(object_box_gl_pos, object_box_gl_rotmat)
 object_box.set_pos(object_box_gl_pos)
 object_box.set_rotmat(object_box_gl_rotmat)
@@ -31,7 +31,7 @@ object_box_copy.attach_to(base)
 # object_box_gl_goal_pos = np.array([.6, -.1, .1])
 # object_box_gl_goal_rotmat = rm.rotmat_from_euler(0, math.pi / 2, math.pi / 2)
 object_box_gl_goal_pos = np.array([.35, -.35, .01])
-object_box_gl_goal_rotmat = rm.rotmat_from_euler(math.pi/3, math.pi / 2, math.pi / 2)
+object_box_gl_goal_rotmat = rm.rotmat_from_euler(math.pi / 3, math.pi / 2, math.pi / 2)
 obgl_goal_homomat = rm.homomat_from_posrot(object_box_gl_goal_pos, object_box_gl_goal_rotmat)
 object_box_goal_copy = object_box.copy()
 object_box_goal_copy.set_homomat(obgl_goal_homomat)
@@ -60,6 +60,8 @@ conf_list, jawwidth_list, objpose_list = \
 robot_attached_list = []
 object_attached_list = []
 counter = [0]
+
+
 def update(robot_s,
            hnd_name,
            object_box,
@@ -92,6 +94,8 @@ def update(robot_s,
     object_attached_list.append(objb_copy)
     counter[0] += 1
     return task.again
+
+
 taskMgr.doMethodLater(0.01, update, "update",
                       extraArgs=[robot_s,
                                  hnd_name,

@@ -248,4 +248,4 @@ class PiecewisePoly(object):
         self._path_array = np.array(path)
         self._n_pnts, self._n_dim = self._path_array.shape
         A = self._solve()
-        return A(np.linspace(0, self._n_pnts-1, num=num)).tolist()
+        return A(np.linspace(0, self._n_pnts - 1, num=num)).tolist()

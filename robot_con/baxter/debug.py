@@ -5,6 +5,7 @@ author: Chenhao
 
 import os
 import sys
+
 #################ENVIRONMENT SETUP####################
 #
 ros_bridge_path = "/home/hlabwrs/Desktop/ros_bridge"
@@ -17,10 +18,10 @@ sys.path.append("/opt/ros/indigo/lib/python2.7/dist-packages")
 os.environ["ROS_ROOT"] = "/opt/ros/indigo/share/ros"
 os.environ["ROS_PACKAGE_PATH"] = ros_bridge_path + "/src:/opt/ros/indigo/share:/opt/ros/indigo/stacks"
 os.environ["ROS_MASTER_URI"] = "http://011402P0015.local:11311"
-os.environ["ROSLISP_PACKAGE_DIRECTORIES"]= ros_bridge_path+"/devel/share/common-lisp"
-os.environ["ROS_DISTRO"]="indigo"
-os.environ["ROS_IP"]="10.0.1.3"
-os.environ["ROS_ETC_DIR"]= "/opt/ros/indigo/etc/ros"
+os.environ["ROSLISP_PACKAGE_DIRECTORIES"] = ros_bridge_path + "/devel/share/common-lisp"
+os.environ["ROS_DISTRO"] = "indigo"
+os.environ["ROS_IP"] = "10.0.1.3"
+os.environ["ROS_ETC_DIR"] = "/opt/ros/indigo/etc/ros"
 
 import rospy
 from baxter_interface import Gripper
@@ -57,8 +58,9 @@ from joint_trajectory_action.joint_trajectory_action import (
     JointTrajectoryActionServer,
 )
 
+
 class Baxter:
-    def __init__(self, usegripper = True):
+    def __init__(self, usegripper=True):
         rospy.init_node("Baxter")
         threading.Thread(target=self.__jointtraj_server).start()
         self.trajrgt = Trajectory("right")
@@ -136,7 +138,7 @@ class Baxter:
         if self._is_grippable(arm):
             arm.open()
         else:
-            rospy.logwarn(armname+ " have not been calibrated")
+            rospy.logwarn(armname + " have not been calibrated")
 
     def closegripper(self, armname="rgt"):
         if not self.__enabled: return
@@ -146,28 +148,28 @@ class Baxter:
         else:
             rospy.logwarn(armname + " have not been calibrated")
 
-    def commandgripper(self,pos , armname="rgt"):
+    def commandgripper(self, pos, armname="rgt"):
         if not self.__enabled: return
         arm = self.__right_hand if armname == "rgt" else self.__left_hand
         if self._is_grippable(arm):
-            arm.command_position(position = pos)
+            arm.command_position(position=pos)
         else:
             rospy.logwarn(armname + " have not been calibrated")
 
-    def _is_grippable(self,gripper):
+    def _is_grippable(self, gripper):
         return (gripper.calibrated() and gripper.ready())
 
-    def currentposgripper(self,armname ="rgt"):
+    def currentposgripper(self, armname="rgt"):
         arm = self.__right_hand if armname == "rgt" else self.__left_hand
         return arm.position()
 
-    def getjnts(self,armname="rgt"):
+    def getjnts(self, armname="rgt"):
         if not self.__enabled: return
         limb = self.__right_limb if armname == "rgt" else self.__left_limb
         angles = limb.joint_angles()
         return angles
 
-    def movejnts(self,jnts_dict, speed =.6 , armname="rgt"):
+    def movejnts(self, jnts_dict, speed=.6, armname="rgt"):
         if not self.__enabled: return
         limb = self.__right_limb if armname == "rgt" else self.__left_limb
         traj = self.trajrgt if armname is "rgt" else self.trajlft
@@ -195,29 +197,29 @@ class Baxter:
         for jnts_dict in jnts_dict_list:
             # limb.move_to_joint_positions(jnts_dict, threshold= baxter_interface.settings.JOINT_ANGLE_TOLERANCE)
 
-            if isinstance(jnts_dict,dict):
+            if isinstance(jnts_dict, dict):
                 path_angle = [jnts_dict[joint_name] for joint_name in limb.joint_names()]
             else:
                 path_angle = jnts_dict
             # print(path_angle)
-            traj.add_point(path_angle,t)
+            traj.add_point(path_angle, t)
             t += speed
         traj.start()
         traj.wait(-1)
         limb.set_joint_position_speed(.3)
         traj.clear()
 
-
-    def getforce(self,armname="rgt"):
+    def getforce(self, armname="rgt"):
         if not self.__enabled: return
         limb = self.__right_limb if armname == "rgt" else self.__left_limb
         ft = limb.endpoint_effort()
         force = ft['force']
         torque = ft['torque']
-        print ft
-        return list(force+torque)
+        print
+        ft
+        return list(force + torque)
 
-    def setscreenimage(self,path):
+    def setscreenimage(self, path):
         # it seems not working
         """
         Send the image located at the specified path to the head
@@ -234,7 +236,7 @@ class Baxter:
         # Sleep to allow for image to be published.
         rospy.sleep(1)
 
-    def getimage(self,cameraname="left_hand_camera"):
+    def getimage(self, cameraname="left_hand_camera"):
         # ['head_camera', 'left_hand_camera', 'right_hand_camera']
         # if cameraname != self.camera_on:
         #     cam = CameraController(self.camera_on)
@@ -248,6 +250,7 @@ class Baxter:
         "rosrun image_view image_view image:=/cameras/head_camera/image"
         # Instantiate CvBridge
         bridge = cv_bridge.CvBridge()
+
         def image_callback(msg):
             print("Received an image!")
             try:
@@ -259,8 +262,9 @@ class Baxter:
                 # Save your OpenCV2 image as a jpeg
                 self.img = cv_img
                 # return cv2_img
+
         # Define your image topic
-        image_topic = "/cameras/"+cameraname+"/image"
+        image_topic = "/cameras/" + cameraname + "/image"
         # Set up your subscriber and define its callback
         imgsub = rospy.Subscriber(image_topic, Image, image_callback)
         while self.img is None:
@@ -270,7 +274,7 @@ class Baxter:
         img = self.img.astype("float")
         self.img = None
 
-        print (img)
+        print(img)
         return img
 
     def __del__(self):
@@ -281,6 +285,7 @@ class Baxter:
                 cam.close()
             except:
                 pass
+
 
 class Trajectory(object):
     def __init__(self, limb):
@@ -321,17 +326,23 @@ class Trajectory(object):
         self._goal = FollowJointTrajectoryGoal()
         self._goal.goal_time_tolerance = self._goal_time_tolerance
         self._goal.trajectory.joint_names = [limb + '_' + joint for joint in \
-            ['s0', 's1', 'e0', 'e1', 'w0', 'w1', 'w2']]
+                                             ['s0', 's1', 'e0', 'e1', 'w0', 'w1', 'w2']]
 
     def stopserver(self):
-        print "ddddd"
+        print
+        "ddddd"
         self.serverpid.kill()
-        print self.serverpid.poll()
-        print "server stop"
+        print
+        self.serverpid.poll()
+        print
+        "server stop"
+
 
 if __name__ == "__main__":
     # b = Baxter()
     rospy.init_node("afds")
+
+
     def server():
         limb = "both"
         rate = 100.0

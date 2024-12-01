@@ -199,8 +199,8 @@ class ADPlanner(object):  # AD = Approach_Depart
                             approach_distance=.1,
                             approach_jawwidth=.05,
                             granularity=.03,
-                            obstacle_list=[], # obstacles, will be checked by both rrt and linear
-                            object_list=[], # target objects, will be checked by rrt, but not by linear
+                            obstacle_list=[],  # obstacles, will be checked by both rrt and linear
+                            object_list=[],  # target objects, will be checked by rrt, but not by linear
                             seed_jnt_values=None,
                             toggle_end_grasp=False,
                             end_jawwidth=.0):
@@ -226,7 +226,7 @@ class ADPlanner(object):  # AD = Approach_Depart
             start2approach_conf_list = self.rrtc_planner.plan(component_name=component_name,
                                                               start_conf=start_conf,
                                                               goal_conf=conf_list[0],
-                                                              obstacle_list=obstacle_list+object_list,
+                                                              obstacle_list=obstacle_list + object_list,
                                                               ext_dist=.05,
                                                               max_time=300)
             if start2approach_conf_list is None:
@@ -244,8 +244,8 @@ class ADPlanner(object):  # AD = Approach_Depart
                           depart_distance=.1,
                           depart_jawwidth=.05,
                           granularity=.03,
-                          obstacle_list=[], # obstacles, will be checked by both rrt and linear
-                          object_list=[], # target objects, will be checked by rrt, but not by linear
+                          obstacle_list=[],  # obstacles, will be checked by both rrt and linear
+                          object_list=[],  # target objects, will be checked by rrt, but not by linear
                           seed_jnt_values=None,
                           toggle_begin_grasp=False,
                           begin_jawwidth=.0):
@@ -271,7 +271,7 @@ class ADPlanner(object):  # AD = Approach_Depart
             depart2goal_conf_list = self.rrtc_planner.plan(component_name=component_name,
                                                            start_conf=conf_list[-1],
                                                            goal_conf=end_conf,
-                                                           obstacle_list=obstacle_list+object_list,
+                                                           obstacle_list=obstacle_list + object_list,
                                                            ext_dist=.05,
                                                            max_time=300)
             if depart2goal_conf_list is None:
@@ -296,8 +296,8 @@ class ADPlanner(object):  # AD = Approach_Depart
                                        depart_distance=.1,
                                        depart_jawwidth=0,
                                        granularity=.03,
-                                       obstacle_list=[], # obstacles, will be checked by both rrt and linear
-                                       object_list=[], # target objects, will be checked by rrt, but not by linear
+                                       obstacle_list=[],  # obstacles, will be checked by both rrt and linear
+                                       object_list=[],  # target objects, will be checked by rrt, but not by linear
                                        seed_jnt_values=None):
         """
         degenerate into gen_ad_primitive if both seed_jnt_values and end_conf are None
@@ -372,6 +372,7 @@ class ADPlanner(object):  # AD = Approach_Depart
 
     def gen_depart_and_approach_motion(self):
         pass
+
 
 if __name__ == '__main__':
     import time

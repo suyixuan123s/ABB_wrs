@@ -24,14 +24,14 @@ _smalltubepath = os.path.join(_this_dir, "objects", "tubesmall.stl")
 _largetubepath = os.path.join(_this_dir, "objects", "tubelarge.stl")
 _tubestand = os.path.join(_this_dir, "objects", "tubestand.stl")
 objst = env.loadobj(_smalltubepath)
-objst.setColor(.7,.7,.7,.9)
+objst.setColor(.7, .7, .7, .9)
 objlt = env.loadobj(_largetubepath)
-objlt.setColor(.3,.3,.3,.9)
+objlt.setColor(.3, .3, .3, .9)
 objtsd = env.loadobj(_tubestand)
 
-objtsd.setColor(0,.5,.7,1.9)
-objtsdpos = [300,0,0]
-objtsd.setPos(objtsdpos[0],objtsdpos[1],objtsdpos[2])
+objtsd.setColor(0, .5, .7, 1.9)
+objtsdpos = [300, 0, 0]
+objtsd.setPos(objtsdpos[0], objtsdpos[1], objtsdpos[2])
 objtsd.reparentTo(base.render)
 
 hndfa = yi.YumiIntegratedFactory()
@@ -44,28 +44,30 @@ robotball = yumiball.YumiBall()
 robotmesh = yumimesh.YumiMesh()
 robotnp = robotmesh.genmnp(robot)
 robotnp.reparentTo(base.render)
-elearray = np.array([[0,0,0,0,0,0,0,0,0,0],
-                     [0,0,0,2,2,2,2,0,0,0],
-                     [0,0,2,1,1,1,0,0,0,0],
-                     [0,0,2,1,2,2,0,0,0,0],
-                     [0,0,0,0,2,0,0,0,0,0]])
+elearray = np.array([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 2, 2, 2, 2, 0, 0, 0],
+                     [0, 0, 2, 1, 1, 1, 0, 0, 0, 0],
+                     [0, 0, 2, 1, 2, 2, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 2, 0, 0, 0, 0, 0]])
 
 
-def getPos(i,j,objtsdpos):
-    x = 300+(i-2)*19
-    y = 9+(j-5)*18
-    z = objtsdpos[2]+2
-    return (x,y,z)
+def getPos(i, j, objtsdpos):
+    x = 300 + (i - 2) * 19
+    y = 9 + (j - 5) * 18
+    z = objtsdpos[2] + 2
+    return (x, y, z)
+
+
 for i in range(5):
     for j in range(10):
-        if elearray[i][j]==1:
+        if elearray[i][j] == 1:
             objsttemp = copy.deepcopy(objst)
-            pos = getPos(i,j,objtsdpos)
+            pos = getPos(i, j, objtsdpos)
             objsttemp.setPos(pos[0], pos[1], pos[2])
             objsttemp.reparentTo(base.render)
-        if elearray[i][j]==2:
+        if elearray[i][j] == 2:
             objsttemp = copy.deepcopy(objlt)
-            pos = getPos(i,j,objtsdpos)
+            pos = getPos(i, j, objtsdpos)
             objsttemp.setPos(pos[0], pos[1], pos[2])
             objsttemp.reparentTo(base.render)
 base.run()
@@ -80,19 +82,21 @@ smoother = sm.Smoother()
 #                      [0, 0, 0, 0, 0, 0, 0, 0, 2, 0],
 #                      [1, 0, 0, 0, 0, 0, 0, 0, 2, 2],
 #                      [1, 0, 0, 0, 0, 0, 0, 2, 0, 2]])
-elearray = np.array([[0,0,0,0,0,0,0,0,0,0],
-                     [0,0,0,2,2,2,2,0,0,0],
-                     [0,0,2,1,1,1,0,0,0,0],
-                     [0,0,2,1,2,2,0,0,0,0],
-                     [0,0,0,0,2,0,0,0,0,0]])
+elearray = np.array([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 2, 2, 2, 2, 0, 0, 0],
+                     [0, 0, 2, 1, 1, 1, 0, 0, 0, 0],
+                     [0, 0, 2, 1, 2, 2, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 2, 0, 0, 0, 0, 0]])
 tpobj = tp.TubePuzzle(elearray)
 path = tpobj.atarSearch()
 
 counter = [0]
 tubemnplist = [[]]
+
+
 def update(path, objst, objlt, counter, tubemnplist, objtsdpos, task):
     if counter[0] < len(path):
-        if len(tubemnplist[0])>0:
+        if len(tubemnplist[0]) > 0:
             for tubemnp in tubemnplist[0]:
                 tubemnp.detachNode()
             tubemnplist[0] = []
@@ -101,13 +105,13 @@ def update(path, objst, objlt, counter, tubemnplist, objtsdpos, task):
             for j in range(state.ncolumn):
                 if state[i][j] == 1:
                     objsttemp = copy.deepcopy(objst)
-                    pos = getPos(i,j,objtsdpos)
+                    pos = getPos(i, j, objtsdpos)
                     objsttemp.setPos(pos[0], pos[1], pos[2])
                     objsttemp.reparentTo(base.render)
                     tubemnplist[0].append(objsttemp)
                 elif state[i][j] == 2:
                     objlttemp = copy.deepcopy(objlt)
-                    pos = getPos(i,j,objtsdpos)
+                    pos = getPos(i, j, objtsdpos)
                     objlttemp.setPos(pos[0], pos[1], pos[2])
                     objlttemp.reparentTo(base.render)
                     tubemnplist[0].append(objlttemp)
@@ -117,6 +121,8 @@ def update(path, objst, objlt, counter, tubemnplist, objtsdpos, task):
     # else:
     #     counter[0] = 0
     return task.again
+
+
 taskMgr.doMethodLater(0.05, update, "update",
                       extraArgs=[path, objst, objlt, counter, tubemnplist, objtsdpos],
                       appendTask=True)

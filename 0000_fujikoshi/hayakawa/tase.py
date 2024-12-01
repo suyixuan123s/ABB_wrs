@@ -549,11 +549,11 @@ def decidemidpose(arm_name, IKpossiblelist_startgoal, handdir, objpos_final=None
                                                                                        obscmlist,
                                                                                        type="source")
                 midpathgoal = robot_inik_solver.gen_rel_linear_motion_with_given_conf(arm_name,
-                                                                                       i[1],
-                                                                                       direction,
-                                                                                       distance,
-                                                                                       obscmlist,
-                                                                                       type="source")
+                                                                                      i[1],
+                                                                                      direction,
+                                                                                      distance,
+                                                                                      obscmlist,
+                                                                                      type="source")
                 if len(midpathstart) > 0 and len(midpathgoal) > 0:
                     # robot_s.movearmfk(midpath[-1], arm_name)
                     # mideepos, mideerot = robot_s.getee(arm_name)
@@ -679,7 +679,7 @@ def execute_global_registration(source_down, target_down, source_fpfh, target_fp
 
 def refine_registration(source, target, result_ransac):
     distance_threshold = 30
-    print(":: Point-to-plane ICP_Iterative_closest_point registration is applied on original point")
+    print(":: Point-to-plane ICP registration is applied on original point")
     print("   clouds to refine the alignment. This time we use a strict")
     print("   distance threshold %.3f." % distance_threshold)
     result = o3d.registration.registration_icp(
@@ -705,7 +705,7 @@ def objectfitting(newpcd, fitobjpcd, refpoint_fitting):
         result_ransac = execute_global_registration(source_down, target_down,
                                                     source_fpfh, source_fpfh, voxel_size)
         print(result_ransac)
-        print("ICP_Iterative_closest_point start")
+        print("ICP start")
         result_icp = refine_registration(source, target, result_ransac)
         print(result_icp)
         transformation = result_icp.transformation

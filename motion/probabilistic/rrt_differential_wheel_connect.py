@@ -167,7 +167,6 @@ if __name__ == '__main__':
     import matplotlib.pyplot as plt
     import robot_sim.robots.xybot.xybot as xyb
 
-
     # ====Search Path with RRT====
     obstacle_list = [
         ((5, 5), 3),

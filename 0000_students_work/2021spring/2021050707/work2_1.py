@@ -5,7 +5,7 @@ import visualization.panda.world as wd
 
 if __name__ == '__main__':
     base = wd.World(cam_pos=np.array([.7, .05, .3]), lookat_pos=np.zeros(3))
-    #衝突モデルの定義
+    # 衝突モデルの定義
     """
     object_ref = cm.CollisionModel(initor="./objects/bunnysim.stl", cdprimit_type="box", cdmesh_type="triangles")
     object_ref.set_rgba([.9, .75, .35, 1])

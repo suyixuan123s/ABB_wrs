@@ -2,6 +2,7 @@ import numpy as np
 import basis.trimesh as trm
 import basis.robot_math as rm
 
+
 def scale(obj, scale_ratio):
     """
     :param obj: trimesh or file path
@@ -33,6 +34,7 @@ def scale_and_save(obj, scale_ratio, savename):
     tmptrimesh = scale(obj, scale_ratio)
     tmptrimesh.export(savename)
 
+
 def convert_to_stl(obj, savename, scale_ratio=1, pos=np.zeros(3), rotmat=np.eye(3)):
     """
     :param obj: trimesh or file path
@@ -48,6 +50,7 @@ def convert_to_stl(obj, savename, scale_ratio=1, pos=np.zeros(3), rotmat=np.eye(
     homomat = rm.homomat_from_posrot(pos, rotmat)
     tmptrimesh.apply_transform(homomat)
     tmptrimesh.export(savename)
+
 
 if __name__ == '__main__':
     # The following contents are commented out to avoid mis-exec.

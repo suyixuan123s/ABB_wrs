@@ -3,6 +3,7 @@ import pickle
 import os
 import environment.bulletcdhelper as bch
 
+
 class HandoverPlanner(object):
     """
 
@@ -41,15 +42,15 @@ class HandoverPlanner(object):
 
         # paramters
         self.fpsnpmat4 = []
-        self.identitygplist = [] # grasp pair list at the identity pose
-        self.fpsnestedglist_rgt = {} # fpsnestedglist_rgt[fpid] = [g0, g1, ...], fpsnestedglist means glist at each floating pose
-        self.fpsnestedglist_lft = {} # fpsnestedglist_lft[fpid] = [g0, g1, ...]
-        self.ikfid_fpsnestedglist_rgt = {} # fid - feasible id
+        self.identitygplist = []  # grasp pair list at the identity pose
+        self.fpsnestedglist_rgt = {}  # fpsnestedglist_rgt[fpid] = [g0, g1, ...], fpsnestedglist means glist at each floating pose
+        self.fpsnestedglist_lft = {}  # fpsnestedglist_lft[fpid] = [g0, g1, ...]
+        self.ikfid_fpsnestedglist_rgt = {}  # fid - feasible id
         self.ikfid_fpsnestedglist_lft = {}
         self.ikjnts_fpsnestedglist_rgt = {}
         self.ikjnts_fpsnestedglist_lft = {}
 
-    def genhvgpsgl(self, posvec, rotmat = None):
+    def genhvgpsgl(self, posvec, rotmat=None):
         """
         generate the handover grasps using the given position and orientation
         sgl means a single position
@@ -65,7 +66,7 @@ class HandoverPlanner(object):
 
         self.identitygplist = []
         if rotmat is None:
-            self.fpsnpmat4 = self.rhx.rm.gen_icohomomats_flat(posvec=posvec, angles=[0,90,180,270])
+            self.fpsnpmat4 = self.rhx.rm.gen_icohomomats_flat(posvec=posvec, angles=[0, 90, 180, 270])
         else:
             self.fpsnpmat4 = [self.rhx.rm.homobuild(posvec, rotmat)]
         self.__genidentitygplist()
@@ -115,13 +116,13 @@ class HandoverPlanner(object):
 
         with open(os.path.join(rhx.root, "datahandover", self.objname + "_hndovrinfo.pickle"), "rb") as file:
             self.fpsnpmat4, self.identitygplist, self.fpsnestedglist_rgt, self.fpsnestedglist_lftt, \
-            self.ikfid_fpsnestedglist_rgt, self.ikfid_fpsnestedglist_lft, \
-            self.ikjnts_fpsnestedglist_rgt, self.ikjnts_fpsnestedglist_lft = pickle.load(file)
+                self.ikfid_fpsnestedglist_rgt, self.ikfid_fpsnestedglist_lft, \
+                self.ikjnts_fpsnestedglist_rgt, self.ikjnts_fpsnestedglist_lft = pickle.load(file)
 
         return self.identityglist_rgt, self.identityglist_lft, self.fpsnpmat4, \
-               self.identitygplist, self.fpsnestedglist_rgt, self.fpsnestedglist_lft, \
-               self.ikfid_fpsnestedglist_rgt, self.ikfid_fpsnestedglist_lft, \
-               self.ikjnts_fpsnestedglist_rgt, self.ikjnts_fpsnestedglist_lft
+            self.identitygplist, self.fpsnestedglist_rgt, self.fpsnestedglist_lft, \
+            self.ikfid_fpsnestedglist_rgt, self.ikfid_fpsnestedglist_lft, \
+            self.ikjnts_fpsnestedglist_rgt, self.ikjnts_fpsnestedglist_lft
 
     def __genidentitygplist(self):
         """
@@ -190,8 +191,8 @@ class HandoverPlanner(object):
                 fgrcenternp = tippos
                 fgrcenterrotmatnp = hndrotmat4[:3, :3]
                 handa = -hndrotmat4[:3, 2]
-                minusworldy = self.rhx.np.array([0,-1,0])
-                if self.rhx.rm.degree_betweenvector(handa,minusworldy) < 90:
+                minusworldy = self.rhx.np.array([0, -1, 0])
+                if self.rhx.rm.degree_betweenvector(handa, minusworldy) < 90:
                     msc = self.rbt.numik(fgrcenternp, fgrcenterrotmatnp, armname)
                     if msc is not None:
                         fgrcenternp_handa = fgrcenternp + handa * self.retractdistance
@@ -212,8 +213,8 @@ class HandoverPlanner(object):
                 fgrcenternp = tippos
                 fgrcenterrotmatnp = hndrotmat4[:3, :3]
                 handa = -hndrotmat4[:3, 2]
-                plusworldy = self.rhx.np.array([0,1,0])
-                if self.rhx.rm.degree_betweenvector(handa,plusworldy) < 90:
+                plusworldy = self.rhx.np.array([0, 1, 0])
+                if self.rhx.rm.degree_betweenvector(handa, plusworldy) < 90:
                     msc = self.rbt.numik(fgrcenternp, fgrcenterrotmatnp, armname)
                     if msc is not None:
                         fgrcenternp_handa = fgrcenternp + handa * self.retractdistance
@@ -247,6 +248,7 @@ class HandoverPlanner(object):
 
         return iscollided
 
+
 if __name__ == "__main__":
     import robothelper as yh
 
@@ -259,8 +261,8 @@ if __name__ == "__main__":
     hmstr.genhvgpsgl(rhx.np.array([400, 0, 300]), rhx.np.eye(3))
 
     identityglist_rgt, identityglist_lft, fpsnpmat4, identitygplist, fpsnestedglist_rgt, fpsnestedglist_lft, \
-    ikfid_fpsnestedglist_rgt,ikfid_fpsnestedglist_lft, \
-    ikjnts_fpsnestedglist_rgt, ikjnts_fpsnestedglist_lft = hmstr.gethandover()
+        ikfid_fpsnestedglist_rgt, ikfid_fpsnestedglist_lft, \
+        ikjnts_fpsnestedglist_rgt, ikjnts_fpsnestedglist_lft = hmstr.gethandover()
     print(ikfid_fpsnestedglist_lft.keys())
     print(ikfid_fpsnestedglist_rgt.keys())
 
@@ -284,4 +286,3 @@ if __name__ == "__main__":
             rhx.rbt.opengripper(jawwidth=jawwidth_lft, armname="lft")
             rhx.rbtmesh.genmnp(rhx.rbt).reparentTo(base.render)
             base.run()
-

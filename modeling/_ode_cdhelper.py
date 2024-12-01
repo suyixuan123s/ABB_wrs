@@ -16,9 +16,11 @@ def gen_cdmesh_vvnf(vertices, vertex_normals, faces):
     obj_ot_geom = OdeTriMeshGeom(OdeTriMeshData(objpdnp, True))
     return obj_ot_geom
 
+
 def copy_cdmesh(obj_ot_geom):
     obj_ot_geom_copy = OdeTriMeshGeom(obj_ot_geom.getTriMeshData())
     return obj_ot_geom_copy
+
 
 # def gen_plane_cdmesh(updirection=np.array([0, 0, 1]), offset=0, name='autogen'):
 #     """
@@ -49,6 +51,7 @@ def is_collided(obj_ode_trimesh0, obj_ode_trimesh1):
     contact_points = [da.pdv3_to_npv3(point) for point in contact_entry.getContactPoints()]
     return (True, contact_points) if len(contact_points) > 0 else (False, contact_points)
 
+
 def update_pose(obj_ode_trimesh, objnp):
     """
     update obj_ode_trimesh using the pos, nd quat of objnp
@@ -60,6 +63,7 @@ def update_pose(obj_ode_trimesh, objnp):
     """
     obj_ode_trimesh.setPosition(objnp.getPos())
     obj_ode_trimesh.setQuaternion(objnp.getQuat())
+
 
 def rayhit_closet(pfrom, pto, objcm):
     """
@@ -77,9 +81,11 @@ def rayhit_closet(pfrom, pto, objcm):
     ray.setLength(length)
     contact_entry = OdeUtil.collide(ray, tgt_cdmesh, max_contacts=10)
     contact_points = [da.pdv3_to_npv3(point) for point in contact_entry.getContactPoints()]
-    min_id = np.argmin(np.linalg.norm(pfrom-np.array(contact_points), axis=1))
-    contact_normals = [da.pdv3_to_npv3(contact_entry.getContactGeom(i).getNormal()) for i in range(contact_entry.getNumContacts())]
+    min_id = np.argmin(np.linalg.norm(pfrom - np.array(contact_points), axis=1))
+    contact_normals = [da.pdv3_to_npv3(contact_entry.getContactGeom(i).getNormal()) for i in
+                       range(contact_entry.getNumContacts())]
     return contact_points[min_id], contact_normals[min_id]
+
 
 def rayhit_all(pfrom, pto, objcm):
     """
@@ -92,7 +98,7 @@ def rayhit_all(pfrom, pto, objcm):
     """
     tgt_cdmesh = gen_cdmesh_vvnf(*objcm.extract_rotated_vvnf())
     ray = OdeRayGeom(length=1)
-    length, dir = rm.unit_vector(pto-pfrom, toggle_length=True)
+    length, dir = rm.unit_vector(pto - pfrom, toggle_length=True)
     ray.set(pfrom[0], pfrom[1], pfrom[2], dir[0], dir[1], dir[2])
     ray.setLength(length)
     hit_entry = OdeUtil.collide(ray, tgt_cdmesh)
@@ -143,7 +149,7 @@ if __name__ == '__main__':
     # for hitpos, hitnormal in zip([hit_point], [hit_normal]):
     for hitpos, hitnormal in zip(hit_points, hit_normals):
         gm.gen_sphere(hitpos, radius=.003, rgba=np.array([0, 1, 1, 1])).attach_to(base)
-        gm.gen_arrow(hitpos, epos=hitpos+hitnormal*.03, thickness=.002, rgba=np.array([0, 1, 1, 1])).attach_to(base)
+        gm.gen_arrow(hitpos, epos=hitpos + hitnormal * .03, thickness=.002, rgba=np.array([0, 1, 1, 1])).attach_to(base)
     gm.gen_stick(spos=pfrom, epos=pto, thickness=.002).attach_to(base)
     # gm.gen_arrow(spos=hitpos, epos=hitpos + hitnrml * .07, thickness=.002, rgba=np.array([0, 1, 0, 1])).attach_to(base)
     base.run()

@@ -10,7 +10,7 @@ gm.gen_torus(axis=[0, 0, 1], portion=1, radius=.2, thickness=.003, rgba=[1, 1, 0
              sections=16, discretization=64).attach_to(base)
 rotmat = rm.rotmat_from_euler(math.pi / 3, -math.pi / 6, math.pi / 3)
 gm.gen_dashframe(length=.2, rotmat=rotmat).attach_to(base)
-gm.gen_dashtorus(axis=rotmat[:3,2], portion=1, radius=.2, thickness=.003, rgba=[1, 1, 0, 1],
+gm.gen_dashtorus(axis=rotmat[:3, 2], portion=1, radius=.2, thickness=.003, rgba=[1, 1, 0, 1],
                  lspace=.007, lsolid=.01, sections=16, discretization=64).attach_to(base)
 # gm.gen_sphere(radius=.2, rgba=[.67,.67,.67,.9], subdivisions=5).attach_to(base)
 #
@@ -29,13 +29,13 @@ gm.gen_dashtorus(axis=rotmat[:3,2], portion=1, radius=.2, thickness=.003, rgba=[
 # gm.gen_sphere(radius=.005, pos=pre_vec_xyz*.2, rgba=[0,0,0,1]).attach_to(base)
 #
 ax, angle = rm.axangle_between_rotmat(np.eye(3), rotmat)
-gm.gen_arrow(epos=ax*.4, rgba=[0,0,0,1]).attach_to(base)
+gm.gen_arrow(epos=ax * .4, rgba=[0, 0, 0, 1]).attach_to(base)
 for step_angle in np.linspace(0, angle, 10).tolist():
     rotmat = rm.rotmat_from_axangle(ax, step_angle)
     gm.gen_dashframe(length=.2, rotmat=rotmat).attach_to(base)
-    gm.gen_dashtorus(axis=rotmat[:3,2], portion=1, radius=.2, thickness=.003, rgba=[1, 1, 0, 1],
+    gm.gen_dashtorus(axis=rotmat[:3, 2], portion=1, radius=.2, thickness=.003, rgba=[1, 1, 0, 1],
                      lspace=.007, lsolid=.01, sections=16, discretization=64).attach_to(base)
-gm.gen_sphere(radius=.2, rgba=[.67,.67,.67,.9], subdivisions=5).attach_to(base)
+gm.gen_sphere(radius=.2, rgba=[.67, .67, .67, .9], subdivisions=5).attach_to(base)
 # radius, _ = rm.unit_vector(cross_vec*.2-cross_vec.dot(ax)*ax*.2, toggle_length=True)
 # print(radius)
 # gm.gen_circarrow(ax, portion=1, center=cross_vec.dot(ax)*ax*.2, radius=radius, discretization=64, sections=16, thickness=.003, rgba=[0,0,0,1]).attach_to(base)

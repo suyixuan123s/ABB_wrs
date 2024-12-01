@@ -10,12 +10,13 @@ if __name__ == '__main__':
     import visualization.panda.world as wd
     import modeling.geometric_model as gm
     import modeling.collision_model as cm
+
     # import robot_sim.manipulators.machinetool.machinetool_gripper as machine
     base = wd.World(cam_pos=[1, 1, .5], lookat_pos=[0, 0, .2])
-    gm.gen_frame(length=.5, thickness=.05,).attach_to(base)
+    gm.gen_frame(length=.5, thickness=.05, ).attach_to(base)
 
     obj = cm.CollisionModel("objects/holder.stl")
-    obj.set_pos(pos = np.array([0,0,1]))
+    obj.set_pos(pos=np.array([0, 0, 1]))
     obj.attach_to(base)
 
     workpiece_before = cm.CollisionModel("objects/workpiece_before.stl")
@@ -35,26 +36,25 @@ if __name__ == '__main__':
     gm.gen_sphere(np.array([0, 0, 0]), radius=0.08).attach_to(base)
     gm.gen_sphere(np.array([-.9, .27, 0.06]), radius=0.08).attach_to(base)
 
-
     # machine = machine.RobotiqHE()
     # machine.gen_meshmodel().attach_to(base)
 
     robot_s = ur5e.UR5EConveyorBelt()
     start_conf = robot_s.get_jnt_values(component_name=component_name)
     # start_tcp = robot_s.fk( component_name="arm" , jnt_values=start_conf)
-    start_tcp_pos, start_tcp_rot = robot_s.get_gl_tcp(manipulator_name = manipulator_name)
+    start_tcp_pos, start_tcp_rot = robot_s.get_gl_tcp(manipulator_name=manipulator_name)
     gm.gen_sphere(start_tcp_pos, radius=0.02).attach_to(base)
     robot_meshmodel = robot_s.gen_meshmodel()
     robot_meshmodel.attach_to(base)
     robot_s.jaw_to(0.05)
     # robot_s.fk("arm", pose)
-    start_tcp_pos, start_tcp_rot = robot_s.get_gl_tcp(manipulator_name = manipulator_name)
+    start_tcp_pos, start_tcp_rot = robot_s.get_gl_tcp(manipulator_name=manipulator_name)
     gm.gen_sphere(start_tcp_pos, radius=0.02).attach_to(base)
     robot_meshmodel = robot_s.gen_meshmodel()
     robot_meshmodel.attach_to(base)
 
-    goal_tcp_pos = start_tcp_pos + np.array([-0.2,-0.8,-0.50])
-    rotmat = rm.rotmat_from_axangle(np.array([0,1,0]), angle = 30*np.pi/180)
+    goal_tcp_pos = start_tcp_pos + np.array([-0.2, -0.8, -0.50])
+    rotmat = rm.rotmat_from_axangle(np.array([0, 1, 0]), angle=30 * np.pi / 180)
     goal_tcp_rot = np.dot(rotmat, start_tcp_rot)
     rotmat = rm.rotmat_from_axangle(np.array([1, 0, 0]), angle=10 * np.pi / 180)
     goal_tcp_rot = np.dot(rotmat, goal_tcp_rot)

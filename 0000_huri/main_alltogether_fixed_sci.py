@@ -22,8 +22,8 @@ if __name__ == '__main__':
     # pcdnp.reparentTo(yhx.base.render)
     elearray, eleconfidencearray = lctr.findtubes(lctr.tubestandhomomat, objpcd, toggledebug=False)
 
-
     import registration.pattern as ptn
+
     pto = ptn.Pattern(root=".")
     # tmpelearray = np.array([[0,0,1,1,0,0,2,2,2,2],
     #                         [1,1,0,0,1,1,0,0,0,0],
@@ -116,7 +116,7 @@ if __name__ == '__main__':
         # print(collisionelearray)
         # print(renderingelearray)
         print(nodepresent.grid)
-        print(nodepresent.grid-nodenext.grid)
+        print(nodepresent.grid - nodenext.grid)
         collisiontbcmlist = lctr.gentubes(collisionelearray, tubestand_homomat=lctr.tubestandhomomat)
 
         initpos_normalized = np.array(
@@ -144,14 +144,15 @@ if __name__ == '__main__':
         #         pto.gencad(homomat=lctr.tubestandhomomat).reparentTo(base.render)
         #         td = True
         numikmsmp, jawwidthmsmp, objmsmp = ppplanner.findppmotion_symmetric(inithm, goalhm, armname=armname,
-                                                                            rbtinitarmjnts = [lastrgtarmjnts, lastlftarmjnts],
+                                                                            rbtinitarmjnts=[lastrgtarmjnts,
+                                                                                            lastlftarmjnts],
                                                                             finalstate="uo",
                                                                             obscmlist=obscmlist, userrt=True,
                                                                             primitivedistance_init_foward=130,
                                                                             premitivedistance_init_backward=130,
                                                                             primitivedistance_final_foward=130,
                                                                             premitivedistance_final_backward=130,
-                                                                            toggledebug = td)
+                                                                            toggledebug=td)
         ## for toggle_debug, check the collisions between the hand and the tubes
         # for tbcm in collisiontbcmlist:
         #     tbcm.reparentTo(yhx.base.render)
@@ -169,8 +170,8 @@ if __name__ == '__main__':
             # weight_array[1,0] = 1
             for id, onebadarray in enumerate(badarraylist):
                 if np.array_equal(onebadarray, tmpelearray):
-                    weightarray[badstartgoals[id][0][0], badstartgoals[id][0][1]] = id+1
-                    weightarray[badstartgoals[id][1][0], badstartgoals[id][1][1]] = id+1
+                    weightarray[badstartgoals[id][0][0], badstartgoals[id][0][1]] = id + 1
+                    weightarray[badstartgoals[id][1][0], badstartgoals[id][1][1]] = id + 1
             path = tpobj.atarSearch(weightarray)
             for node in path:
                 print(node)
@@ -217,6 +218,8 @@ if __name__ == '__main__':
     counter = [0]
     tubemnplist = [[]]
     tubestandhomomat = [lctr.tubestandhomomat]
+
+
     def update(path, counter, lctr, tubemnplist, task):
         if counter[0] < len(path):
             for np in tubemnplist[0]:
@@ -233,6 +236,7 @@ if __name__ == '__main__':
         else:
             counter[0] = 0
         return task.again
+
 
     taskMgr.doMethodLater(0.05, update, "update",
                           extraArgs=[finalpath, counter, lctr, tubemnplist],

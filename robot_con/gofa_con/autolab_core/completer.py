@@ -8,11 +8,13 @@ import pyreadline as readline
 
 RE_SPACE = re.compile('.*\s+$', re.M)
 
+
 class Completer(object):
     """
     Tab completion class for Dex-Net CLI.
     Adapted from http://stackoverflow.com/questions/5637124/tab-completion-in-pythons-raw-input
     """
+
     def __init__(self, commands=[]):
         """ Provide a list of commands """
         self.commands = commands
@@ -38,7 +40,7 @@ class Completer(object):
         dirname, rest = os.path.split(path)
         tmp = dirname if dirname else '.'
         res = [os.path.join(dirname, p)
-                for p in self._listdir(tmp) if p.startswith(rest)]
+               for p in self._listdir(tmp) if p.startswith(rest)]
         # more than one match, or single match which does not exist (typo)
         if len(res) > 1 or not os.path.exists(path):
             return res
@@ -52,7 +54,7 @@ class Completer(object):
         "Completions for the 'extra' command."
         # treat the last arg as a path and complete it
         if len(args) == 0:
-            return self._listdir('./')            
+            return self._listdir('./')
         return self._complete_path(args[-1])
 
     def complete(self, text, state):
@@ -67,7 +69,7 @@ class Completer(object):
         line = readline.get_line_buffer().split()
 
         # dexnet entity tab completion
-        results =  [w for w in self.words if w.startswith(text)] + [None]
+        results = [w for w in self.words if w.startswith(text)] + [None]
         if results != [None]:
             return results[state]
 

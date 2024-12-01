@@ -1,6 +1,7 @@
 import basis.robot_math as rm
 import modeling._ode_cdhelper as mcd
 
+
 class ModelCollection(object):
     """
     a helper class to further hide pandanodes
@@ -43,7 +44,7 @@ class ModelCollection(object):
             homomat = objcm.get_homomat()
             vertices += rm.homomat_transform_points(homomat, objtrm.vertices)
             vertex_normals += rm.homomat_transform_points(homomat, objtrm.vertex_normals)
-            faces += (objtrm.faces+len(faces))
+            faces += (objtrm.faces + len(faces))
         return mcd.gen_cdmesh_vvnf(vertices, vertex_normals, faces)
 
     @property
@@ -75,11 +76,11 @@ class ModelCollection(object):
         for gm in self._gm_list:
             gm.detach()
 
-    def show_cdprimit(self): # only work for cm
+    def show_cdprimit(self):  # only work for cm
         for cm in self._cm_list:
             cm.show_cdprimit()
 
-    def unshow_cdprimit(self): # only work for cm
+    def unshow_cdprimit(self):  # only work for cm
         for cm in self._cm_list:
             cm.unshow_cdprimit()
 

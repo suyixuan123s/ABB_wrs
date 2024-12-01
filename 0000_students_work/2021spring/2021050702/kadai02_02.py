@@ -21,12 +21,12 @@ if __name__ == "__main__":
 
     # 初期姿勢における関節変位を求めます
     start_pos = np.array([.15, -.35, .3])  # 初期姿勢
-    start_rotmat = rm.rotmat_from_axangle([0, 1, 0], math.pi/2)  # 初期姿勢
+    start_rotmat = rm.rotmat_from_axangle([0, 1, 0], math.pi / 2)  # 初期姿勢
     gm.gen_frame(pos=start_pos, rotmat=start_rotmat).attach_to(base)
     start_conf = yumi_s.ik(component_name, start_pos, start_rotmat)
     # ゴールの姿勢における関節変位を求めます
     goal_pos = np.array([.4, -.2, .2])  # ゴールの姿勢
-    goal_rotmat = rm.rotmat_from_axangle([0, 1, 0], math.pi/3)  # ゴールの姿勢
+    goal_rotmat = rm.rotmat_from_axangle([0, 1, 0], math.pi / 3)  # ゴールの姿勢
     gm.gen_frame(pos=goal_pos, rotmat=goal_rotmat).attach_to(base)
     goal_conf = yumi_s.ik(component_name, goal_pos, goal_rotmat)
 
@@ -40,9 +40,9 @@ if __name__ == "__main__":
     star1.set_rotmat(rm.rotmat_from_axangle(axis=[0, 0, 1], angle=math.pi / 2.))
     # 各障害物のCollisionModelを表示します
     glass1.attach_to(base)
-    #glass1.show_cdprimit()
+    # glass1.show_cdprimit()
     star1.attach_to(base)
-    #star1.show_cdprimit()
+    # star1.show_cdprimit()
     # obstacle listを作成します
     obstacle_list = [glass1, star1]
 

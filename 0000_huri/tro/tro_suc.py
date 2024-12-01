@@ -13,9 +13,9 @@ class PcdGrab(object):
             self.bgpcd = pickle.load(open("../databackground/bgpcddepthlow.pkl", "rb"))
             self.sensorhomomat = pickle.load(open("../datacalibration/calibmat.pkl", "rb"))
         else:
-            self.bgdepth = pickle.load(open(directory+"/databackground/bgdepthlow.pkl", "rb"))
-            self.bgpcd = pickle.load(open(directory+"/databackground/bgpcddepthlow.pkl", "rb"))
-            self.sensorhomomat = pickle.load(open(directory+"/datacalibration/calibmat.pkl", "rb"))
+            self.bgdepth = pickle.load(open(directory + "/databackground/bgdepthlow.pkl", "rb"))
+            self.bgpcd = pickle.load(open(directory + "/databackground/bgpcddepthlow.pkl", "rb"))
+            self.sensorhomomat = pickle.load(open(directory + "/datacalibration/calibmat.pkl", "rb"))
 
     def capturecorrectedpcd(self, pxc, ncapturetimes=1):
         """
@@ -38,7 +38,7 @@ class PcdGrab(object):
             substracteddepth = substracteddepth.clip(20, 300)
             substracteddepth[substracteddepth == 20] = 0
             substracteddepth[substracteddepth == 300] = 0
-            substracteddepth[:100, :] = 0 # 300, 1700 for high resolution
+            substracteddepth[:100, :] = 0  # 300, 1700 for high resolution
             substracteddepth[1000:, :] = 0
             substracteddepth[:, :100] = 0
             substracteddepth[:, 1000:] = 0
@@ -69,6 +69,7 @@ class PcdGrab(object):
         """
 
         return rm.homotransformpointarray(self.sensorhomomat, pcdarray)
+
 
 if __name__ == '__main__':
     import robothelper
@@ -110,26 +111,28 @@ if __name__ == '__main__':
         reconstructedmeshobjcm = cm.CollisionModel(reconstructedtrimesh)
         reconstructedmeshobjcm.reparentTo(rhx.base.render)
         if i == 0:
-            reconstructedmeshobjcm.setColor(.7,0,0,1)
+            reconstructedmeshobjcm.setColor(.7, 0, 0, 1)
         elif i == 1:
-            reconstructedmeshobjcm.setColor(0,0,.7,1)
+            reconstructedmeshobjcm.setColor(0, 0, .7, 1)
         elif i == 2:
-            reconstructedmeshobjcm.setColor(0,.7,0,1)
+            reconstructedmeshobjcm.setColor(0, .7, 0, 1)
         else:
-            reconstructedmeshobjcm.setColor(1,1,1,1)
+            reconstructedmeshobjcm.setColor(1, 1, 1, 1)
 
-        freesuctst.plansuctions(effa=effa, objinit=reconstructedmeshobjcm, faceangle=.85, segangle=.85, mindist=10, reduceradius=30, discretesize=8, torqueresist = 100)
+        freesuctst.plansuctions(effa=effa, objinit=reconstructedmeshobjcm, faceangle=.85, segangle=.85, mindist=10,
+                                reduceradius=30, discretesize=8, torqueresist=100)
         # freesuctst.showfacets(togglesamples=True, togglenormals=False,
         #                       togglesamples_ref=True, togglenormals_ref=False,
         #                       togglesamples_refcls=True, togglenormals_refcls=False, specificfacet=True)
-        p3dh.gensphere(pos=np.mean(freesuctst.objcm.objtrm.vertices, axis=0), radius=5, rgba=[1, 1, 1, 1]).reparentTo(rhx.base.render)
+        p3dh.gensphere(pos=np.mean(freesuctst.objcm.objtrm.vertices, axis=0), radius=5, rgba=[1, 1, 1, 1]).reparentTo(
+            rhx.base.render)
         print(len(freesuctst.sucrotmats_planned))
         print(len(freesuctst.facets))
         for i, homomat in enumerate(freesuctst.sucrotmats_planned):
             # homomat[:3,3] = homomat[:3,3]-homomat[:3,2]*120
             homomatnew = np.copy(homomat)
-            homomatnew[:3,3] = homomat[:3,3]-homomat[:3,2]*3
-            homomatnew[:3, :3] = np.dot(rm.rodrigues(homomat[:3,0], 45), homomat[:3,:3])
+            homomatnew[:3, 3] = homomat[:3, 3] - homomat[:3, 2] * 3
+            homomatnew[:3, :3] = np.dot(rm.rodrigues(homomat[:3, 0], 45), homomat[:3, :3])
             # tmpef = effa.genendeffector()
             # tmpef.sethomomat(homomat)
             # tmpef.reparentTo(rhx.base.render)
@@ -141,8 +144,8 @@ if __name__ == '__main__':
                 tmpef.set_homomat(homomat)
                 tmpef.reparentTo(rhx.base.render)
                 tmpef.set_rgba(1, 1, 1, .3)
-                pos = homomat[:3,3]
-                rot = homomat[:3,:3]
+                pos = homomat[:3, 3]
+                rot = homomat[:3, :3]
                 rhx.opengripperx("lft")
                 rhx.movetox(armjnts, "lft")
                 break
@@ -155,5 +158,3 @@ if __name__ == '__main__':
         #     tmpef.setcolor(1, 0, 0, .3)
         break
     rhx.show()
-
-

@@ -1,5 +1,7 @@
-#-*-coding:utf-8-*-
+# -*-coding:utf-8-*-
 import numpy as np
+from direct.task.TaskManagerGlobal import taskMgr
+
 import basis.trimesh as trimesh
 from panda3d.core import *
 # import pandaplotutils.pandageom as pandageom
@@ -8,7 +10,7 @@ import modeling.geometric_model as gm
 import basis.data_adapter as da
 
 
-def drawSurface(base,vertices, normal, faces, color):
+def drawSurface(base, vertices, normal, faces, color):
     '''
     draw a surface using pandageom.packpandageom
     :param base:
@@ -33,7 +35,8 @@ def drawSurface(base,vertices, normal, faces, color):
     star.setTwoSided(True)
     star.reparentTo(base.render)
 
-def drawSingleFaceSurface(base,vertices, faces, color):
+
+def drawSingleFaceSurface(base, vertices, faces, color):
     '''
     draw a surface using a calculated fourth point to creat a hull
     :param base:
@@ -54,7 +57,8 @@ def drawSingleFaceSurface(base,vertices, faces, color):
     surface.set_rgba(color)
     surface.attach_to(base)
 
-def drawanySingleSurface(base,vertices,color):
+
+def drawanySingleSurface(base, vertices, color):
     '''
     draw a surface using a calculated fourth point to creat a hull
     :param base:
@@ -72,6 +76,7 @@ def drawanySingleSurface(base,vertices,color):
     surface = da.trimesh_to_nodepath(surface)
     surface.set_color(color)
     surface.reparentTo(base.render)
+
 
 def monitor(textNode):
     from direct.gui.OnscreenText import OnscreenText

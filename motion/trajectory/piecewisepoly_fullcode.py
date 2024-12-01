@@ -100,7 +100,7 @@ class PiecewisePoly(object):
             interpolated_y_dotdot += interpolated_y_dotdot_i.tolist()
         return interpolated_y, interpolated_y_dot, interpolated_y_dotdot, interpolated_y, interpolated_x
 
-    def _quintic_solve(self): # WRONG! should be 6 d
+    def _quintic_solve(self):  # WRONG! should be 6 d
         N = self._n_pnts - 1
         X = np.zeros((5 * N, 5 * N))
         Y = np.zeros((5 * N, self._n_dim))

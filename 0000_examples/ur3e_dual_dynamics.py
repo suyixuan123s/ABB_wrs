@@ -14,13 +14,14 @@ def get_lnk_bdmodel(robot_s, component_name, lnk_id):
     bd_lnk.set_homomat(rm.homomat_from_posrot(lnk["gl_pos"], lnk["gl_rotmat"]))
     return bd_lnk
 
+
 def update_robot_bdmodel(robot_s, bd_lnk_list):
     cnter = 0
     for arm_name in ["lft_arm", "rgt_arm"]:
         for lnk_id in [1, 2, 3, 4, 5, 6]:
             lnk = robot_s.manipulator_dict[arm_name].lnks[lnk_id]
             bd_lnk_list[cnter].set_homomat(rm.homomat_from_posrot(lnk["gl_pos"], lnk["gl_rotmat"]))
-            cnter+=1
+            cnter += 1
 
 
 def get_robot_bdmoel(robot_s):
@@ -45,7 +46,7 @@ if __name__ == '__main__':
     base.attach_internal_update_obj(obj_bd_box)
 
     robot_s = ur3ed.UR3EDual()
-    robot_s.fk("both_arm", np.radians(np.array([-90,-60,-60,180,0,0,90,-120,60,0,0,0])))
+    robot_s.fk("both_arm", np.radians(np.array([-90, -60, -60, 180, 0, 0, 90, -120, 60, 0, 0, 0])))
     robot_s.gen_stickmodel().attach_to(base)
     robot_s.show_cdprimit()
     bd_lnk_list = get_robot_bdmoel(robot_s)
@@ -53,17 +54,20 @@ if __name__ == '__main__':
         bdl.start_physics()
         base.attach_internal_update_obj(bdl)
 
+
     def update(robot_s, bd_lnk_list, task):
         if base.inputmgr.keymap['space'] is True:
             la_jnt_values = robot_s.get_jnt_values("lft_arm")
             ra_jnt_values = robot_s.get_jnt_values("rgt_arm")
-            rand_la = np.random.rand(6)*.01
-            rand_ra = np.random.rand(6)*.01
-            la_jnt_values=la_jnt_values+rand_la
-            ra_jnt_values=ra_jnt_values+rand_ra
+            rand_la = np.random.rand(6) * .01
+            rand_ra = np.random.rand(6) * .01
+            la_jnt_values = la_jnt_values + rand_la
+            ra_jnt_values = ra_jnt_values + rand_ra
             robot_s.fk(component_name="both_arm", jnt_values=np.hstack((la_jnt_values, ra_jnt_values)))
             update_robot_bdmodel(robot_s, bd_lnk_list)
             base.inputmgr.keymap['space'] = False
         return task.cont
+
+
     taskMgr.add(update, "update", extraArgs=[robot_s, bd_lnk_list], appendTask=True)
     base.run()

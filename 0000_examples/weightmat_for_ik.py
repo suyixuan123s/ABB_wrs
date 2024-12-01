@@ -60,6 +60,6 @@ for element in onej:
 y = []
 for each_value in x:
     y.append(_wln_weightmat(each_value))
-print(x,y)
+print(x, y)
 plt.plot(x, y)
 plt.show()

@@ -44,7 +44,7 @@ while True:
         # cv2.waitKey(0)
         point_cloud = pk_obj.transform_depth_image_to_point_cloud(depth_image_handle)
         point_cloud = rm.homomat_transform_points(rm.homomat_inverse(origin_homomat), point_cloud)
-        point_cloud[point_cloud[:,0]<-1]=point_cloud[point_cloud[:,0]<-1]*0
+        point_cloud[point_cloud[:, 0] < -1] = point_cloud[point_cloud[:, 0] < -1] * 0
         mypoint_cloud = gm.GeometricModel(initor=point_cloud)
         mypoint_cloud.attach_to(base)
         base.run()

@@ -116,7 +116,7 @@ class Protocol1PacketHandler(object):
 
         txpacket[total_packet_length - 1] = ~checksum & 0xFF
 
-        #print "[TxPacket] %r" % txpacket
+        # print "[TxPacket] %r" % txpacket
 
         # tx packet
         port.clearPort()
@@ -197,7 +197,7 @@ class Protocol1PacketHandler(object):
 
         port.is_using = False
 
-        #print "[RxPacket] %r" % rxpacket
+        # print "[RxPacket] %r" % rxpacket
 
         return rxpacket, result
 

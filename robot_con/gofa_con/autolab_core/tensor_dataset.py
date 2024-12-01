@@ -38,11 +38,13 @@ from . import YamlConfig
 TENSOR_EXT = '.npy'
 COMPRESSED_TENSOR_EXT = '.npz'
 
+
 class Tensor(object):
     """ Abstraction for 4-D tensor objects with a fixed allocation size. 
     The data structure can only be modified by appending a datapoint
     or removing the last datapoint, but can be read from any index at any time.
     """
+
     def __init__(self, shape, dtype=np.float32, data=None):
         self.cur_index = 0
         self.iter_index = 0
@@ -53,12 +55,12 @@ class Tensor(object):
 
     @property
     def arr(self):
-        return self.data[:self.cur_index,...]
+        return self.data[:self.cur_index, ...]
 
     @property
     def size(self):
         return self.cur_index
-    
+
     @property
     def shape(self):
         return self.data.shape
@@ -98,7 +100,7 @@ class Tensor(object):
 
     def __setitem__(self, i, data):
         if ind >= self.size:
-            raise ValueError('Index %d out of bounds! Tensor has size %d' %(i, self.size))
+            raise ValueError('Index %d out of bounds! Tensor has size %d' % (i, self.size))
         return self.set_datapoint(i, data)
 
     def __iter__(self):
@@ -109,8 +111,8 @@ class Tensor(object):
         if self.iter_index >= self.size:
             raise StopIteration
         self.iter_index += 1
-        return self.datapoint(self.iter_index-1)
-    
+        return self.datapoint(self.iter_index - 1)
+
     def next(self):
         return self.__next__()
 
@@ -129,7 +131,7 @@ class Tensor(object):
         num_datapoints_to_add = datapoints.shape[0]
         end_index = self.cur_index + num_datapoints_to_add
         if end_index <= self.num_datapoints:
-            self.data[self.cur_index:end_index,...] = datapoints
+            self.data[self.cur_index:end_index, ...] = datapoints
             self.cur_index = end_index
 
     def delete_last(self):
@@ -137,7 +139,7 @@ class Tensor(object):
         if self.cur_index == 0:
             raise ValueError('Cannot delete datapoint from empty tensor!')
         self.cur_index -= 1
-            
+
     def datapoint(self, ind):
         """ Returns the datapoint at the given index. """
         if self.height is None:
@@ -147,9 +149,9 @@ class Tensor(object):
     def set_datapoint(self, ind, datapoint):
         """ Sets the value of the datapoint at the given index. """
         if ind >= self.num_datapoints:
-            raise ValueError('Index %d out of bounds! Tensor has %d datapoints' %(ind, self.num_datapoints))
+            raise ValueError('Index %d out of bounds! Tensor has %d datapoints' % (ind, self.num_datapoints))
         self.data[ind, ...] = np.array(datapoint).astype(self.dtype)
-            
+
     def data_slice(self, slice_ind):
         """ Returns a slice of datapoints """
         if self.height is None:
@@ -166,13 +168,13 @@ class Tensor(object):
         _, file_ext = os.path.splitext(filename)
         if compressed:
             if file_ext != COMPRESSED_TENSOR_EXT:
-                raise ValueError('Can only save compressed tensor with %s extension' %(COMPRESSED_TENSOR_EXT))
+                raise ValueError('Can only save compressed tensor with %s extension' % (COMPRESSED_TENSOR_EXT))
             np.savez_compressed(filename,
-                                self.data[:self.cur_index,...])
+                                self.data[:self.cur_index, ...])
         else:
             if file_ext != TENSOR_EXT:
                 raise ValueError('Can only save tensor with .npy extension')
-            np.save(filename, self.data[:self.cur_index,...])
+            np.save(filename, self.data[:self.cur_index, ...])
         return True
 
     @staticmethod
@@ -182,27 +184,29 @@ class Tensor(object):
         _, file_ext = os.path.splitext(filename)
         if compressed:
             if file_ext != COMPRESSED_TENSOR_EXT:
-                raise ValueError('Can only load compressed tensor with %s extension' %(COMPRESSED_TENSOR_EXT))
+                raise ValueError('Can only load compressed tensor with %s extension' % (COMPRESSED_TENSOR_EXT))
             data = np.load(filename)['arr_0']
         else:
             if file_ext != TENSOR_EXT:
                 raise ValueError('Can only load tensor with .npy extension')
             data = np.load(filename)
-            
+
         # fill prealloc tensor
         if prealloc is not None:
             prealloc.reset()
             prealloc.add_batch(data)
             return prealloc
-            
+
         # init new tensor
         tensor = Tensor(data.shape, data.dtype, data=data)
         return tensor
+
 
 class TensorDatapoint(dict):
     """ A single tensor datapoint.
     Basically acts like a dictionary.
     """
+
     def __init__(self, field_names, *args, **kwargs):
         dict.__init__(self, *args, **kwargs)
         for field_name in field_names:
@@ -211,7 +215,8 @@ class TensorDatapoint(dict):
     @property
     def field_names(self):
         return list(self.keys())
-            
+
+
 class TensorDataset(object):
     """ A class for efficient storage and access of datasets containing datapoints
     with multiple attributes of different types (e.g. images and robot_s gripper poses).
@@ -222,6 +227,7 @@ class TensorDataset(object):
     Thus, reads are most efficient when performed in order rather than randomly, to prevent
     expensive I/O to read a single datapoint.
     """
+
     def __init__(self, filename, config, access_mode=WRITE_ACCESS, force_overwrite=False):
         # read params
         self._filename = filename
@@ -236,18 +242,18 @@ class TensorDataset(object):
             os.mkdir(self._filename)
         # throw error if dataset doesn't exist
         elif not os.path.exists(self._filename) and access_mode == READ_ONLY_ACCESS:
-            raise ValueError('Dataset %s does not exist!' %(self._filename))
+            raise ValueError('Dataset %s does not exist!' % (self._filename))
         # check dataset empty
         elif access_mode == WRITE_ACCESS and os.path.exists(self._filename) and len(os.listdir(self._filename)) > 0:
             if not force_overwrite:
-                human_input = keyboard_input('Dataset %s exists. Overwrite?' %(self._filename), yesno=True)
+                human_input = keyboard_input('Dataset %s exists. Overwrite?' % (self._filename), yesno=True)
                 if human_input.lower() == 'n':
                     raise ValueError('User opted not to overwrite dataset')
-                
+
             # delete the old dataset
             shutil.rmtree(self._filename)
             os.mkdir(self._filename)
-            
+
         # save config to location
         if access_mode == WRITE_ACCESS:
             config_filename = os.path.join(self._filename, 'config.json')
@@ -267,7 +273,7 @@ class TensorDataset(object):
         # init index maps
         self._index_to_file_num = {}
         self._file_num_to_indices = {}
-            
+
         # init state variables
         if access_mode == WRITE_ACCESS:
             # init no files
@@ -282,7 +288,7 @@ class TensorDataset(object):
             self._metadata = {}
             if os.path.exists(self.metadata_filename):
                 self._metadata = json.load(open(self.metadata_filename, 'r'))
-            
+
             # read the number of tensor files
             tensor_dir = self.tensor_dir
             tensor_filenames = filenames(tensor_dir, tag=COMPRESSED_TENSOR_EXT, sorted=True)
@@ -293,10 +299,10 @@ class TensorDataset(object):
                     pruned_tensor_filenames.append(filename)
                 except:
                     pass
-            tensor_filenames = pruned_tensor_filenames    
+            tensor_filenames = pruned_tensor_filenames
             file_nums = np.array([int(filename[-9:-4]) for filename in tensor_filenames])
             if len(file_nums) > 0:
-                self._num_tensors = np.max(file_nums)+1
+                self._num_tensors = np.max(file_nums) + 1
             else:
                 self._num_tensors = 0
 
@@ -304,7 +310,7 @@ class TensorDataset(object):
             self._num_datapoints_last_file = 0
             self._num_datapoints = 0
             if file_nums.shape[0] > 0:
-                last_tensor_ind = np.where(file_nums == self._num_tensors-1)[0][0]
+                last_tensor_ind = np.where(file_nums == self._num_tensors - 1)[0][0]
                 found_last_file = False
                 while self._num_tensors >= 0 and not found_last_file:
                     try:
@@ -313,11 +319,12 @@ class TensorDataset(object):
                     except:
                         found_last_file = False
                         self._num_tensors -= 1
-                        last_tensor_ind = np.where(file_nums == self._num_tensors-1)[0][0]
-                        
+                        last_tensor_ind = np.where(file_nums == self._num_tensors - 1)[0][0]
+
                 self._num_datapoints_last_file = last_tensor_data.shape[0]
-                self._num_datapoints = self._datapoints_per_file * (self._num_tensors-1) + self._num_datapoints_last_file
-                
+                self._num_datapoints = self._datapoints_per_file * (
+                            self._num_tensors - 1) + self._num_datapoints_last_file
+
             # set file index
             cur_file_num = 0
             start_datapoint_index = 0
@@ -332,10 +339,12 @@ class TensorDataset(object):
                     start_datapoint_index += self._datapoints_per_file
 
                     # set mapping from file num to datapoint indices
-                    if cur_file_num < self._num_tensors-1:
-                        self._file_num_to_indices[cur_file_num] = np.arange(self._datapoints_per_file) + start_datapoint_index
+                    if cur_file_num < self._num_tensors - 1:
+                        self._file_num_to_indices[cur_file_num] = np.arange(
+                            self._datapoints_per_file) + start_datapoint_index
                     else:
-                        self._file_num_to_indices[cur_file_num] = np.arange(self._num_datapoints_last_file) + start_datapoint_index
+                        self._file_num_to_indices[cur_file_num] = np.arange(
+                            self._num_datapoints_last_file) + start_datapoint_index
 
                 # set mapping from index to file num
                 self._index_to_file_num[ind] = cur_file_num
@@ -355,7 +364,7 @@ class TensorDataset(object):
     @property
     def metadata_filename(self):
         return os.path.join(self._filename, 'metadata.json')
-    
+
     @property
     def num_tensors(self):
         return self._num_tensors
@@ -394,7 +403,7 @@ class TensorDataset(object):
     def tensor_indices(self):
         """ Returns an array of all tensor indices. """
         return np.arange(self._num_tensors)
-    
+
     @property
     def tensor_dir(self):
         """ Return the tensor directory. """
@@ -411,17 +420,19 @@ class TensorDataset(object):
         """
         split_names = os.listdir(self.split_dir)
         return split_names
-    
+
     def datapoint_indices_for_tensor(self, tensor_index):
         """ Returns the indices for all datapoints in the given tensor. """
         if tensor_index >= self._num_tensors:
-            raise ValueError('Tensor index %d is greater than the number of tensors (%d)' %(tensor_index, self._num_tensors))
+            raise ValueError(
+                'Tensor index %d is greater than the number of tensors (%d)' % (tensor_index, self._num_tensors))
         return self._file_num_to_indices[tensor_index]
 
     def tensor_index(self, datapoint_index):
         """ Returns the index of the tensor containing the referenced datapoint. """
         if datapoint_index >= self._num_datapoints:
-            raise ValueError('Datapoint index %d is greater than the number of datapoints (%d)' %(datapoint_index, self._num_datapoints))
+            raise ValueError('Datapoint index %d is greater than the number of datapoints (%d)' % (
+            datapoint_index, self._num_datapoints))
         return self._index_to_file_num[datapoint_index]
 
     def generate_tensor_filename(self, field_name, file_num, compressed=True):
@@ -429,7 +440,7 @@ class TensorDataset(object):
         file_ext = TENSOR_EXT
         if compressed:
             file_ext = COMPRESSED_TENSOR_EXT
-        filename = os.path.join(self.filename, 'tensors', '%s_%05d%s' %(field_name, file_num, file_ext))
+        filename = os.path.join(self.filename, 'tensors', '%s_%05d%s' % (field_name, file_num, file_ext))
         return filename
 
     def train_indices_filename(self, split_name):
@@ -455,7 +466,7 @@ class TensorDataset(object):
         if os.path.exists(os.path.join(self.split_dir, split_name)):
             return True
         return False
-    
+
     def _allocate_tensors(self):
         """ Allocates the tensors in the dataset. """
         # init tensors dict
@@ -465,7 +476,7 @@ class TensorDataset(object):
         for field_name, field_spec in self._config['fields'].items():
             # parse attributes
             field_dtype = np.dtype(field_spec['dtype'])
-            
+
             # parse shape
             field_shape = [self._datapoints_per_file]
             if 'height' in field_spec.keys():
@@ -474,7 +485,7 @@ class TensorDataset(object):
                     field_shape.append(field_spec['width'])
                     if 'channels' in field_spec.keys():
                         field_shape.append(field_spec['channels'])
-                        
+
             # create tensor
             self._tensors[field_name] = Tensor(field_shape, field_dtype)
 
@@ -490,8 +501,8 @@ class TensorDataset(object):
         # check datapoint fields
         for field_name in datapoint.keys():
             if field_name not in self.field_names:
-                raise ValueError('Field %s not specified in dataset' %(field_name))
-        
+                raise ValueError('Field %s not specified in dataset' % (field_name))
+
         # store data in tensor
         cur_num_tensors = self._num_tensors
         new_num_tensors = cur_num_tensors
@@ -520,7 +531,7 @@ class TensorDataset(object):
         field_name = self.field_names[0]
         if self._tensors[field_name].is_full:
             # save next tensors to file
-            logging.info('Dataset %s: Writing tensor %d to disk' %(self.filename, tensor_ind))
+            logging.info('Dataset %s: Writing tensor %d to disk' % (self.filename, tensor_ind))
             self.write()
 
         # increment num datapoints
@@ -551,12 +562,13 @@ class TensorDataset(object):
 
         # check valid input
         if ind >= self._num_datapoints:
-            raise ValueError('Index %d larger than the number of datapoints in the dataset (%d)' %(ind, self._num_datapoints))
+            raise ValueError(
+                'Index %d larger than the number of datapoints in the dataset (%d)' % (ind, self._num_datapoints))
 
         # load the field names
         if field_names is None:
             field_names = self.field_names
-        
+
         # return the datapoint
         datapoint = TensorDatapoint(field_names)
         file_num = self._index_to_file_num[ind]
@@ -640,7 +652,7 @@ class TensorDataset(object):
         new_last_tensor_ind = new_last_datapoint_ind // self._datapoints_per_file
 
         # delete all but the last tensor
-        delete_tensor_ind = range(new_last_tensor_ind+1, last_tensor_ind+1) 
+        delete_tensor_ind = range(new_last_tensor_ind + 1, last_tensor_ind + 1)
         for tensor_ind in delete_tensor_ind:
             for field_name in self.field_names:
                 filename = self.generate_tensor_filename(field_name, tensor_ind)
@@ -664,7 +676,7 @@ class TensorDataset(object):
             if not new_last_tensor.has_data:
                 os.remove(filename)
                 new_last_tensor.reset()
-        
+
         # update num datapoints            
         if self._num_datapoints - 1 - num_to_delete >= 0:
             self._num_datapoints = new_num_datapoints
@@ -675,7 +687,7 @@ class TensorDataset(object):
         self._num_tensors = new_last_tensor_ind + 1
         if dataset_empty:
             self._num_tensors = 0
-            
+
     def add_metadata(self, key, value):
         """ Adds metadata (key-value pairs) to the dataset.
 
@@ -692,12 +704,12 @@ class TensorDataset(object):
         json.dump(self._metadata, open(self.metadata_filename, 'w'),
                   indent=JSON_INDENT,
                   sort_keys=True)
-    
+
     def write(self):
         """ Writes all tensors to the next file number. """
         # write the next file for all fields
         for field_name in self.field_names:
-            filename = self.generate_tensor_filename(field_name, self._num_tensors-1)
+            filename = self.generate_tensor_filename(field_name, self._num_tensors - 1)
             self._tensors[field_name].save(filename, compressed=True)
 
         # write the current metadata to file
@@ -707,7 +719,7 @@ class TensorDataset(object):
 
         # update
         self._has_unsaved_data = False
-        
+
     def flush(self):
         """ Flushes the data tensors and saves metadata to disk. """
         self.write()
@@ -751,16 +763,16 @@ class TensorDataset(object):
             metadata about the split
         """
         if not self.has_split(split_name):
-            raise ValueError('Split %s does not exist!' %(split_name))
+            raise ValueError('Split %s does not exist!' % (split_name))
         metadata_filename = self.split_metadata_filename(split_name)
         train_filename = self.train_indices_filename(split_name)
-        val_filename = self.val_indices_filename(split_name)        
+        val_filename = self.val_indices_filename(split_name)
 
         metadata = json.load(open(metadata_filename, 'r'))
         train_indices = np.load(train_filename)['arr_0']
         val_indices = np.load(val_filename)['arr_0']
         return train_indices, val_indices, metadata
-        
+
     def make_split(self, split_name, val_indices=None, train_pct=0.8, field_name=None):
         """ Splits the dataset into train and test according
         to the given attribute.
@@ -790,7 +802,9 @@ class TensorDataset(object):
 
         # check existence
         if self.has_split(split_name):
-            raise ValueError('Cannot create split %s - it already exists! To overwrite, delete split with TensorDataset.delete_split(split_name)' %(split_name))
+            raise ValueError(
+                'Cannot create split %s - it already exists! To overwrite, delete split with TensorDataset.delete_split(split_name)' % (
+                    split_name))
 
         # perform splitting
         if val_indices is not None:
@@ -822,7 +836,7 @@ class TensorDataset(object):
 
             # check valid field
             if field_name not in self.config['fields'].keys():
-                raise ValueError('Field %d not in dataset!' %(field_name))
+                raise ValueError('Field %d not in dataset!' % (field_name))
             if 'height' in self.config['fields'][field_name].keys():
                 raise ValueError('Can only split on scalar fields!')
 
@@ -850,9 +864,9 @@ class TensorDataset(object):
                 else:
                     val_indices.append(i)
             train_indices = np.array(train_indices)
-            val_indices = np.array(val_indices)                    
-                
-        # sort indices
+            val_indices = np.array(val_indices)
+
+            # sort indices
         train_indices.sort()
         val_indices.sort()
 
@@ -862,7 +876,7 @@ class TensorDataset(object):
         split_dir = os.path.join(self.split_dir, split_name)
         os.mkdir(split_dir)
         train_filename = self.train_indices_filename(split_name)
-        val_filename = self.val_indices_filename(split_name)        
+        val_filename = self.val_indices_filename(split_name)
         np.savez_compressed(train_filename, train_indices)
         np.savez_compressed(val_filename, val_indices)
         metadata_filename = self.split_metadata_filename(split_name)

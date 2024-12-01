@@ -20,7 +20,6 @@ import utiltools.thirdparty.o3dhelper as o3dh
 import pickle
 import tro.tro_pickplaceplanner as ppp
 
-
 if __name__ == '__main__':
 
     yhx = robothelper.RobotHelperX(usereal=True)
@@ -31,7 +30,6 @@ if __name__ == '__main__':
     # yhx.opengripperx(arm_name="rgt")
     # yhx.opengripperx(arm_name="lft")
 
-
     objcm = cm.CollisionModel("../objects/vacuumhead.stl")
 
     # yhx = robothelper.RobotHelper(startworld=True)
@@ -39,22 +37,22 @@ if __name__ == '__main__':
     obstaclecmlist = []
     armname = "rgt"
     rgtinitarmjnts = yhx.robot_s.getarmjnts(armname=armname).tolist()
-    primitivedirection_backward = np.array([0,0,1])
+    primitivedirection_backward = np.array([0, 0, 1])
     primitivedistance_backward = 150
     rgtupmotion = yhx.genmovebackwardmotion(primitivedirection_backward, primitivedistance_backward,
-                                         armjnts0, obstaclecmlist, armname)
+                                            armjnts0, obstaclecmlist, armname)
     rgtpickmotion = rgtupmotion[::-1]
     rgtrrtgotobeforepick = yhx.planmotion(rgtinitarmjnts, rgtpickmotion[0], obstaclecmlist, armname)
     armname = "lft"
     lftinitarmjnts = yhx.robot_s.getarmjnts(armname=armname).tolist()
-    fakelftupmotion = [lftinitarmjnts]*len(rgtupmotion)
-    fakelftpickmotion = [lftinitarmjnts]*len(rgtpickmotion)
-    fakelftrrtgotobeforepick = [lftinitarmjnts]*len(rgtrrtgotobeforepick)
+    fakelftupmotion = [lftinitarmjnts] * len(rgtupmotion)
+    fakelftpickmotion = [lftinitarmjnts] * len(rgtpickmotion)
+    fakelftrrtgotobeforepick = [lftinitarmjnts] * len(rgtrrtgotobeforepick)
 
-    rgtmotion = rgtrrtgotobeforepick+rgtpickmotion+rgtupmotion
-    lftmotion = fakelftrrtgotobeforepick+fakelftpickmotion+fakelftupmotion
+    rgtmotion = rgtrrtgotobeforepick + rgtpickmotion + rgtupmotion
+    lftmotion = fakelftrrtgotobeforepick + fakelftpickmotion + fakelftupmotion
 
-    yhx.movemotionx(rgtrrtgotobeforepick+rgtpickmotion, armname='rgt')
+    yhx.movemotionx(rgtrrtgotobeforepick + rgtpickmotion, armname='rgt')
     yhx.toggleonsuction(armname='rgt')
     yhx.movemotionx(rgtupmotion, armname='rgt')
 
@@ -64,15 +62,15 @@ if __name__ == '__main__':
     rgtinitarmjnts = rgtupmotion[-1]
     yhx.robot_s.movearmfk(armjnts1, armname)
     # primitivedirection_backward = -yhx.robot_s.getee(arm_name)[1][:,0]
-    primitivedirection_backward = np.array([0,-1,1])
+    primitivedirection_backward = np.array([0, -1, 1])
     primitivedistance_backward = 150
     rgtbackmotion = yhx.genmovebackwardmotion(primitivedirection_backward, primitivedistance_backward,
-                                         armjnts1, obstaclecmlist, armname)
+                                              armjnts1, obstaclecmlist, armname)
     rgtrrtgotobeforehandover = yhx.planmotion(rgtinitarmjnts, rgtbackmotion[0], obstaclecmlist, armname)
-    fakelftrrtgotobeforehandover = [lftinitarmjnts]*len(rgtrrtgotobeforehandover)
+    fakelftrrtgotobeforehandover = [lftinitarmjnts] * len(rgtrrtgotobeforehandover)
 
-    rgtmotion = rgtmotion+rgtrrtgotobeforehandover
-    lftmotion = lftmotion+fakelftrrtgotobeforehandover
+    rgtmotion = rgtmotion + rgtrrtgotobeforehandover
+    lftmotion = lftmotion + fakelftrrtgotobeforehandover
 
     yhx.movemotionx(rgtrrtgotobeforehandover, armname='rgt')
 
@@ -83,23 +81,23 @@ if __name__ == '__main__':
     primitivedirection_backward = -yhx.robot_s.getee(armname)[1][:, 2]
     primitivedistance_backward = 100
     lftbackmotion = yhx.genmovebackwardmotion(primitivedirection_backward, primitivedistance_backward,
-                                            armjnts2, obstaclecmlist, armname)
+                                              armjnts2, obstaclecmlist, armname)
     lftforwardmotion = lftbackmotion[::-1]
     lftrrtgotobeforehandoverreceive = yhx.planmotion(lftinitarmjnts, lftforwardmotion[0], obstaclecmlist, armname)
-    fakergtrrtgotobeforehandoverreceive = [rgtinitarmjnts]*len(lftrrtgotobeforehandoverreceive)
-    fakergtforwardmotion = [rgtinitarmjnts]*len(lftforwardmotion)
+    fakergtrrtgotobeforehandoverreceive = [rgtinitarmjnts] * len(lftrrtgotobeforehandoverreceive)
+    fakergtforwardmotion = [rgtinitarmjnts] * len(lftforwardmotion)
 
-    rgtmotion = rgtmotion+fakergtrrtgotobeforehandoverreceive+fakergtforwardmotion
-    lftmotion = lftmotion+lftrrtgotobeforehandoverreceive+lftforwardmotion
+    rgtmotion = rgtmotion + fakergtrrtgotobeforehandoverreceive + fakergtforwardmotion
+    lftmotion = lftmotion + lftrrtgotobeforehandoverreceive + lftforwardmotion
     #
     yhx.movemotionx(lftrrtgotobeforehandoverreceive, armname='lft')
     yhx.movemotionx(lftforwardmotion, armname='lft')
     yhx.closegripperx(armname='lft')
 
-    fakelftbackmotion = [lftforwardmotion[-1]]*len(rgtbackmotion)
+    fakelftbackmotion = [lftforwardmotion[-1]] * len(rgtbackmotion)
 
-    rgtmotion = rgtmotion+rgtbackmotion
-    lftmotion = lftmotion+fakelftbackmotion
+    rgtmotion = rgtmotion + rgtbackmotion
+    lftmotion = lftmotion + fakelftbackmotion
     #
     yhx.toggleoffsuction(armname='rgt')
     yhx.movemotionx(rgtbackmotion, armname='rgt')
@@ -110,21 +108,24 @@ if __name__ == '__main__':
     # armjnts3 = np.array([-55.57, -66.58, 80.62, 18.66, -205.87, -17.62, -124.98])
     armjnts3 = np.array([-61.65, -58.98, 90.48, 12.00, -234.39, -31.60, -101.99])
     armname = "lft"
-    lftinitarmjnts = lftforwardmotion[-1] # yhx.robot_s.movearmfk(armjnts3, arm_name)
-    primitivedirection_forward = np.array([0,0,1])
+    lftinitarmjnts = lftforwardmotion[-1]  # yhx.robot_s.movearmfk(armjnts3, arm_name)
+    primitivedirection_forward = np.array([0, 0, 1])
     primitivedistance_forward = -200
     lftforwardmotion = yhx.genmoveforwardmotion(primitivedirection_forward, primitivedistance_forward,
-                                         armjnts3, obstaclecmlist, armname)
+                                                armjnts3, obstaclecmlist, armname)
     lftdownwardmotion = lftforwardmotion
     yhx.robot_s.movearmfk(armjnts3, armname)
     yhx.robot_s.movearmfk(rgtbackmotion[-1], "rgt")
-    lftrrtgotobeforeinsertion = yhx.planmotionhold(lftinitarmjnts, lftdownwardmotion[0], objcm=objcm, relpos=np.array([0,0,0]), relrot=rm.rodrigues(np.array([0,0,1]), 90), obscmlist=obstaclecmlist, armname=armname)
+    lftrrtgotobeforeinsertion = yhx.planmotionhold(lftinitarmjnts, lftdownwardmotion[0], objcm=objcm,
+                                                   relpos=np.array([0, 0, 0]),
+                                                   relrot=rm.rodrigues(np.array([0, 0, 1]), 90),
+                                                   obscmlist=obstaclecmlist, armname=armname)
 
-    fakergtrrtgotobeforeinsertion = [rgtbackmotion[-1]]*len(lftrrtgotobeforeinsertion)
-    fakergtdownwardmotion = [rgtbackmotion[-1]]*len(lftdownwardmotion)
+    fakergtrrtgotobeforeinsertion = [rgtbackmotion[-1]] * len(lftrrtgotobeforeinsertion)
+    fakergtdownwardmotion = [rgtbackmotion[-1]] * len(lftdownwardmotion)
 
-    rgtmotion = rgtmotion+fakergtrrtgotobeforeinsertion+fakergtdownwardmotion
-    lftmotion = lftmotion+lftrrtgotobeforeinsertion+lftdownwardmotion
+    rgtmotion = rgtmotion + fakergtrrtgotobeforeinsertion + fakergtdownwardmotion
+    lftmotion = lftmotion + lftrrtgotobeforeinsertion + lftdownwardmotion
 
     #
     yhx.movemotionx(lftrrtgotobeforeinsertion, armname='lft')
@@ -132,6 +133,8 @@ if __name__ == '__main__':
 
     rbtmnp = [None]
     motioncounter = [0]
+
+
     def render(yh, rgtmotion, lftmotion, rbtmnp, motioncounter, task):
         print(motioncounter[0])
         if motioncounter[0] < len(rgtmotion):
@@ -144,6 +147,8 @@ if __name__ == '__main__':
         else:
             motioncounter[0] = 0
         return task.again
+
+
     taskMgr.doMethodLater(0.01, render, "render",
                           extraArgs=[yhx, rgtmotion, lftmotion, rbtmnp, motioncounter],
                           appendTask=True)

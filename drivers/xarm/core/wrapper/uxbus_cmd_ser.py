@@ -41,7 +41,7 @@ class UxbusCmdSer(UxbusCmd):
 
     def set_prot_flag(self, prot_flag):
         return 0
-    
+
     def get_prot_flag(self):
         return 0
 

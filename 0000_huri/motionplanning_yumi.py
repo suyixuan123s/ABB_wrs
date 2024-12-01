@@ -14,7 +14,6 @@ import copy
 import robotconn.yumirapid.yumi_robot as yr
 import robotconn.yumirapid.yumi_state as ys
 
-
 if __name__ == '__main__':
 
     base = pandactrl.World(camp=[2700, -2000, 2000], lookatpos=[0, 0, 500])
@@ -33,9 +32,9 @@ if __name__ == '__main__':
     objlt = env.loadobj(_largetubepath)
     objtsd = env.loadobj(_tubestand)
 
-    objtsd.setColor(0,.5,.7,1.9)
-    objtsdpos = [300,0,0]
-    objtsd.setPos(objtsdpos[0],objtsdpos[1],objtsdpos[2])
+    objtsd.setColor(0, .5, .7, 1.9)
+    objtsdpos = [300, 0, 0]
+    objtsd.setPos(objtsdpos[0], objtsdpos[1], objtsdpos[2])
     objtsd.reparentTo(base.render)
 
     tubecmlist = []
@@ -44,11 +43,15 @@ if __name__ == '__main__':
                          [0, 0, 2, 1, 1, 1, 0, 0, 0, 0],
                          [0, 0, 2, 1, 2, 2, 0, 0, 0, 0],
                          [0, 0, 0, 0, 2, 0, 0, 0, 0, 0]])
+
+
     def getPos(i, j, objtsdpos):
         x = 300 + (i - 2) * 19
         y = 9 + (j - 5) * 18
         z = objtsdpos[2] + 2
         return (x, y, z)
+
+
     for i in range(5):
         for j in range(10):
             if elearray[i][j] == 1:
@@ -108,20 +111,20 @@ if __name__ == '__main__':
 
     starttreesamplerate = 50
     endtreesamplerate = 50
-    rbtstartpos = np.array([250,-250,200])
-    rbtstartrot = np.array([[1,0,0],
-                        [0,-0.92388,-0.382683],
-                        [0,0.382683,-0.92388]]).T
+    rbtstartpos = np.array([250, -250, 200])
+    rbtstartrot = np.array([[1, 0, 0],
+                            [0, -0.92388, -0.382683],
+                            [0, 0.382683, -0.92388]]).T
     # start = robot_s.numik(rbtstartpos, rbtstartrot, arm_name=arm_name)
     # print(start)
-    rbtgoalpos = np.array([300,-200,200])
-    rbtgoalrot = np.dot(rm.rodrigues([0,0,1],90),rbtstartrot)
+    rbtgoalpos = np.array([300, -200, 200])
+    rbtgoalrot = np.dot(rm.rodrigues([0, 0, 1], 90), rbtstartrot)
     goal = robot.numik(rbtgoalpos, rbtgoalrot, armname=armname)
     print(goal)
     planner = rrtc.RRTConnect(start=start, goal=goal, ctcallback=ctcallback,
-                                  starttreesamplerate=starttreesamplerate,
-                                  endtreesamplerate=endtreesamplerate, expanddis=30,
-                                  maxiter=2000, maxtime=100.0)
+                              starttreesamplerate=starttreesamplerate,
+                              endtreesamplerate=endtreesamplerate, expanddis=30,
+                              maxiter=2000, maxtime=100.0)
     robot.movearmfk(start, armname)
     robotnp = robotmesh.genmnp(robot)
     robotnp.reparentTo(base.render)
@@ -130,13 +133,15 @@ if __name__ == '__main__':
 
     robotnp.reparentTo(base.render)
     robotball.showcn(robotball.genfullbcndict(robot))
-    [path, sampledpoints] = planner.planning(obscmlist+tubecmlist)
+    [path, sampledpoints] = planner.planning(obscmlist + tubecmlist)
     path = smoother.pathsmoothing(path, planner, maxiter=100)
     print(path)
     for pose in path:
         robot.movearmfk(pose, armname)
-        rbtmnp = robotmesh.genmnp(robot, rgbargt=[1,0,0,.3])
+        rbtmnp = robotmesh.genmnp(robot, rgbargt=[1, 0, 0, .3])
         rbtmnp.reparentTo(base.render)
+
+
     # base.run()
     def update(rbtmnp, motioncounter, robot, path, armname, robotmesh, robotball, task):
         if base.inputmgr.keyMap['space'] is True:
@@ -163,6 +168,7 @@ if __name__ == '__main__':
         else:
             motioncounter[0] = 0
         return task.again
+
 
     rbtmnp = [None, None]
     motioncounter = [0]

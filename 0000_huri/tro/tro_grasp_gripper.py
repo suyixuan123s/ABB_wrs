@@ -4,6 +4,7 @@ import numpy as np
 import pickle
 import random
 
+
 def write_pickle_file(model_name, effect_grasps, root=None):
     """
 
@@ -18,10 +19,10 @@ def write_pickle_file(model_name, effect_grasps, root=None):
     if root is None:
         directory = "./"
     else:
-        directory = root+"/"
+        directory = root + "/"
 
     try:
-        data = pickle.load(open(directory+'tro_predefinedgrippings.pickle', 'rb'))
+        data = pickle.load(open(directory + 'tro_predefinedgrippings.pickle', 'rb'))
     except:
         print("load failed, create new file.")
         data = {}
@@ -29,7 +30,8 @@ def write_pickle_file(model_name, effect_grasps, root=None):
     data[model_name] = effect_grasps
     for k, v in data.items():
         print(k, len(v))
-    pickle.dump(data, open(directory+'tro_predefinedgrippings.pickle', 'wb'))
+    pickle.dump(data, open(directory + 'tro_predefinedgrippings.pickle', 'wb'))
+
 
 def load_pickle_file(model_name, root=None):
     """
@@ -45,10 +47,10 @@ def load_pickle_file(model_name, root=None):
     if root is None:
         directory = "./"
     else:
-        directory = root+"/"
+        directory = root + "/"
 
     try:
-        data = pickle.load(open(directory+'tro_predefinedgrippings.pickle', 'rb'))
+        data = pickle.load(open(directory + 'tro_predefinedgrippings.pickle', 'rb'))
         for k, v in data.items():
             print(k, len(v))
         effect_grasps = data[model_name]
@@ -56,6 +58,7 @@ def load_pickle_file(model_name, root=None):
     except:
         print("load failed, create new graqsp file or grasp first.")
         raise ValueError("File or data not found!")
+
 
 if __name__ == "__main__":
     rhx = yh.RobotHelper()
@@ -65,20 +68,24 @@ if __name__ == "__main__":
     predefinedgrasps = []
     c0nvec = rhx.np.array([0, -1, 0])
     approachvec = rhx.np.array([1, 0, 0])
-    for z in [90+random.randint(0,20), 130+random.randint(-10,20), 170+random.randint(-10,10), 210+random.randint(-10,20)]:
-        x = random.randint(-2,8)
+    for z in [90 + random.randint(0, 20), 130 + random.randint(-10, 20), 170 + random.randint(-10, 10),
+              210 + random.randint(-10, 20)]:
+        x = random.randint(-2, 8)
         for anglei in range(0, 360, 15):
-        # for anglej in [240, 270]:
+            # for anglej in [240, 270]:
             newav = rhx.np.dot(rhx.rm.rodrigues(c0nvec, anglei), approachvec)
-            predefinedgrasps+=gu.define_grasp(hndfa,rhx.np.array([x,0,z]),c0nvec, newav,jawwidth=30, objcm=objcm, toggleflip=False)
+            predefinedgrasps += gu.define_grasp(hndfa, rhx.np.array([x, 0, z]), c0nvec, newav, jawwidth=30, objcm=objcm,
+                                                toggleflip=False)
     c0nvec = rhx.np.array([0, 1, 0])
     approachvec = rhx.np.array([1, 0, 0])
-    for z in [90+random.randint(0,20), 130+random.randint(-10,20), 170+random.randint(-10,10), 210+random.randint(-10,20)]:
-        x = random.randint(-2,8)
+    for z in [90 + random.randint(0, 20), 130 + random.randint(-10, 20), 170 + random.randint(-10, 10),
+              210 + random.randint(-10, 20)]:
+        x = random.randint(-2, 8)
         for anglei in range(0, 360, 15):
-        # for anglej in [240, 270]:
+            # for anglej in [240, 270]:
             newav = rhx.np.dot(rhx.rm.rodrigues(c0nvec, anglei), approachvec)
-            predefinedgrasps+=gu.define_grasp(hndfa,rhx.np.array([x,0,z]),c0nvec, newav,jawwidth=30, objcm=objcm, toggleflip=False)
+            predefinedgrasps += gu.define_grasp(hndfa, rhx.np.array([x, 0, z]), c0nvec, newav, jawwidth=30, objcm=objcm,
+                                                toggleflip=False)
 
     write_pickle_file(objcm.name, predefinedgrasps)
 

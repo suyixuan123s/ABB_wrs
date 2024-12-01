@@ -236,7 +236,7 @@ class IncrementalNIK(object):
             seed_jnt_values = jnt_values
         self.robot_s.fk(component_name, jnt_values_bk)
         if toggle_tcp_list:
-            return jnt_values_list,[[pos_list[i], rotmat_list[i]] for i in range(len(pos_list))]
+            return jnt_values_list, [[pos_list[i], rotmat_list[i]] for i in range(len(pos_list))]
         else:
             return jnt_values_list
 

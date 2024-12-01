@@ -580,11 +580,11 @@ class Socket(object):
             elif self.__status == Socket.WAITING:
                 raise ViscaSocketStatusError(
                     "Tried to block socket {} for packet '{}', but socket was already WAITING response for packet '{}'" \
-                    .format(self.__number, packet_sent, self.packet_sent))
+                        .format(self.__number, packet_sent, self.packet_sent))
             else:
                 raise ViscaSocketStatusError(
                     "Tried to block socket {} for packet '{}', but socket was in unexpected status {}" \
-                    .format(self.__number, packet_sent, self.__status))
+                        .format(self.__number, packet_sent, self.__status))
 
     def recv(self, packet):
         with self.__cond:

@@ -1,5 +1,5 @@
 from time import time as time_function
-from logging import getLogger   as _getLogger
+from logging import getLogger as _getLogger
 from logging import NullHandler as _NullHandler
 
 

@@ -18,17 +18,17 @@ ground.set_pos(np.array([0, 0, -.5]))
 ground.attach_to(base)
 ## show human
 human = nxt.Nextage()
-rotmat = rm.rotmat_from_axangle([0, 0, 1], math.pi/2)
+rotmat = rm.rotmat_from_axangle([0, 0, 1], math.pi / 2)
 human.fix_to(np.array([0, -1.5, 1]), rotmat=rotmat)
 gm.gen_arrow(spos=np.array([0, -1.5, 1]),
-              epos=np.array([0, -1.5, 0]),
+             epos=np.array([0, -1.5, 0]),
              thickness=0.01,
              rgba=np.array([.5, 0, 0, 1])).attach_to(base)
 human.gen_stickmodel().attach_to(base)
 ## show table2
 table2_center = np.array([-1.3, .6, .483])
-table2_bottom = cm.gen_box(extent=[1.08, .42, .06], rgba=[150/255, 154/255, 152/255, 1])
-rotmat = rm.rotmat_from_axangle([0, 0, 1], math.pi/2)
+table2_bottom = cm.gen_box(extent=[1.08, .42, .06], rgba=[150 / 255, 154 / 255, 152 / 255, 1])
+rotmat = rm.rotmat_from_axangle([0, 0, 1], math.pi / 2)
 table2_bottom.set_rotmat(rotmat)
 table2_bottom.set_pos(table2_center - np.array([0, 0, .03]))
 table2_bottom.attach_to(base)
@@ -38,16 +38,16 @@ table2_bottom2.attach_to(base)
 table2_top = table2_bottom.copy()
 table2_top.set_pos(table2_center + np.array([0, 0, -.483 + 1 - .03]))
 table2_top.attach_to(base)
-table2_leg1 = cm.gen_box(extent=[0.06, 0.06, 1], rgba=[150/255, 154/255, 152/255, 1])
+table2_leg1 = cm.gen_box(extent=[0.06, 0.06, 1], rgba=[150 / 255, 154 / 255, 152 / 255, 1])
 table2_leg1.set_pos(table2_center + np.array([-.21 + .03, .54 - .03, -.483 + .5]))
 table2_leg1.attach_to(base)
-table2_leg2 = cm.gen_box(extent=[0.06, 0.06, 1], rgba=[150/255, 154/255, 152/255, 1])
+table2_leg2 = cm.gen_box(extent=[0.06, 0.06, 1], rgba=[150 / 255, 154 / 255, 152 / 255, 1])
 table2_leg2.set_pos(table2_center + np.array([.21 - .03, .54 - .03, -.483 + .5]))
 table2_leg2.attach_to(base)
-table2_leg3 = cm.gen_box(extent=[0.06, 0.06, 1], rgba=[150/255, 154/255, 152/255, 1])
+table2_leg3 = cm.gen_box(extent=[0.06, 0.06, 1], rgba=[150 / 255, 154 / 255, 152 / 255, 1])
 table2_leg3.set_pos(table2_center + np.array([-.21 + .03, -.54 + .03, -.483 + .5]))
 table2_leg3.attach_to(base)
-table2_leg4 = cm.gen_box(extent=[0.06, 0.06, 1], rgba=[150/255, 154/255, 152/255, 1])
+table2_leg4 = cm.gen_box(extent=[0.06, 0.06, 1], rgba=[150 / 255, 154 / 255, 152 / 255, 1])
 table2_leg4.set_pos(table2_center + np.array([.21 - .03, -.54 + .03, -.483 + .5]))
 table2_leg4.attach_to(base)
 ## show worktable
@@ -55,44 +55,46 @@ table_center = np.array([0, -1, 0.8])
 table_plate = cm.gen_box(extent=[1.82, .8, .05], rgba=[.7, .5, .3, 1])
 table_plate.set_pos(table_center - np.array([0, 0, .025]))
 table_plate.attach_to(base)
-table_leg1 = cm.gen_box(extent=[0.03, 0.03, .8], rgba=[150/255, 154/255, 152/255, 1])
+table_leg1 = cm.gen_box(extent=[0.03, 0.03, .8], rgba=[150 / 255, 154 / 255, 152 / 255, 1])
 table_leg1.set_pos(table_center + np.array([.91 - .015, -.4 - .015, -.4]))
 table_leg1.attach_to(base)
-table_leg2 = cm.gen_box(extent=[0.03, 0.03, .8], rgba=[150/255, 154/255, 152/255, 1])
+table_leg2 = cm.gen_box(extent=[0.03, 0.03, .8], rgba=[150 / 255, 154 / 255, 152 / 255, 1])
 table_leg2.set_pos(table_center + np.array([.91 - .015, .4 + .015, -.4]))
 table_leg2.attach_to(base)
-table_leg3 = cm.gen_box(extent=[0.03, 0.03, .8], rgba=[150/255, 154/255, 152/255, 1])
+table_leg3 = cm.gen_box(extent=[0.03, 0.03, .8], rgba=[150 / 255, 154 / 255, 152 / 255, 1])
 table_leg3.set_pos(table_center + np.array([-.91 + .015, -.4 - .015, -.4]))
 table_leg3.attach_to(base)
-table_leg4 = cm.gen_box(extent=[0.03, 0.03, .8], rgba=[150/255, 154/255, 152/255, 1])
+table_leg4 = cm.gen_box(extent=[0.03, 0.03, .8], rgba=[150 / 255, 154 / 255, 152 / 255, 1])
 table_leg4.set_pos(table_center + np.array([-.91 + .015, .4 + .015, -.4]))
 table_leg4.attach_to(base)
 ## show object
-height = .018/2
-object_box1 = cm.gen_box(extent=[.296, .92, .018], rgba=[.7, .5, .3, 1])   # no.3
+height = .018 / 2
+object_box1 = cm.gen_box(extent=[.296, .92, .018], rgba=[.7, .5, .3, 1])  # no.3
 object_box1.set_pos(table2_center + np.array([0, 0, height]))
 object_box1.attach_to(base)
 height += .018
-object_box2 = cm.gen_box(extent=[.296, .92, .017], rgba=[.7, .5, .3, 1])   # no.4
+object_box2 = cm.gen_box(extent=[.296, .92, .017], rgba=[.7, .5, .3, 1])  # no.4
 object_box2.set_pos(table2_center + np.array([0, 0, height]))
 object_box2.attach_to(base)
 height += .017
-object_box3 = cm.gen_box(extent=[.296, .88, .018], rgba=[.7, .5, .3, 1])   # no.2
+object_box3 = cm.gen_box(extent=[.296, .88, .018], rgba=[.7, .5, .3, 1])  # no.2
 object_box3.set_pos(table2_center + np.array([0, 0, height]))
 object_box3.attach_to(base)
 object_box3.show_localframe()
 pre_homo = object_box3.get_homomat()
 height += .018
-object_box4 = cm.gen_box(extent=[.296, .88, .018], rgba=[.7, .5, .3, .5])   # no.1
+object_box4 = cm.gen_box(extent=[.296, .88, .018], rgba=[.7, .5, .3, .5])  # no.1
 object_box4.set_pos(table2_center + np.array([0, 0, height]))
 ## show tool table
-tool_table = cm.gen_box(extent=[.3, .2, .3], rgba=[150/255, 154/255, 152/255, 1])
+tool_table = cm.gen_box(extent=[.3, .2, .3], rgba=[150 / 255, 154 / 255, 152 / 255, 1])
 tool_table_pos = np.array([table2_leg2.get_pos()[0] + .15 + .03, table2_leg2.get_pos()[1] - .1 + .03, .15])
 tool_table.set_pos(tool_table_pos)
 tool_table.attach_to(base)
 # set obstacles
-obstacle_list = [tool_table, table2_top, table2_bottom, table2_bottom2, table2_leg1, table2_leg2, table2_leg3, table2_leg4,
-                table_plate, table_leg1, table_leg2, table_leg3, table_leg4, object_box1, object_box2, object_box3, object_box4]
+obstacle_list = [tool_table, table2_top, table2_bottom, table2_bottom2, table2_leg1, table2_leg2, table2_leg3,
+                 table2_leg4,
+                 table_plate, table_leg1, table_leg2, table_leg3, table_leg4, object_box1, object_box2, object_box3,
+                 object_box4]
 for i in obstacle_list:
     i.show_cdprimit()
 # base.run()
@@ -110,7 +112,8 @@ tool_initial.show_localframe()
 tool_initial_homomat = rm.homomat_from_posrot(tool_initial_pos, rotmat)
 tool_final.set_rgba([0, 0, 1, 1])
 tool_final_pos = np.array([table2_center[0], table2_center[1], object_box4.get_pos()[2] + .009 + .11])
-rotmat = np.dot(rm.rotmat_from_axangle([0, 1, 0], math.radians(90)), rm.rotmat_from_axangle([0, 0, 1], math.radians(90)))
+rotmat = np.dot(rm.rotmat_from_axangle([0, 1, 0], math.radians(90)),
+                rm.rotmat_from_axangle([0, 0, 1], math.radians(90)))
 tool_final.set_pos(tool_final_pos)
 tool_final.set_rotmat(rotmat)
 tool_final_homomat = rm.homomat_from_posrot(tool_final_pos, rotmat)
@@ -176,7 +179,6 @@ for i in dist_pos:
     pos[2] = 0
     gm.gen_sphere(pos=pos).attach_to(base)
 
-
 ## ppp (tool ppp)
 object_box = tool.copy()
 target_obj = object_box4.copy()
@@ -200,7 +202,7 @@ for dict_goal_pos in dist_pos:
                                         obstacle_list=obstacle_list,
                                         depart_distance_list=[.1] * len(goal_homomat_list))
     if conf_list1 is not None:
-        conf_list = robot_s.cvt_to_alljnts(conf_list1,hnd_name)
+        conf_list = robot_s.cvt_to_alljnts(conf_list1, hnd_name)
         jawwidth_list = jawwidth_list1
         objpose_list = objpose_list1
         objpose_list_box = []
@@ -324,12 +326,11 @@ for dict_goal_pos in dist_pos:
     #         print("---finish creating path---")
     #         break
 
-
-
 ## gen animation
 robot_attached_list = []
 object_attached_list = []
 counter = [0]
+
 
 def update(robot_s,
            hnd_name,
@@ -370,6 +371,8 @@ def update(robot_s,
     object_attached_list.append(objb_copy1)
     counter[0] += 1
     return task.again
+
+
 taskMgr.doMethodLater(0.01, update, "update",
                       extraArgs=[robot_s,
                                  hnd_name,

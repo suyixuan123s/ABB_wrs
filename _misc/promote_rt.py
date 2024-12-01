@@ -2,12 +2,14 @@
 
 import ctypes, sys
 
+
 def check_winsys():
     try:
         sys.getwindowsversion()
     except AttributeError:
         return False
     return True
+
 
 def is_admin():
     try:
@@ -23,6 +25,7 @@ def promote_admin():
         # Re-run the program with admin rights
         ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
 
+
 def set_realtime():
     if check_winsys():
         import win32api, win32process
@@ -37,6 +40,7 @@ def set_realtime():
         bash_command = f"chrt -f -p 99 {pid}"
         os.system(bash_command)
 
+
 if __name__ == '__main__':
     import time
     import numpy as np
@@ -44,10 +48,10 @@ if __name__ == '__main__':
     # set_realtime()
     time_list = []
     for i in range(1000):
-        tic=time.time()
+        tic = time.time()
         for i in range(1000):
-            a=1+2
+            a = 1 + 2
         # time.sleep(.001)
-        toc=time.time()
-        time_list.append(toc-tic)
+        toc = time.time()
+        time_list.append(toc - tic)
     print(np.mean(time_list), np.std(time_list))

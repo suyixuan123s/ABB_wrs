@@ -16,8 +16,10 @@ if __name__ == '__main__':
     import grasping.planning.antipodal as gpa
     import manipulation.pick_place_planner as ppp
     import motion.probabilistic.rrt_connect as rrtc
+
     # import robot_sim.manipulators.machinetool.machinetool_gripper as machine
-    original_grasp_info_list = gpa.load_pickle_file('workpiece_before', './', 'robotiq85_fujikoshi.pickle') # .. Needed for pick and place parameters
+    original_grasp_info_list = gpa.load_pickle_file('workpiece_before', './',
+                                                    'robotiq85_fujikoshi.pickle')  # .. Needed for pick and place parameters
     # ..Create base
     base = wd.World(cam_pos=[1, 1, .5], lookat_pos=[0, 0, .2])
     # ..Create table (1)
@@ -28,7 +30,7 @@ if __name__ == '__main__':
     table_2 = cm.CollisionModel("objects/MTbase2.stl")
     table_2.set_pos(pos=np.array([0.7, 1.6, -0.82]))
     table_2.attach_to(base)
-    #base.run()
+    # base.run()
     # ..Create Workpiece(1) for table(1), set its position, show its local frame and calculate its homogenous matrix
     workpiece_before = cm.CollisionModel("objects/workpiece_before.stl")
     workpiece_before.set_pos(pos=np.array([0.4, 0.1, 0.0]))
@@ -87,7 +89,8 @@ if __name__ == '__main__':
     base.run()
     # .. Link the workpiece position and orientation with the machine jaw center position and orientation
     workpiece_before.set_pos(pos=robot_s.machine.jaw_center_pos + np.array([-0.06, 0, 0]))
-    workpiece_before.set_rotmat(rotmat=np.dot(robot_s.machine.jaw_center_rot, rm.rotmat_from_axangle(np.array([0, 1, 0]), np.pi / 2)))
+    workpiece_before.set_rotmat(
+        rotmat=np.dot(robot_s.machine.jaw_center_rot, rm.rotmat_from_axangle(np.array([0, 1, 0]), np.pi / 2)))
 
     # .. Set the goal position for the robot to be the workpiece position and orientation
     goal_pos_workpiece_before = workpiece_before.get_pos()
@@ -113,8 +116,9 @@ if __name__ == '__main__':
     door_list2 = np.linspace(1, 1, 50)
     door_list_before = np.concatenate((door_list_before, door_list2), axis=0)
     chunk_list_before = np.linspace(0, 0, 50)
-    chunk_list2 = np.linspace(0, 0.08, 50)                           # .. Note that the second number represent the chunk head openning distance
+    chunk_list2 = np.linspace(0, 0.08, 50)  # .. Note that the second number represent the chunk head openning distance
     chunk_list_before = np.concatenate((chunk_list_before, chunk_list2), axis=0)
+
 
     # .. Create a function that calculate the path concatenated before
 
@@ -133,11 +137,12 @@ if __name__ == '__main__':
         obj_pose_list = np.concatenate((obj_pose_list_door, obj_pose_list), axis=0)
         return door_list, chunk_list, conf_list, jaw_width_list, obj_pose_list
 
+
     # .. function usage
     door_list, chunk_list, conf_list, jaw_width_list, obj_pose_list = path_concatenated(door_list_before,
-                                                                                       chunk_list_before,
-                                                                                       jaw_width_list, obj_pose_list,
-                                                                                       conf_list)
+                                                                                        chunk_list_before,
+                                                                                        jaw_width_list, obj_pose_list,
+                                                                                        conf_list)
     # .. Config the machine door and chunk parameters after motion
     door_list_after = np.linspace(1, -0.6, 50)
     door_list2 = np.linspace(-0.6, -0.6, 50)
@@ -146,14 +151,14 @@ if __name__ == '__main__':
     chunk_list2 = np.linspace(0, 0, 50)
     chunk_list_after = np.concatenate((chunk_list_after, chunk_list2), axis=0)
     # .. Config the path concatenated after motion
-    door_list = np.concatenate((door_list, door_list_after), axis = 0)
+    door_list = np.concatenate((door_list, door_list_after), axis=0)
     chunk_list = np.concatenate((chunk_list, chunk_list_after), axis=0)
 
     conf_list_door = [conf_list[-1] for i in range(len(door_list_after))]
     jaw_width_list_door = [jaw_width_list[-1] for i in range(len(door_list_after))]
     obj_pose_list_door = [obj_pose_list[-1] for i in range(len(door_list_after))]
 
-    conf_list = np.concatenate((conf_list, conf_list_door), axis = 0)
+    conf_list = np.concatenate((conf_list, conf_list_door), axis=0)
     jaw_width_list = np.concatenate((jaw_width_list, jaw_width_list_door), axis=0)
     obj_pose_list = np.concatenate((obj_pose_list, obj_pose_list_door), axis=0)
     # .. Config required variables for upgrade
@@ -164,7 +169,6 @@ if __name__ == '__main__':
 
 
     # .. Create a function that update the path of the robot
-
 
     def update(robot_s,
                object_box,

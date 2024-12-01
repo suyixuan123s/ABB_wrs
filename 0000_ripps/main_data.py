@@ -84,6 +84,7 @@ if __name__ == '__main__':
     ee_s = cbtg.CobottaPipette()
 
     import sys
+
     sys.stdout = open('file', 'w')
     for id_x in range(8):
         for id_y in range(9):

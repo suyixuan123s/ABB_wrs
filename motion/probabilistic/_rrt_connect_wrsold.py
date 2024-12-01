@@ -42,7 +42,7 @@ class RRTConnect(rrt.RRT):
                                      obstacle_list, [roadmap.nodes[nearest_nid]['conf'], conf], new_conf, '^c')
                 # check goal
                 if self._goal_test(conf=roadmap.nodes[new_nid]['conf'], goal_conf=goal_conf, threshold=ext_dist):
-                    roadmap.add_node('connection', conf=goal_conf) # TODO current name -> connection
+                    roadmap.add_node('connection', conf=goal_conf)  # TODO current name -> connection
                     roadmap.add_edge(new_nid, 'connection')
                     return 'connection'
         else:
@@ -134,7 +134,8 @@ class RRTConnect(rrt.RRT):
             else:
                 goal_nid = last_nid
                 goal_conf = self.roadmap_start.nodes[goal_nid]['conf']
-                rand_conf = self._sample_conf(component_name=component_name, rand_rate=rand_rate, default_conf=goal_conf)
+                rand_conf = self._sample_conf(component_name=component_name, rand_rate=rand_rate,
+                                              default_conf=goal_conf)
                 last_nid = self._extend_roadmap(self.roadmap_goal,
                                                 conf=rand_conf,
                                                 ext_dist=ext_dist,
@@ -188,6 +189,7 @@ if __name__ == '__main__':
     # path = rrtc.plan(seed_jnt_values=np.array([0, 0]), end_conf=np.array([5, 10]), obstacle_list=obstacle_list,
     #                  ext_dist=1, rand_rate=70, max_time=300, hnd_name=None, animation=True)
     import time
+
     total_t = 0
     for i in range(100):
         tic = time.time()

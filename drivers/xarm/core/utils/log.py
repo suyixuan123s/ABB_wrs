@@ -37,6 +37,7 @@ class Logger(logging.Logger):
             cls.logger = super(Logger, cls).__new__(cls, *args, **kwargs)
         return cls.logger
 
+
 logger = Logger(__name__)
 logger.setLevel(logging.WARNING)
 

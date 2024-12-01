@@ -9,6 +9,7 @@ import utiltools.robotmath as rm
 
 bcdchecker = bch.MCMchecker(toggledebug=False)
 
+
 def ishndobjcollided(hndfa, jawwidth, homomat, objcm):
     """
 
@@ -22,12 +23,13 @@ def ishndobjcollided(hndfa, jawwidth, homomat, objcm):
 
     hnd = hndfa.genHand()
     hnd.set_homomat(homomat)
-    setjawwidth = 30 if jawwidth>=30 else jawwidth+10
+    setjawwidth = 30 if jawwidth >= 30 else jawwidth + 10
     hnd.setjawwidth(setjawwidth)
     iscollided = bcdchecker.isMeshListMeshListCollided(hnd.cmlist, [objcm])
     return iscollided
 
-def define_grasp(hndfa, finger_center, finger_normal, hand_normal, jawwidth, objcm, toggleflip = True):
+
+def define_grasp(hndfa, finger_center, finger_normal, hand_normal, jawwidth, objcm, toggleflip=True):
     """
 
     :param hndfa:
@@ -58,8 +60,9 @@ def define_grasp(hndfa, finger_center, finger_normal, hand_normal, jawwidth, obj
             effect_grasp.append(grasp_flipped)
     return effect_grasp
 
+
 def define_grasp_with_rotation(hndfa, grasp_center, finger_normal, hand_normal, jawwidth, objcm,
-                               rotation_interval=15, rotation_range=(-90, 90), toggleflip = True):
+                               rotation_interval=15, rotation_range=(-90, 90), toggleflip=True):
     """
 
     :param hndfa:
@@ -83,16 +86,19 @@ def define_grasp_with_rotation(hndfa, grasp_center, finger_normal, hand_normal, 
         hand_normal_rotated = np.dot(rm.rodrigues(finger_normal, rotate_angle), np.asarray(hand_normal))
         grasp = hnd.approachat(grasp_center[0], grasp_center[1], grasp_center[2],
                                finger_normal[0], finger_normal[1], finger_normal[2],
-                               hand_normal_rotated[0], hand_normal_rotated[1], hand_normal_rotated[2], jawwidth=jawwidth)
+                               hand_normal_rotated[0], hand_normal_rotated[1], hand_normal_rotated[2],
+                               jawwidth=jawwidth)
         # if not ishndobjcollided(hndfa, grasp[0], grasp[2], objcm) == False:
         effect_grasp.append(grasp)
         if toggleflip:
             grasp_flipped = hnd.approachat(grasp_center[0], grasp_center[1], grasp_center[2],
                                            -finger_normal[0], -finger_normal[1], -finger_normal[2],
-                                           hand_normal_rotated[0], hand_normal_rotated[1], hand_normal_rotated[2], jawwidth=jawwidth)
+                                           hand_normal_rotated[0], hand_normal_rotated[1], hand_normal_rotated[2],
+                                           jawwidth=jawwidth)
             if not ishndobjcollided(hndfa, grasp_flipped[0], grasp_flipped[2], objcm):
                 effect_grasp.append(grasp_flipped)
     return effect_grasp
+
 
 def define_suction(hndfa, finger_center, finger_normal, hand_normal, objcm):
     """
@@ -117,6 +123,7 @@ def define_suction(hndfa, finger_center, finger_normal, hand_normal, objcm):
     if not ishndobjcollided(hndfa, grasp[0], grasp[2], objcm):
         effect_grasp.append(grasp)
     return effect_grasp
+
 
 def define_suction_with_rotation(hndfa, grasp_center, finger_normal, hand_normal, objcm,
                                  rotation_interval=15, rotation_range=(-90, 90)):
@@ -147,6 +154,7 @@ def define_suction_with_rotation(hndfa, grasp_center, finger_normal, hand_normal
             effect_grasp.append(grasp)
     return effect_grasp
 
+
 def write_pickle_file(model_name, effect_grasps, root=None):
     """
 
@@ -161,10 +169,10 @@ def write_pickle_file(model_name, effect_grasps, root=None):
     if root is None:
         directory = "./"
     else:
-        directory = root+"/"
+        directory = root + "/"
 
     try:
-        data = pickle.load(open(directory+'predefinedgrasps.pickle', 'rb'))
+        data = pickle.load(open(directory + 'predefinedgrasps.pickle', 'rb'))
     except:
         print("load failed, create new file.")
         data = {}
@@ -172,7 +180,8 @@ def write_pickle_file(model_name, effect_grasps, root=None):
     data[model_name] = effect_grasps
     for k, v in data.items():
         print(k, len(v))
-    pickle.dump(data, open(directory+'predefinedgrasps.pickle', 'wb'))
+    pickle.dump(data, open(directory + 'predefinedgrasps.pickle', 'wb'))
+
 
 def load_pickle_file(model_name, root=None):
     """
@@ -188,10 +197,10 @@ def load_pickle_file(model_name, root=None):
     if root is None:
         directory = "./"
     else:
-        directory = root+"/"
+        directory = root + "/"
 
     try:
-        data = pickle.load(open(directory+'predefinedgrasps.pickle', 'rb'))
+        data = pickle.load(open(directory + 'predefinedgrasps.pickle', 'rb'))
         for k, v in data.items():
             print(k, len(v))
         effect_grasps = data[model_name]
@@ -199,4 +208,3 @@ def load_pickle_file(model_name, root=None):
     except:
         print("load failed, create new graqsp file or grasp first.")
         raise ValueError("File or data not found!")
-

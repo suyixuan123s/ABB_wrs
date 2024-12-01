@@ -18,10 +18,10 @@ if __name__ == '__main__':
     # robot_s
     component_name = 'rgt_arm'
     robot_instance = ur3d.UR3Dual()
-    start_hnd_pos=np.array([0.4, -0.5, 1.3])
-    start_hnd_rotmat=rm.rotmat_from_axangle([0, 1, 0], math.pi / 2)
-    goal_hnd_pos=np.array([0.4, -0.3, 1.3])
-    goal_hnd_rotmat=rm.rotmat_from_axangle([0, 1, 0], math.pi / 2)
+    start_hnd_pos = np.array([0.4, -0.5, 1.3])
+    start_hnd_rotmat = rm.rotmat_from_axangle([0, 1, 0], math.pi / 2)
+    goal_hnd_pos = np.array([0.4, -0.3, 1.3])
+    goal_hnd_rotmat = rm.rotmat_from_axangle([0, 1, 0], math.pi / 2)
     gm.gen_frame(pos=start_hnd_pos, rotmat=start_hnd_rotmat).attach_to(base)
     gm.gen_frame(pos=goal_hnd_pos, rotmat=goal_hnd_rotmat).attach_to(base)
 

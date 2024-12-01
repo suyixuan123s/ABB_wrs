@@ -10,9 +10,10 @@ if __name__ == '__main__':
     import visualization.panda.world as wd
     import modeling.geometric_model as gm
     import modeling.collision_model as cm
+
     # import robot_sim.manipulators.machinetool.machinetool_gripper as machine
     base = wd.World(cam_pos=[1, 1, .5], lookat_pos=[0, 0, .2])
-    gm.gen_frame(length=.5, thickness=.05,).attach_to(base)
+    gm.gen_frame(length=.5, thickness=.05, ).attach_to(base)
 
     obj = cm.CollisionModel("objects/holder.stl")
     obj.set_pos(pos=np.array([0, 0, 1]))
@@ -33,7 +34,7 @@ if __name__ == '__main__':
     robot_s = ur5e.UR5EConveyorBelt()
     start_conf = robot_s.get_jnt_values(component_name=component_name)
     # start_tcp = robot_s.fk( component_name="arm" , jnt_values=start_conf)
-    start_tcp_pos, start_tcp_rot = robot_s.get_gl_tcp(manipulator_name = manipulator_name)
+    start_tcp_pos, start_tcp_rot = robot_s.get_gl_tcp(manipulator_name=manipulator_name)
     gm.gen_sphere(start_tcp_pos, radius=0.02).attach_to(base)
     robot_meshmodel = robot_s.gen_meshmodel()
     # robot_meshmodel.attach_to(base)
@@ -41,8 +42,8 @@ if __name__ == '__main__':
     # robot_s.jaw_to(0.05)
     # robot_s.fk("arm", pose)
 
-    goal_tcp_pos = start_tcp_pos + np.array([-0.2,-0.8,-0.50])
-    rotmat = rm.rotmat_from_axangle(np.array([0,1,0]), angle = 30*np.pi/180)
+    goal_tcp_pos = start_tcp_pos + np.array([-0.2, -0.8, -0.50])
+    rotmat = rm.rotmat_from_axangle(np.array([0, 1, 0]), angle=30 * np.pi / 180)
     goal_tcp_rot = np.dot(rotmat, start_tcp_rot)
     rotmat = rm.rotmat_from_axangle(np.array([1, 0, 0]), angle=10 * np.pi / 180)
     goal_tcp_rot = np.dot(rotmat, goal_tcp_rot)
@@ -66,6 +67,7 @@ if __name__ == '__main__':
     object_attached_list = []
     counter = [0]
     machine_attached_list = []
+
 
     def update(robot_s,
                object_box,
@@ -106,8 +108,6 @@ if __name__ == '__main__':
         objb_copy.attach_to(base)
         object_attached_list.append(objb_copy)
 
-
-
         counter[0] += 1
         return task.again
 
@@ -122,7 +122,7 @@ if __name__ == '__main__':
     objpose_list = [np.eye(4) for i in range(40)]
     door_list = np.linspace(0, 1, 20)
     door_list2 = np.linspace(1, 1, 20)
-    door_list = np.concatenate((door_list, door_list2), axis = 0)
+    door_list = np.concatenate((door_list, door_list2), axis=0)
     chunck_list = np.linspace(0, 0, 20)
     chunck_list2 = np.linspace(0, 0.08, 20)
     chunck_list = np.concatenate((chunck_list, chunck_list2), axis=0)

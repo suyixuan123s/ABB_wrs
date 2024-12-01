@@ -50,8 +50,9 @@ if __name__ == '__main__':
 
     obscmlist = yhx.obscmlist
     numikmsmp, jawwidthmsmp, objmsmp = ppplanner.findppmotion(inithomomat, goalhomomat, armname=armname,
-                                                                rbtinitarmjnts = [lastrgtarmjnts, lastlftarmjnts],
-                                                                finalstate="uo", obscmlist=obscmlist, userrt=True, toggledebug=False)
+                                                              rbtinitarmjnts=[lastrgtarmjnts, lastlftarmjnts],
+                                                              finalstate="uo", obscmlist=obscmlist, userrt=True,
+                                                              toggledebug=False)
     if armname is "rgt":
         lastrgtarmjnts = numikmsmp[-1][-1][1]
         lastlftarmjnts = lastlftarmjnts

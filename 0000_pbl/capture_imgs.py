@@ -17,7 +17,7 @@ else:
     files = glob.glob(foldername + "*")
     for f in files:
         os.remove(f)
-type='jpg'
+type = 'jpg'
 
 base = wd.World(cam_pos=[0, 0, -10], lookat_pos=[0, 0, 10])
 gm.gen_frame().attach_to(base)

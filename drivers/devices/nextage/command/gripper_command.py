@@ -7,6 +7,7 @@ date: 20190417
 
 from robotconn.rpc.nxtrobot.nxtlib.command.abs_hand_command import AbsractHandCommand
 
+
 class GripperCommand(AbsractHandCommand):
     """
     Following Command design pattern, this class represents an abstract
@@ -50,7 +51,7 @@ class GripperCommand(AbsractHandCommand):
                 dout = [self._DIO_VALVE_L_2]
             elif self._hands.HAND_R == self._hand:
                 dout = [self._DIO_VALVE_R_2]
-        mask = None 
+        mask = None
         if self._hands.HAND_L == self._hand:
             mask = mask_l
         elif self._hands.HAND_R == self._hand:

@@ -5,15 +5,16 @@ import networkx as nx
 
 from ..transformations import quaternion_matrix, rotation_matrix
 
+
 class TransformForest:
     def __init__(self, base_frame='world'):
         self.transforms = EnforcedForest()
         self.base_frame = base_frame
-        self._paths     = {}
+        self._paths = {}
 
-    def update(self, 
+    def update(self,
                frame_to,
-               frame_from = None,
+               frame_from=None,
                **kwargs):
         '''
         Update a transform in the tree.
@@ -34,11 +35,11 @@ class TransformForest:
         '''
         if frame_from is None:
             frame_from = self.base_frame
-        matrix  = kwargs_to_matrix(**kwargs)
-        changed = self.transforms.add_edge(frame_from, 
+        matrix = kwargs_to_matrix(**kwargs)
+        changed = self.transforms.add_edge(frame_from,
                                            frame_to,
-                                           attr_dict = {'matrix' : matrix,
-                                                        'time'   : time.time()})
+                                           attr_dict={'matrix': matrix,
+                                                      'time': time.time()})
         if changed:
             self._paths = {}
 
@@ -50,7 +51,7 @@ class TransformForest:
 
     def get(self,
             frame_to,
-            frame_from = None):
+            frame_from=None):
         '''
         Get the transform from one frame to another, assuming they are connected
         in the transform tree. 
@@ -75,27 +76,27 @@ class TransformForest:
 
         for i in range(len(path) - 1):
             data, direction = self.transforms.get_edge_data_direction(path[i],
-                                                                      path[i+1])
+                                                                      path[i + 1])
             matrix = data['matrix']
-            if direction < 0: 
+            if direction < 0:
                 matrix = np.linalg.inv(matrix)
             transform = np.dot(transform, matrix)
         return transform
 
     def __getitem__(self, key):
         return self.get(key)
-        
+
     def __setitem__(self, key, value):
         value = np.asanyarray(value)
-        if value.shape != (4,4):
+        if value.shape != (4, 4):
             raise ValueError('Matrix must be specified!')
         return self.update(key, matrix=value)
-        
+
     def clear(self):
         self.transforms = EnforcedForest()
-        self._paths     = {}
-        
-    def _get_path(self, 
+        self._paths = {}
+
+    def _get_path(self,
                   frame_from,
                   frame_to):
         '''
@@ -116,16 +117,17 @@ class TransformForest:
         '''
         key = (frame_from, frame_to)
         if not (key in self._paths):
-            path =  self.transforms.shortest_path_undirected(frame_from, 
-                                                             frame_to)
+            path = self.transforms.shortest_path_undirected(frame_from,
+                                                            frame_to)
             self._paths[key] = path
         return self._paths[key]
 
-class EnforcedForest(nx.DiGraph):    
+
+class EnforcedForest(nx.DiGraph):
     def __init__(self, *args, **kwargs):
-        self.flags = {'strict'        : False,
-                      'assert_forest' : False}
-        
+        self.flags = {'strict': False,
+                      'assert_forest': False}
+
         for k, v in self.flags.items():
             if k in kwargs:
                 self.flags[k] = bool(kwargs[k])
@@ -144,9 +146,9 @@ class EnforcedForest(nx.DiGraph):
                 raise ValueError('Edge must be between two unique nodes!')
             return changed
         if self._undirected.has_edge(u, v):
-            self.remove_edges_from([[u, v], [v,u]])
+            self.remove_edges_from([[u, v], [v, u]])
         elif len(self.nodes()) > 0:
-            try: 
+            try:
                 path = nx.shortest_path(self._undirected, u, v)
                 if self.flags['strict']:
                     raise ValueError('Multiple edge path exists between nodes!')
@@ -154,14 +156,14 @@ class EnforcedForest(nx.DiGraph):
                 changed = True
             except (nx.NetworkXError, nx.NetworkXNoPath):
                 pass
-        self._undirected.add_edge(u,v)
+        self._undirected.add_edge(u, v)
         super(self.__class__, self).add_edge(u, v, *args, **kwargs)
-      
+
         if self.flags['assert_forest']:
             # this is quite slow but makes very sure structure is correct 
             # so is mainly used for testing
             assert nx.is_forest(nx.Graph(self))
-            
+
         return changed
 
     def add_edges_from(self, *args, **kwargs):
@@ -173,7 +175,7 @@ class EnforcedForest(nx.DiGraph):
     def remove_edge(self, *args, **kwargs):
         super(self.__class__, self).remove_edge(*args, **kwargs)
         self._undirected.remove_edge(*args, **kwargs)
-        
+
     def remove_edges_from(self, *args, **kwargs):
         super(self.__class__, self).remove_edges_from(*args, **kwargs)
         self._undirected.remove_edges_from(*args, **kwargs)
@@ -188,20 +190,22 @@ class EnforcedForest(nx.DiGraph):
         return path
 
     def get_edge_data_direction(self, u, v):
-        if self.has_edge(u,v):
+        if self.has_edge(u, v):
             direction = 1
-        elif self.has_edge(v,u):
+        elif self.has_edge(v, u):
             direction = -1
-        else: 
+        else:
             raise ValueError('Edge doesnt exist!')
-        data = self.get_edge_data(*[u,v][::direction])
+        data = self.get_edge_data(*[u, v][::direction])
         return data, direction
-        
+
+
 def path_to_edges(path):
     '''
     Turn an (n) path into a (2(n-1)) set of edges
     '''
-    return np.column_stack((path, path)).reshape(-1)[1:-1].reshape((-1,2))
+    return np.column_stack((path, path)).reshape(-1)[1:-1].reshape((-1, 2))
+
 
 def kwargs_to_matrix(**kwargs):
     '''
@@ -216,13 +220,12 @@ def kwargs_to_matrix(**kwargs):
     elif ('axis' in kwargs) and ('angle' in kwargs):
         matrix = rotation_matrix(kwargs['angle'],
                                  kwargs['axis'])
-    else: 
+    else:
         raise ValueError('Couldn\'t update transform!')
 
     if 'translation' in kwargs:
         # translation can be used in conjunction with any of the methods of 
         # specifying transforms. In the case a matrix and translation are passed,
         # we add the translations together rather than picking one. 
-        matrix[0:3,3] += kwargs['translation']
+        matrix[0:3, 3] += kwargs['translation']
     return matrix
-        

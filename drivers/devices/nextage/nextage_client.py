@@ -9,8 +9,8 @@ from robotconn.rpc.nxtrobot.nxtlib.hironx_client import HIRONX
 from robotconn.rpc.nxtrobot.nxtlib.hands_05 import Hands05
 from robotconn.rpc.nxtrobot.nxtlib.iros13_hands import Iros13Hands
 
-class NextageClient(HIRONX, object):
 
+class NextageClient(HIRONX, object):
     # The 2nd arg 'object' is passed to work around the issue raised because
     # HrpsysConfigurator is "old-style" python class.
     # See http://stackoverflow.com/a/18392639/577001
@@ -224,4 +224,3 @@ class NextageClient(HIRONX, object):
 
     def dioWriter(self, indices, assignments, padding=_DIO_ASSIGN_OFF):
         return self._hands._dio_writer(indices, assignments, padding)
-

@@ -89,12 +89,12 @@ if __name__ == '__main__':
     z_offset = np.array([0, 0, .07])
     previous_jnt_values = rbt_s.get_jnt_values(component_name=component_name)
     goal_joint_values_attachment = utils.search_reachable_configuration(rbt_s=rbt_s,
-                                                              ee_s=ee_s,
-                                                              component_name=component_name,
-                                                              tgt_pos=tip_pos + z_offset,
-                                                              cone_axis=-tip_rotmat[:3, 2],
-                                                              rotation_interval=np.radians(15),
-                                                              obstacle_list=[frame_bottom])
+                                                                        ee_s=ee_s,
+                                                                        component_name=component_name,
+                                                                        tgt_pos=tip_pos + z_offset,
+                                                                        cone_axis=-tip_rotmat[:3, 2],
+                                                                        rotation_interval=np.radians(15),
+                                                                        obstacle_list=[frame_bottom])
     if goal_joint_values_attachment is not None:
         rbt_s.fk(component_name=component_name, jnt_values=goal_joint_values_attachment)
         rbt_s.gen_meshmodel().attach_to(base)
@@ -151,13 +151,13 @@ if __name__ == '__main__':
     well_pos, well_rotmat = microplate96.get_rack_hole_pose(id_x=id_x, id_y=id_y)
     z_offset = np.array([0, 0, .05])
     goal_joint_values_aspiration = utils.search_reachable_configuration(rbt_s=rbt_s,
-                                                             ee_s=ee_s,
-                                                             component_name=component_name,
-                                                             tgt_pos=well_pos + z_offset,
-                                                             cone_axis=-well_rotmat[:3, 2],
-                                                             rotation_interval=np.radians(15),
-                                                             obstacle_list=[frame_bottom],
-                                                             seed_jnt_values=np.zeros(6))
+                                                                        ee_s=ee_s,
+                                                                        component_name=component_name,
+                                                                        tgt_pos=well_pos + z_offset,
+                                                                        cone_axis=-well_rotmat[:3, 2],
+                                                                        rotation_interval=np.radians(15),
+                                                                        obstacle_list=[frame_bottom],
+                                                                        seed_jnt_values=np.zeros(6))
     if goal_joint_values_aspiration is not None:
         rbt_s.fk(component_name=component_name, jnt_values=goal_joint_values_aspiration)
         rbt_s.gen_meshmodel().attach_to(base)
@@ -176,7 +176,6 @@ if __name__ == '__main__':
                 gm.gen_stick(previous_pos, pos, rgba=rgba).attach_to(base)
             previous_pos = pos
             # rbt_s.gen_meshmodel(rgba=rgba).attach_to(base)
-
 
     well_pos, well_rotmat = microplate24_1.get_rack_hole_pose(id_x=0, id_y=0)
     z_offset = np.array([0, 0, .03])

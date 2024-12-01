@@ -6,6 +6,7 @@ import robotconn.rpc.extcam.extcam_pb2 as ecmsg
 import robotconn.rpc.extcam.extcam_pb2_grpc as ecrpc
 import numpy as np
 
+
 class ExtCamServer(ecrpc.CamServicer):
 
     def __init__(self):
@@ -29,11 +30,12 @@ class ExtCamServer(ecrpc.CamServicer):
         fmbytes = np.ndarray.tobytes(frame)
         return ecmsg.CamImg(width=w, height=h, channel=nch, image=fmbytes)
 
+
 def serve(host="127.0.0.1:18300"):
     _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 
     options = [('grpc.max_message_length', 10 * 3840 * 2160)]
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10), options = options)
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10), options=options)
     ecrpc.add_CamServicer_to_server(ExtCamServer(), server)
     server.add_insecure_port(host)
     server.start()
@@ -43,6 +45,7 @@ def serve(host="127.0.0.1:18300"):
             time.sleep(_ONE_DAY_IN_SECONDS)
     except KeyboardInterrupt:
         server.stop(0)
+
 
 if __name__ == '__main__':
     serve(host="192.168.125.100:18301")

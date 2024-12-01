@@ -5,7 +5,7 @@ from panda3d.bullet import BulletWorld
 from panda3d.bullet import BulletPlaneShape, BulletDebugNode
 from panda3d.bullet import BulletRigidBodyNode
 from panda3d.bullet import BulletBoxShape, BulletTriangleMeshShape, BulletSphereShape, BulletCylinderShape, ZUp
-from panda3d.bullet import BulletCapsuleShape, BulletConeShape,BulletConvexHullShape, BulletTriangleMesh
+from panda3d.bullet import BulletCapsuleShape, BulletConeShape, BulletConvexHullShape, BulletTriangleMesh
 import modeling.collision_model as cm
 import modeling.geometric_model as gm
 import basis.data_adapter as da
@@ -73,15 +73,15 @@ bunny_geom_nodepath = bunny_cm.objpdnp.getChild(0).find("+GeomNode")
 geom = copy.deepcopy(bunny_geom_nodepath.node().getGeom(0))
 geombmesh = BulletTriangleMesh()
 geombmesh.addGeom(geom)
-shape = BulletTriangleMeshShape(geombmesh, dynamic = True)
+shape = BulletTriangleMeshShape(geombmesh, dynamic=True)
 shape.setMargin(1e-6)
 
 for i in range(15):
-    node = BulletRigidBodyNode('bunny'+str(i))
+    node = BulletRigidBodyNode('bunny' + str(i))
     node.setMass(20)
     node.addShape(shape)
     np = base.render.attachNewNode(node)
-    np.setPos(0, 0, 1000+i*300)
+    np.setPos(0, 0, 1000 + i * 300)
     base.physicsworld.attachRigidBody(node)
 
 # debugNode = BulletDebugNode('Debug')

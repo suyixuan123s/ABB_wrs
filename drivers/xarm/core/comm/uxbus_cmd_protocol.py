@@ -25,6 +25,7 @@ class Ux2HexProtocol(object):
     """
     fromid and toid: broadcast address is 0xFF
     """
+
     def __init__(self, rx_que, fromid, toid):
         self.rx_que = rx_que
         self.rxstate = UX2HEX_RXSTART_FROMID
@@ -97,4 +98,3 @@ class Ux2HexProtocol(object):
                         self.rx_que.get()
                     self.rx_que.put(self.rxbuf)
                     # print(self.rxbuf)
-

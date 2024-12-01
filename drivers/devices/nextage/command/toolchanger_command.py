@@ -7,6 +7,7 @@ date: 20190417
 
 from robotconn.rpc.nxtrobot.nxtlib.command.abs_hand_command import AbsractHandCommand
 
+
 class ToolchangerCommand(AbsractHandCommand):
     """
     Following Command design pattern, this class represents commands for

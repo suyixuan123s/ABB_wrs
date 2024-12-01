@@ -6,9 +6,10 @@ import utiltools.thirdparty.p3dhelper as p3dh
 import numpy as np
 import environment.collisionmodel as cm
 
+
 class Locator(object):
 
-    def __init__(self, directory=None, standtype = "light"):
+    def __init__(self, directory=None, standtype="light"):
         """
         standtype could be normal, light, ...
 
@@ -21,10 +22,10 @@ class Locator(object):
             tspcdfilename = "tubestandtemplatepcd.pkl"
             # down x, right y
             tubeholecenters = []
-            for x in [-38,-19,0,19,38]:
+            for x in [-38, -19, 0, 19, 38]:
                 tubeholecenters.append([])
                 for y in [-81, -63, -45, -27, -9, 9, 27, 45, 63, 81]:
-                    tubeholecenters[-1].append([x,y])
+                    tubeholecenters[-1].append([x, y])
             self.tubeholecenters = np.array(tubeholecenters)
             self.tubeholesize = np.array([15, 16])
             self.tubestandsize = np.array([96, 192])
@@ -45,21 +46,24 @@ class Locator(object):
             self.bgdepth = pickle.load(open("./databackground/bgdepth.pkl", "rb"))
             self.bgpcd = pickle.load(open("./databackground/bgpcd.pkl", "rb"))
             self.sensorhomomat = pickle.load(open("./datacalibration/calibmat.pkl", "rb"))
-            self.tstpcdnp = pickle.load(open("./dataobjtemplate/"+tspcdfilename, "rb"))# tstpcd, tube stand template
-            self.tubestandcm = cm.CollisionModel("./objects/"+tsfilename)
+            self.tstpcdnp = pickle.load(open("./dataobjtemplate/" + tspcdfilename, "rb"))  # tstpcd, tube stand template
+            self.tubestandcm = cm.CollisionModel("./objects/" + tsfilename)
             self.tubebigcm = cm.CollisionModel("./objects/tubebig_capped.stl", type="cylinder", expand_radius=0)
             self.tubesmallcm = cm.CollisionModel("./objects/tubesmall_capped.stl", type="cylinder", expand_radius=0)
         else:
-            self.bgdepth = pickle.load(open(directory+"/databackground/bgdepth.pkl", "rb"))
-            self.bgpcd = pickle.load(open(directory+"/databackground/bgpcd.pkl", "rb"))
-            self.sensorhomomat = pickle.load(open(directory+"/datacalibration/calibmat.pkl", "rb"))
-            self.tstpcdnp = pickle.load(open(directory+"/dataobjtemplate/"+tspcdfilename, "rb"))# tstpcd, tube stand template
-            self.tubestandcm = cm.CollisionModel(directory+"/objects/"+tsfilename)
-            self.tubebigcm = cm.CollisionModel(directory +"/objects/tubebig_capped.stl", type="cylinder", expand_radius=0)
-            self.tubesmallcm = cm.CollisionModel(directory +"/objects/tubesmall_capped.stl", type="cylinder", expand_radius=0)
+            self.bgdepth = pickle.load(open(directory + "/databackground/bgdepth.pkl", "rb"))
+            self.bgpcd = pickle.load(open(directory + "/databackground/bgpcd.pkl", "rb"))
+            self.sensorhomomat = pickle.load(open(directory + "/datacalibration/calibmat.pkl", "rb"))
+            self.tstpcdnp = pickle.load(
+                open(directory + "/dataobjtemplate/" + tspcdfilename, "rb"))  # tstpcd, tube stand template
+            self.tubestandcm = cm.CollisionModel(directory + "/objects/" + tsfilename)
+            self.tubebigcm = cm.CollisionModel(directory + "/objects/tubebig_capped.stl", type="cylinder",
+                                               expand_radius=0)
+            self.tubesmallcm = cm.CollisionModel(directory + "/objects/tubesmall_capped.stl", type="cylinder",
+                                                 expand_radius=0)
 
         # for compatibility with locatorfixed
-        self.tubestandhomomat =  None
+        self.tubestandhomomat = None
 
     def findtubestand_matchonobb(self, tgtpcdnp, toggledebug=False):
         """
@@ -79,7 +83,7 @@ class Locator(object):
 
         # 20200425 cluster is further included
         pcdarraylist, _ = o3dh.cluster_pcd(tgtpcdnp)
-        tgtpcdnp = max(pcdarraylist, key = lambda x:len(x))
+        tgtpcdnp = max(pcdarraylist, key=lambda x: len(x))
         # for pcdarray in pcdarraylist:
         #     rgb = np.random.rand(3)
         #     rgba = np.array([rgb[0], rgb[1], rgb[2], 1])
@@ -89,21 +93,23 @@ class Locator(object):
         # base.run()
 
         inithomomat = self.findtubestand_obb(tgtpcdnp, toggledebug)
-        inlinnerrmse, homomat = o3dh.registration_icp_ptpt(self.tstpcdnp, tgtpcdnp, inithomomat, maxcorrdist=5, toggledebug=toggledebug)
+        inlinnerrmse, homomat = o3dh.registration_icp_ptpt(self.tstpcdnp, tgtpcdnp, inithomomat, maxcorrdist=5,
+                                                           toggledebug=toggledebug)
         inithomomatflipped = copy.deepcopy(inithomomat)
-        inithomomatflipped[:3,0] = -inithomomatflipped[:3,0]
-        inithomomatflipped[:3,1] = -inithomomatflipped[:3,1]
-        inlinnerrmseflipped, homomatflipped = o3dh.registration_icp_ptpt(self.tstpcdnp, tgtpcdnp, inithomomatflipped, maxcorrdist=5, toggledebug=toggledebug)
+        inithomomatflipped[:3, 0] = -inithomomatflipped[:3, 0]
+        inithomomatflipped[:3, 1] = -inithomomatflipped[:3, 1]
+        inlinnerrmseflipped, homomatflipped = o3dh.registration_icp_ptpt(self.tstpcdnp, tgtpcdnp, inithomomatflipped,
+                                                                         maxcorrdist=5, toggledebug=toggledebug)
         print(inlinnerrmse, inlinnerrmseflipped)
         if inlinnerrmseflipped < inlinnerrmse:
             homomat = homomatflipped
 
         # for compatibility with locactorfixed
-        self.tubestandhomomat =  homomat
+        self.tubestandhomomat = homomat
 
         return copy.deepcopy(homomat)
 
-    def findtubestand_match(self, tgtpcdnp, toggledebug = False):
+    def findtubestand_match(self, tgtpcdnp, toggledebug=False):
         """
         match self.tstpcd from tgtpcdnp
         NOTE: tgtpcdnp must be in global frame, use getglobalpcd to convert if local
@@ -120,7 +126,7 @@ class Locator(object):
 
         return copy.deepcopy(homomat)
 
-    def findtubestand_obb(self, tgtpcdnp, toggledebug = False):
+    def findtubestand_obb(self, tgtpcdnp, toggledebug=False):
         """
         match self.tstpcd from tgtpcdnp
         NOTE: tgtpcdnp must be in global frame, use getglobalpcd to convert if local
@@ -136,7 +142,7 @@ class Locator(object):
         # removing outlier is not longer needed, 20200425
         # tgtpcdnp = o3dh.removeoutlier(tgtpcdnp, nb_points=20, radius=10)
 
-        tgtpcdnp2d = tgtpcdnp[:,:2] # TODO clip using sensor z
+        tgtpcdnp2d = tgtpcdnp[:, :2]  # TODO clip using sensor z
         ca = np.cov(tgtpcdnp2d, y=None, rowvar=0, bias=1)
         v, vect = np.linalg.eig(ca)
         tvect = np.transpose(vect)
@@ -170,15 +176,15 @@ class Locator(object):
 
         axind = np.argsort(v)
         homomat = np.eye(4)
-        homomat[:3,axind[0]] = np.array([vect[0,0], vect[1,0], 0])
-        homomat[:3,axind[1]] = np.array([vect[0,1], vect[1,1], 0])
-        homomat[:3,2] = np.array([0,0,1])
-        if np.cross(homomat[:3,0], homomat[:3,1])[2] < -.5:
-            homomat[:3,1] = -homomat[:3,1]
+        homomat[:3, axind[0]] = np.array([vect[0, 0], vect[1, 0], 0])
+        homomat[:3, axind[1]] = np.array([vect[0, 1], vect[1, 1], 0])
+        homomat[:3, 2] = np.array([0, 0, 1])
+        if np.cross(homomat[:3, 0], homomat[:3, 1])[2] < -.5:
+            homomat[:3, 1] = -homomat[:3, 1]
         homomat[:3, 3] = np.array([center[0], center[1], -15])
         return homomat
 
-    def _crop_pcd_overahole(self, tgtpcd_intsframe, holecenter_x, holecenter_y, crop_ratio = .9, crop_height = 70):
+    def _crop_pcd_overahole(self, tgtpcd_intsframe, holecenter_x, holecenter_y, crop_ratio=.9, crop_height=70):
         """
 
         crop the point cloud over a hole in the tubestand frame
@@ -194,10 +200,10 @@ class Locator(object):
         """
 
         # squeeze the hole size by half, make it a bit smaller than a half
-        tmppcd = tgtpcd_intsframe[tgtpcd_intsframe[:, 0] < (holecenter_x + self.tubeholesize[0]*crop_ratio/2)]
-        tmppcd = tmppcd[tmppcd[:, 0] > (holecenter_x - self.tubeholesize[0]*crop_ratio/2)]
-        tmppcd = tmppcd[tmppcd[:, 1] < (holecenter_y + self.tubeholesize[1]*crop_ratio/2)]
-        tmppcd = tmppcd[tmppcd[:, 1] > (holecenter_y - self.tubeholesize[1]*crop_ratio/2)]
+        tmppcd = tgtpcd_intsframe[tgtpcd_intsframe[:, 0] < (holecenter_x + self.tubeholesize[0] * crop_ratio / 2)]
+        tmppcd = tmppcd[tmppcd[:, 0] > (holecenter_x - self.tubeholesize[0] * crop_ratio / 2)]
+        tmppcd = tmppcd[tmppcd[:, 1] < (holecenter_y + self.tubeholesize[1] * crop_ratio / 2)]
+        tmppcd = tmppcd[tmppcd[:, 1] > (holecenter_y - self.tubeholesize[1] * crop_ratio / 2)]
         tmppcd = tmppcd[tmppcd[:, 2] > crop_height]
 
         return tmppcd
@@ -312,7 +318,7 @@ class Locator(object):
                         print("------the new test is done------")
         return elearray, eleconfidencearray
 
-    def capturecorrectedpcd(self, pxc, ncapturetimes = 1):
+    def capturecorrectedpcd(self, pxc, ncapturetimes=1):
         """
         capture a poind cloud and transform it from its sensor frame to global frame
 
@@ -343,7 +349,7 @@ class Locator(object):
                 objpcdmerged = np.vstack((objpcdmerged, objpcd))
 
         # further crop x
-        objpcdmerged = objpcdmerged[objpcdmerged[:,0]>200]
+        objpcdmerged = objpcdmerged[objpcdmerged[:, 0] > 200]
 
         return objpcdmerged
 
@@ -372,11 +378,11 @@ class Locator(object):
 
         tubestandcm = copy.deepcopy(self.tubestandcm)
         tubestandcm.set_homomat(homomat)
-        tubestandcm.setColor(0,.5,.7,1)
+        tubestandcm.setColor(0, .5, .7, 1)
 
         return tubestandcm
 
-    def gentubeandstandboxcm(self, homomat, wrapheight = 120, rgba = np.array([.5, .5, .5, .3])):
+    def gentubeandstandboxcm(self, homomat, wrapheight=120, rgba=np.array([.5, .5, .5, .3])):
         """
         gen a solid box to wrap both a stand and the tubes in it
 
@@ -388,8 +394,9 @@ class Locator(object):
         """
 
         homomat_copy = copy.deepcopy(homomat)
-        homomat_copy[:3, 3] = homomat_copy[:3, 3] + homomat_copy[:3,2]* wrapheight/2
-        tubeandstandboxcm = cm.CollisionModel(p3dh.genbox(np.array([self.tubestandsize[0], self.tubestandsize[1], 120]), homomat_copy))
+        homomat_copy[:3, 3] = homomat_copy[:3, 3] + homomat_copy[:3, 2] * wrapheight / 2
+        tubeandstandboxcm = cm.CollisionModel(
+            p3dh.genbox(np.array([self.tubestandsize[0], self.tubestandsize[1], 120]), homomat_copy))
         tubeandstandboxcm.setColor(rgba[0], rgba[1], rgba[2], rgba[3])
 
         return tubeandstandboxcm
@@ -408,23 +415,23 @@ class Locator(object):
         """
 
         if eleconfidencearray is None:
-            eleconfidencearray = np.ones_like(elearray)*alpha
+            eleconfidencearray = np.ones_like(elearray) * alpha
 
         tubecmlist = []
         for i in range(5):
             for j in range(10):
-                if elearray[i,j] == 1:
+                if elearray[i, j] == 1:
                     tubecm = self.tubebigcm
-                    rgba = np.array([.7, .7, 0, eleconfidencearray[i,j]])
-                elif elearray[i,j] == 2:
+                    rgba = np.array([.7, .7, 0, eleconfidencearray[i, j]])
+                elif elearray[i, j] == 2:
                     tubecm = self.tubesmallcm
-                    rgba = np.array([.7, 0, .7, eleconfidencearray[i,j]])
+                    rgba = np.array([.7, 0, .7, eleconfidencearray[i, j]])
                 else:
                     continue
                 newtubecm = copy.deepcopy(tubecm)
                 tubemat = copy.deepcopy(tubestand_homomat)
-                tubepos_normalized = np.array([self.tubeholecenters[i,j][0], self.tubeholecenters[i,j][1], 5])
-                tubepos  = rm.homotransformpoint(tubestand_homomat, tubepos_normalized)
+                tubepos_normalized = np.array([self.tubeholecenters[i, j][0], self.tubeholecenters[i, j][1], 5])
+                tubepos = rm.homotransformpoint(tubestand_homomat, tubepos_normalized)
                 tubemat[:3, 3] = tubepos
                 newtubecm.set_homomat(tubemat)
                 newtubecm.setColor(rgba[0], rgba[1], rgba[2], rgba[3])
@@ -472,7 +479,7 @@ if __name__ == '__main__':
     # homomat = loc.findtubestand_match(objpcdmerged, toggle_debug=True)
 
     elearray, eleconfidencearray = loc.findtubes(homomat, objpcd, toggledebug=False)
-    yhx.p3dh.genframe(pos=homomat[:3,3], rotmat=homomat[:3,:3]).reparentTo(yhx.base.render)
+    yhx.p3dh.genframe(pos=homomat[:3, 3], rotmat=homomat[:3, :3]).reparentTo(yhx.base.render)
     rbtnp = yhx.rbtmesh.genmnp(yhx.rbt)
     rbtnp.reparentTo(yhx.base.render)
     pcdnp = p3dh.genpointcloudnodepath(objpcd, pntsize=5)

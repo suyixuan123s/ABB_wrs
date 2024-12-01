@@ -89,7 +89,7 @@ class BDModel(object):
         """
         if isinstance(obj, ShowBase):
             # for rendering to base.render
-            self._gm.set_homomat(self.bdb.get_homomat()) # get updated with dynamics
+            self._gm.set_homomat(self.bdb.get_homomat())  # get updated with dynamics
             self._gm.attach_to(obj)
         else:
             raise ValueError("Must be ShowBase!")
@@ -138,6 +138,7 @@ if __name__ == "__main__":
     bunnycm2.start_physics()
     base.attach_internal_update_obj(bunnycm2)
 
+
     def update(bunnycm, task):
         if base.inputmgr.keymap['space'] is True:
             for i in range(1):
@@ -146,16 +147,18 @@ if __name__ == "__main__":
                 rndcolor = np.random.rand(4)
                 rndcolor[-1] = 1
                 bunnycm1.set_rgba(rndcolor)
-                rotmat = rm.rotmat_from_euler(0, 0, math.pi/12)
+                rotmat = rm.rotmat_from_euler(0, 0, math.pi / 12)
                 z = math.floor(i / 100)
                 y = math.floor((i - z * 100) / 10)
                 x = i - z * 100 - y * 10
                 print(x, y, z, "\n")
-                bunnycm1.set_homomat(rm.homomat_from_posrot(np.array([x * 0.015 - 0.07, y * 0.015 - 0.07, 0.35 + z * 0.015]), rotmat))
+                bunnycm1.set_homomat(
+                    rm.homomat_from_posrot(np.array([x * 0.015 - 0.07, y * 0.015 - 0.07, 0.35 + z * 0.015]), rotmat))
                 base.attach_internal_update_obj(bunnycm1)
                 bunnycm1.start_physics()
         base.inputmgr.keymap['space'] = False
         return task.cont
+
 
     gm.gen_frame().attach_to(base)
     taskMgr.add(update, "addobject", extraArgs=[bunnycm], appendTask=True)

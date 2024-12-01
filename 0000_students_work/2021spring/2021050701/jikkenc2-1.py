@@ -6,7 +6,7 @@ import modeling.collision_model as cm
 import basis.robot_math as rm
 
 if __name__ == '__main__':
-    base = wd.World(cam_pos=np.array([-.8, .3, .4]),lookat_pos=np.array([0, 0, .1]))
+    base = wd.World(cam_pos=np.array([-.8, .3, .4]), lookat_pos=np.array([0, 0, .1]))
     # マグカップの生成
     object1 = cm.CollisionModel(initor="./objects/mug.stl",
                                 cdprimit_type="box",

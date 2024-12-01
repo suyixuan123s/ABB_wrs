@@ -6,7 +6,7 @@ import modeling.collision_model as cm
 import utils
 import os
 
-base = wd.World(cam_pos=[0,0,.3], lookat_pos=[0, 0, 0])
+base = wd.World(cam_pos=[0, 0, .3], lookat_pos=[0, 0, 0])
 
 this_dir, this_filename = os.path.split(__file__)
 file_tip_rack = os.path.join(this_dir, "objects", "tip_rack.stl")

@@ -78,10 +78,10 @@ total_t = 0
 for i in range(500):
     tic = time.time()
     path = rrtc_wro_s.plan(start_conf=start_conf, goal_conf=goal_conf,
-                          obstacle_list=obstacle_list,
-                          ext_dist=1, rand_rate=70, max_time=300,
-                          component_name='all',
-                          animation=False)
+                           obstacle_list=obstacle_list,
+                           ext_dist=1, rand_rate=70, max_time=300,
+                           component_name='all',
+                           animation=False)
     toc = time.time()
     total_t = total_t + toc - tic
 print("rrtc wrsold costs:", total_t)

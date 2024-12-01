@@ -135,7 +135,7 @@ class BDBody(BulletRigidBodyNode):
         self.setTransform(TransformState.makeMat(dh.npv3mat3_to_pdmat4(pos, rotmat)))
 
     def setmass(self, mass):
-        self.mass=mass
+        self.mass = mass
         self.setMass(mass)
 
     def copy(self):

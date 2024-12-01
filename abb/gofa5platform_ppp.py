@@ -3,23 +3,24 @@ import math
 import time
 
 import numpy as np
+from direct.task.TaskManagerGlobal import taskMgr
+
 import visualization.panda.world as wd
 import modeling.geometric_model as gm
 import modeling.collision_model as cm
 import grasping.planning.antipodal as gpa
 import robot_sim.end_effectors.gripper.dh60.dh60 as dh
 import robot_sim.end_effectors.gripper.ag145.ag145 as dh
-import robot_sim.robots.gofa5.gofa5 as gf5
+import robot_sim.robots.gofa5.GOFA5 as gf5
 import manipulation.pick_place_planner as ppp
 import motion.probabilistic.rrt_connect as rrtc
 import basis.robot_math as rm
-import  robot_con.gofa_con.gofa_con as gofa_con
+import robot_con.gofa_con.gofa_con as gofa_con
 
 
 def go_init():
     init_jnts = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
     current_jnts = rbt_s.get_jnt_values("arm")
-
 
     path = rrtc_s.plan(component_name="arm",
                        start_conf=current_jnts,
@@ -27,6 +28,7 @@ def go_init():
                        ext_dist=0.05,
                        max_time=300)
     rbt_r.move_jntspace_path(path)
+
 
 if __name__ == '__main__':
     base = wd.World(cam_pos=[4.16951, 1.8771, 1.70872], lookat_pos=[0, 0, 0.5])
@@ -51,7 +53,7 @@ if __name__ == '__main__':
     manipulator_name = "arm"
     # start_conf = rbt_s.get_jnt_values(manipulator_name)
     # start_conf = np.array([0.0439823 , -0.53023103  ,1.05243354 , 0.0143117  , 1.55351757 , 1.57079633])
-    start_conf = np.array([0.0, 0.0, 0.0,0.0,0.0,0.0])
+    start_conf = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
     print(start_conf)
     hand_name = "hnd"
 
@@ -59,14 +61,14 @@ if __name__ == '__main__':
     objcm_name = "box"
     obj = cm.CollisionModel(f"objects/{objcm_name}.stl")
     obj.set_rgba([.9, .75, .35, 1])
-    obj.set_pos(np.array([.6,-.2,0.03]))
+    obj.set_pos(np.array([.6, -.2, 0.03]))
     obj.set_rotmat()
     obj.attach_to(base)
 
     # object_goal
     obj_goal = cm.CollisionModel(f"objects/{objcm_name}.stl")
     obj_goal.set_rgba([1, 1, 1, 1])
-    obj_goal.set_pos(np.array([.6,+.2,0.03]))
+    obj_goal.set_pos(np.array([.6, +.2, 0.03]))
     obj_goal.set_rotmat()
     obj_goal.attach_to(base)
 
@@ -119,6 +121,7 @@ if __name__ == '__main__':
     # for path in robot_paths:
     rbt_r.move_jntspace_path(conf_list)
 
+
     # if jawwidth_path[counter[0]]!= jawwidth_path[counter[0]+1]:
     #     rbt_r.move_jntspace_path([])
     #
@@ -157,6 +160,7 @@ if __name__ == '__main__':
         object_attached_list.append(objb_copy)
         counter[0] += 1
         return task.again
+
 
     taskMgr.doMethodLater(0.1, update, "update",
                           extraArgs=[rbt_s,

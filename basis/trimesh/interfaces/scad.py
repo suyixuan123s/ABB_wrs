@@ -4,6 +4,7 @@ from distutils.spawn import find_executable
 _scad_executable = find_executable('openscad')
 exists = _scad_executable is not None
 
+
 def interface_scad(meshes, script):
     '''
     A way to interface with openSCAD which is itself an interface
@@ -20,10 +21,11 @@ def interface_scad(meshes, script):
     '''
     if not exists:
         raise ValueError('No SCAD available!')
-    with MeshScript(meshes = meshes, script = script) as scad:
+    with MeshScript(meshes=meshes, script=script) as scad:
         result = scad.run(_scad_executable + ' $script -o $mesh_post')
     return result
-    
+
+
 def boolean(meshes, operation='difference'):
     '''
     Run an operation on a set of meshes
@@ -33,6 +35,3 @@ def boolean(meshes, operation='difference'):
         script += 'import(\"$mesh_' + str(i) + '\");'
     script += '}'
     return interface_scad(meshes, script)
-
-
-

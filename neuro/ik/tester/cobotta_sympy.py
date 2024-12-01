@@ -9,14 +9,14 @@ import visualization.panda.world as world
 import time
 import pickle
 
-
 rbt_s = cbt_s.Cobotta()
 x, y, z, r00, r01, r02, r10, r11, r12, r20, r21, r22 = sympy.symbols("x y z r00 r01 r02 r10 r11 r12 r20 r21 r22")
-diff = -(rbt_s.manipulator_dict['arm'].jnts[6]['loc_pos'][1]+rbt_s.manipulator_dict['arm'].tcp_loc_pos[1])
-Matrix([x,y,z])+Matrix([r02, r12, r22])*diff
-Matrix([[r00, r01, r02], [r10, r11, r12], [r20, r21, r22]])*diff
+diff = -(rbt_s.manipulator_dict['arm'].jnts[6]['loc_pos'][1] + rbt_s.manipulator_dict['arm'].tcp_loc_pos[1])
+Matrix([x, y, z]) + Matrix([r02, r12, r22]) * diff
+Matrix([[r00, r01, r02], [r10, r11, r12], [r20, r21, r22]]) * diff
 
-Matrix([x,y,z])-
+
+# Matrix([x,y,z])
 
 
 def sym_axangle(ax, angle):
@@ -113,7 +113,7 @@ total_rotmat = accumulated_rotmat6
 # sympy_total_rotmat = pickle.load("cbt_fk.pkl")
 
 fk = lambdify((q1, q2, q3, q4, q5, q6), [total_pos, total_rotmat], 'numpy')
-jnt_values=[.5]*6
+jnt_values = [.5] * 6
 tic = time.time_ns()
 print(fk(*jnt_values))
 toc = time.time_ns()

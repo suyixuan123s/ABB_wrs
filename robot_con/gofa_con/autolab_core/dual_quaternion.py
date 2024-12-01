@@ -9,6 +9,7 @@ import numpy as np
 
 from .transformations import quaternion_multiply, quaternion_conjugate
 
+
 class DualQuaternion(object):
     """Class for handling dual quaternions and their interpolations.
 
@@ -30,7 +31,7 @@ class DualQuaternion(object):
         This quaternion with qr normalized.
     """
 
-    def __init__(self, qr=[1,0,0,0], qd=[0,0,0,0], enforce_unit_norm=True):
+    def __init__(self, qr=[1, 0, 0, 0], qd=[0, 0, 0, 0], enforce_unit_norm=True):
         """Initialize a dual quaternion.
 
         Parameters
@@ -112,7 +113,7 @@ class DualQuaternion(object):
     def normalized(self):
         """:obj:`DualQuaternion`: This quaternion with qr normalized.
         """
-        qr = self.qr /1./ np.linalg.norm(self.qr)
+        qr = self.qr / 1. / np.linalg.norm(self.qr)
         return DualQuaternion(qr, self.qd, True)
 
     def copy(self):
@@ -158,7 +159,7 @@ class DualQuaternion(object):
         if not 0 <= t <= 1:
             raise ValueError("Interpolation step must be between 0 and 1! Got {0}".format(t))
 
-        dqt = dq0 * (1-t) + dq1 * t
+        dqt = dq0 * (1 - t) + dq1 * t
         return dqt.normalized
 
     def __mul__(self, val):
@@ -228,4 +229,3 @@ class DualQuaternion(object):
 
     def __repr__(self):
         return 'DualQuaternion({0},{1})'.format(repr(self.qr), repr(self.qd))
-

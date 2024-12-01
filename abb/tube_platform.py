@@ -6,7 +6,7 @@ import modeling.geometric_model as gm
 import modeling.collision_model as cm
 import grasping.planning.antipodal as gpa
 import robot_sim.end_effectors.gripper.dh60.dh60 as dh
-import robot_sim.robots.gofa5.gofa5 as gf5
+import robot_sim.robots.gofa5.GOFA5 as gf5
 import manipulation.pick_place_planner as ppp
 import motion.probabilistic.rrt_connect as rrtc
 import basis.robot_math as rm
@@ -27,31 +27,31 @@ if __name__ == '__main__':
     rack_name = "rack_10ml"
     rack_10ml = cm.CollisionModel(f"objects/{rack_name}.stl")
     rack_10ml.set_rgba([1, 1, 1, 1])
-    rack_10ml.set_pos(np.array([.6,-.5,-0.05]))
+    rack_10ml.set_pos(np.array([.6, -.5, -0.05]))
     rack_10ml.set_rotmat()
     rack_10ml.attach_to(base)
     tube_name = "tube"
     tube1 = cm.CollisionModel(f"objects/{tube_name}.stl")
     tube1.set_rgba([.0, 1, .0, 1])
-    tube1.set_pos(np.array([.610,-.491,-0.032]))
+    tube1.set_pos(np.array([.610, -.491, -0.032]))
     tube1.set_rotmat()
     tube1.attach_to(base)
 
     tube2 = cm.CollisionModel(f"objects/{tube_name}.stl")
     tube2.set_rgba([.0, 1, .0, 1])
-    tube2.set_pos(np.array([.610,-.457,-0.032]))
+    tube2.set_pos(np.array([.610, -.457, -0.032]))
     tube2.set_rotmat()
     tube2.attach_to(base)
 
     tube3 = cm.CollisionModel(f"objects/{tube_name}.stl")
     tube3.set_rgba([.0, 1, .0, 1])
-    tube3.set_pos(np.array([.610,-.423,-0.032]))
+    tube3.set_pos(np.array([.610, -.423, -0.032]))
     tube3.set_rotmat()
     tube3.attach_to(base)
 
     tube4 = cm.CollisionModel(f"objects/{tube_name}.stl")
     tube4.set_rgba([.0, 1, .0, 1])
-    tube4.set_pos(np.array([.610,-.389,-0.032]))
+    tube4.set_pos(np.array([.610, -.389, -0.032]))
     tube4.set_rotmat()
     tube4.attach_to(base)
     base.run()

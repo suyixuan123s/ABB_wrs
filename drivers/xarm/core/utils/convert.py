@@ -103,7 +103,8 @@ def bytes_to_u32(data):
 
 
 def bytes_to_u64(data):
-    data_u64 = data[0] << 56 | data[1] << 48 | data[2] << 40 | data[3] << 32 | data[4] << 24 | data[5] << 16 | data[6] << 8 | data[7]
+    data_u64 = data[0] << 56 | data[1] << 48 | data[2] << 40 | data[3] << 32 | data[4] << 24 | data[5] << 16 | data[
+        6] << 8 | data[7]
     return data_u64
 
 
@@ -119,4 +120,3 @@ def bytes_to_num32(data, fmt='>l'):
 def bytes_to_long_big(data):
     """大端字节序"""
     return bytes_to_num32(data, '>l')
-

@@ -6,8 +6,9 @@ import numpy as np
 from .. import transform_points
 
 # try:
-    # pip install pycollada
+# pip install pycollada
 from . import collada
+
 # except BaseException:
 #     collada = None
 try:
@@ -153,7 +154,7 @@ def _parse_node(node,
                 face_normals = (vertex_normals[:, 0, :] + vertex_normals[:, 1, :] + vertex_normals[:, 2, :]) / 3
                 if not np.allclose(parent_matrix, np.eye(4), 1e-8):
                     vertices = transform_points(vertices, parent_matrix)
-                    normalized_matrix = parent_matrix/np.linalg.norm(parent_matrix[:,0])
+                    normalized_matrix = parent_matrix / np.linalg.norm(parent_matrix[:, 0])
                     face_normals = transform_points(face_normals, normalized_matrix, translate=False)
                 primid = '{}.{}'.format(geometry.id, i)
                 meshes[primid] = {

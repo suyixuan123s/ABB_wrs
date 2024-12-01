@@ -4,6 +4,7 @@ Author: Jeff Mahler
 """
 import numpy as np
 
+
 class Box(object):
     """A 2D box or 3D rectangular prism.
 
@@ -117,6 +118,7 @@ class Box(object):
         """
         return self._frame
 
+
 class Contour(object):
     """ A set of pixels forming the boundary of an object of interest in an image.
 
@@ -131,14 +133,14 @@ class Contour(object):
     num_pixels : int
         number of pixels along the boundary
     """
+
     def __init__(self, boundary_pixels, area=0.0, frame='unspecified'):
         self.boundary_pixels = boundary_pixels.squeeze()
         self.bounding_box = Box(np.min(self.boundary_pixels, axis=0),
                                 np.max(self.boundary_pixels, axis=0),
                                 frame)
         self.area = area
-        
+
     @property
     def num_pixels(self):
         return self.boundary_pixels.shape[0]
-

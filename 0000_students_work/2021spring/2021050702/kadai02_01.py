@@ -22,7 +22,7 @@ if __name__ == '__main__':
     star1 = cm.CollisionModel(initor="objects/star2.stl", cdprimit_type="surface_balls", cdmesh_type="convex_hull")
     star1.set_rgba([.9, .75, .35, 1])  # 黄色に変更
     star1.set_pos(np.array([0, .01, .07]))
-    star1.set_rotmat(rm.rotmat_from_axangle(axis=[0, 0, 1], angle=math.pi/2.))
+    star1.set_rotmat(rm.rotmat_from_axangle(axis=[0, 0, 1], angle=math.pi / 2.))
 
     # glass1, star1をそれぞれコピーし，meshes(triangles)に変更してglass2, star2を作成します
     glass2 = glass1.copy()

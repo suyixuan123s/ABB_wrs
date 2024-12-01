@@ -311,12 +311,12 @@ class RRTKinodynamic(object):
             x = state[0]
             y = state[1]
             theta = state[2]
-            ax.add_patch(plt.Circle((x,y), .5, edgecolor=edgecolor, facecolor=facecolor))
-            ax.add_patch(plt.Rectangle((x,y), .7, .1, math.degrees(theta), color='y'))
-            ax.add_patch(plt.Rectangle((x,y), -.1, .1, math.degrees(theta),
+            ax.add_patch(plt.Circle((x, y), .5, edgecolor=edgecolor, facecolor=facecolor))
+            ax.add_patch(plt.Rectangle((x, y), .7, .1, math.degrees(theta), color='y'))
+            ax.add_patch(plt.Rectangle((x, y), -.1, .1, math.degrees(theta),
                                        edgecolor=edgecolor, facecolor=facecolor))
-            ax.add_patch(plt.Rectangle((x,y), .7, -.1, math.degrees(theta), color='y'))
-            ax.add_patch(plt.Rectangle((x,y), -.1, -.1, math.degrees(theta),
+            ax.add_patch(plt.Rectangle((x, y), .7, -.1, math.degrees(theta), color='y'))
+            ax.add_patch(plt.Rectangle((x, y), -.1, -.1, math.degrees(theta),
                                        edgecolor=edgecolor, facecolor=facecolor))
 
         plt.clf()

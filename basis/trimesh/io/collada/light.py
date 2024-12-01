@@ -16,7 +16,7 @@ import numpy
 
 from .common import DaeObject, E, tag
 from .common import DaeIncompleteError, DaeBrokenRefError, \
-        DaeMalformedError, DaeUnsupportedError
+    DaeMalformedError, DaeUnsupportedError
 from .util import _correctValInNode
 from .xmlutil import etree as ElementTree
 
@@ -26,26 +26,26 @@ class Light(DaeObject):
 
     @staticmethod
     def load(collada, localscope, node):
-        tecnode = node.find( collada.tag('technique_common') )
+        tecnode = node.find(collada.tag('technique_common'))
         if tecnode is None or len(tecnode) == 0:
             raise DaeIncompleteError('Missing common technique in light')
         lightnode = tecnode[0]
         if lightnode.tag == collada.tag('directional'):
-            return DirectionalLight.load( collada, localscope, node )
+            return DirectionalLight.load(collada, localscope, node)
         elif lightnode.tag == collada.tag('point'):
-            return PointLight.load( collada, localscope, node )
+            return PointLight.load(collada, localscope, node)
         elif lightnode.tag == collada.tag('ambient'):
-            return AmbientLight.load( collada, localscope, node )
+            return AmbientLight.load(collada, localscope, node)
         elif lightnode.tag == collada.tag('spot'):
-            return SpotLight.load( collada, localscope, node )
+            return SpotLight.load(collada, localscope, node)
         else:
-            raise DaeUnsupportedError('Unrecognized light type: %s'%lightnode.tag)
+            raise DaeUnsupportedError('Unrecognized light type: %s' % lightnode.tag)
 
 
 class DirectionalLight(Light):
     """Directional light as defined in COLLADA tag <directional> tag."""
 
-    def __init__(self, id, color, xmlnode = None):
+    def __init__(self, id, color, xmlnode=None):
         """Create a new directional light.
 
         :param str id:
@@ -60,8 +60,8 @@ class DirectionalLight(Light):
         """
         self.id = id
         """The unique string identifier for the light"""
-        self.direction = numpy.array( [0, 0, -1], dtype=numpy.float32 )
-        #Not documenting this because it doesn't make sense to set the direction
+        self.direction = numpy.array([0, 0, -1], dtype=numpy.float32)
+        # Not documenting this because it doesn't make sense to set the direction
         # of an unbound light. The direction isn't set until binding in a scene.
         self.color = color
         """Either a tuple of size 3 containing the RGB color value
@@ -77,28 +77,27 @@ class DirectionalLight(Light):
                         E.color(' '.join(map(str, self.color)))
                     )
                 )
-            , id=self.id, name=self.id)
+                , id=self.id, name=self.id)
 
     def save(self):
         """Saves the light's properties back to :attr:`xmlnode`"""
         self.xmlnode.set('id', self.id)
         self.xmlnode.set('name', self.id)
         colornode = self.xmlnode.find('%s/%s/%s' % (tag('technique_common'),
-            tag('directional'), tag('color')))
+                                                    tag('directional'), tag('color')))
         colornode.text = ' '.join(map(str, self.color))
-
 
     @staticmethod
     def load(collada, localscope, node):
-        colornode = node.find( '%s/%s/%s'%(collada.tag('technique_common'),collada.tag('directional'),
-                                           collada.tag('color') ) )
+        colornode = node.find('%s/%s/%s' % (collada.tag('technique_common'), collada.tag('directional'),
+                                            collada.tag('color')))
         if colornode is None:
             raise DaeIncompleteError('Missing color for directional light')
         try:
             color = tuple([float(v) for v in colornode.text.split()])
         except ValueError as ex:
             raise DaeMalformedError('Corrupted color values in light definition')
-        return DirectionalLight(node.get('id'), color, xmlnode = node)
+        return DirectionalLight(node.get('id'), color, xmlnode=node)
 
     def bind(self, matrix):
         """Binds this light to a transform matrix.
@@ -121,7 +120,7 @@ class DirectionalLight(Light):
 class AmbientLight(Light):
     """Ambient light as defined in COLLADA tag <ambient>."""
 
-    def __init__(self, id, color, xmlnode = None):
+    def __init__(self, id, color, xmlnode=None):
         """Create a new ambient light.
 
         :param str id:
@@ -150,28 +149,27 @@ class AmbientLight(Light):
                         E.color(' '.join(map(str, self.color)))
                     )
                 )
-            , id=self.id, name=self.id)
+                , id=self.id, name=self.id)
 
     def save(self):
         """Saves the light's properties back to :attr:`xmlnode`"""
         self.xmlnode.set('id', self.id)
         self.xmlnode.set('name', self.id)
         colornode = self.xmlnode.find('%s/%s/%s' % (tag('technique_common'),
-            tag('ambient'), tag('color')))
+                                                    tag('ambient'), tag('color')))
         colornode.text = ' '.join(map(str, self.color))
-
 
     @staticmethod
     def load(collada, localscope, node):
         colornode = node.find('%s/%s/%s' % (collada.tag('technique_common'),
-            collada.tag('ambient'), collada.tag('color')))
+                                            collada.tag('ambient'), collada.tag('color')))
         if colornode is None:
             raise DaeIncompleteError('Missing color for ambient light')
         try:
-            color = tuple( [ float(v) for v in colornode.text.split() ] )
+            color = tuple([float(v) for v in colornode.text.split()])
         except ValueError as ex:
             raise DaeMalformedError('Corrupted color values in light definition')
-        return AmbientLight(node.get('id'), color, xmlnode = node)
+        return AmbientLight(node.get('id'), color, xmlnode=node)
 
     def bind(self, matrix):
         """Binds this light to a transform matrix.
@@ -195,7 +193,7 @@ class PointLight(Light):
     """Point light as defined in COLLADA tag <point>."""
 
     def __init__(self, id, color, constant_att=None, linear_att=None,
-            quad_att=None, zfar=None, xmlnode = None):
+                 quad_att=None, zfar=None, xmlnode=None):
         """Create a new sun light.
 
         :param str id:
@@ -218,8 +216,8 @@ class PointLight(Light):
         """
         self.id = id
         """The unique string identifier for the light"""
-        self.position = numpy.array( [0, 0, 0], dtype=numpy.float32 )
-        #Not documenting this because it doesn't make sense to set the position
+        self.position = numpy.array([0, 0, 0], dtype=numpy.float32)
+        # Not documenting this because it doesn't make sense to set the position
         # of an unbound light. The position isn't set until binding in a scene.
         self.color = color
         """Either a tuple of size 3 containing the RGB color value
@@ -239,7 +237,7 @@ class PointLight(Light):
             """ElementTree representation of the light."""
         else:
             pnode = E.point(
-                E.color(' '.join(map(str, self.color ) ))
+                E.color(' '.join(map(str, self.color)))
             )
             if self.constant_att is not None:
                 pnode.append(E.constant_attenuation(str(self.constant_att)))
@@ -252,15 +250,15 @@ class PointLight(Light):
 
             self.xmlnode = E.light(
                 E.technique_common(pnode)
-            , id=self.id, name=self.id)
+                , id=self.id, name=self.id)
 
     def save(self):
         """Saves the light's properties back to :attr:`xmlnode`"""
         self.xmlnode.set('id', self.id)
         self.xmlnode.set('name', self.id)
-        pnode = self.xmlnode.find( '%s/%s'%(tag('technique_common'), tag('point')) )
-        colornode = pnode.find( tag('color') )
-        colornode.text = ' '.join(map(str, self.color ) )
+        pnode = self.xmlnode.find('%s/%s' % (tag('technique_common'), tag('point')))
+        colornode = pnode.find(tag('color'))
+        colornode.text = ' '.join(map(str, self.color))
         _correctValInNode(pnode, 'constant_attenuation', self.constant_att)
         _correctValInNode(pnode, 'linear_attenuation', self.linear_att)
         _correctValInNode(pnode, 'quadratic_attenuation', self.quad_att)
@@ -269,7 +267,7 @@ class PointLight(Light):
     @staticmethod
     def load(collada, localscope, node):
         pnode = node.find('%s/%s' % (collada.tag('technique_common'), collada.tag('point')))
-        colornode = pnode.find( collada.tag('color') )
+        colornode = pnode.find(collada.tag('color'))
         if colornode is None:
             raise DaeIncompleteError('Missing color for point light')
         try:
@@ -277,10 +275,10 @@ class PointLight(Light):
         except ValueError as ex:
             raise DaeMalformedError('Corrupted color values in light definition')
         constant_att = linear_att = quad_att = zfar = None
-        qattnode = pnode.find( collada.tag('quadratic_attenuation') )
-        cattnode = pnode.find( collada.tag('constant_attenuation') )
-        lattnode = pnode.find( collada.tag('linear_attenuation') )
-        zfarnode = pnode.find( collada.tag('zfar') )
+        qattnode = pnode.find(collada.tag('quadratic_attenuation'))
+        cattnode = pnode.find(collada.tag('constant_attenuation'))
+        lattnode = pnode.find(collada.tag('linear_attenuation'))
+        zfarnode = pnode.find(collada.tag('zfar'))
         try:
             if cattnode is not None:
                 constant_att = float(cattnode.text)
@@ -293,7 +291,7 @@ class PointLight(Light):
         except ValueError as ex:
             raise DaeMalformedError('Corrupted values in light definition')
         return PointLight(node.get('id'), color, constant_att, linear_att,
-                quad_att, zfar, xmlnode = node)
+                          quad_att, zfar, xmlnode=node)
 
     def bind(self, matrix):
         """Binds this light to a transform matrix.
@@ -317,7 +315,7 @@ class SpotLight(Light):
     """Spot light as defined in COLLADA tag <spot>."""
 
     def __init__(self, id, color, constant_att=None, linear_att=None,
-            quad_att=None, falloff_ang=None, falloff_exp=None, xmlnode = None):
+                 quad_att=None, falloff_ang=None, falloff_exp=None, xmlnode=None):
         """Create a new spot light.
 
         :param str id:
@@ -362,7 +360,7 @@ class SpotLight(Light):
             """ElementTree representation of the light."""
         else:
             pnode = E.spot(
-                E.color(' '.join(map(str, self.color ) )),
+                E.color(' '.join(map(str, self.color))),
             )
             if self.constant_att is not None:
                 pnode.append(E.constant_attenuation(str(self.constant_att)))
@@ -377,7 +375,7 @@ class SpotLight(Light):
 
             self.xmlnode = E.light(
                 E.technique_common(pnode)
-            , id=self.id, name=self.id)
+                , id=self.id, name=self.id)
 
     def save(self):
         """Saves the light's properties back to :attr:`xmlnode`"""
@@ -385,7 +383,7 @@ class SpotLight(Light):
         self.xmlnode.set('name', self.id)
         pnode = self.xmlnode.find('%s/%s' % (tag('technique_common'), tag('spot')))
         colornode = pnode.find(tag('color'))
-        colornode.text = ' '.join(map(str, self.color ) )
+        colornode.text = ' '.join(map(str, self.color))
         _correctValInNode(pnode, 'constant_attenuation', self.constant_att)
         _correctValInNode(pnode, 'linear_attenuation', self.linear_att)
         _correctValInNode(pnode, 'quadratic_attenuation', self.quad_att)
@@ -394,8 +392,8 @@ class SpotLight(Light):
 
     @staticmethod
     def load(collada, localscope, node):
-        pnode = node.find( '%s/%s'%(collada.tag('technique_common'),collada.tag('spot')) )
-        colornode = pnode.find( collada.tag('color') )
+        pnode = node.find('%s/%s' % (collada.tag('technique_common'), collada.tag('spot')))
+        colornode = pnode.find(collada.tag('color'))
         if colornode is None:
             raise DaeIncompleteError('Missing color for spot light')
         try:
@@ -403,11 +401,11 @@ class SpotLight(Light):
         except ValueError as ex:
             raise DaeMalformedError('Corrupted color values in spot light definition')
         constant_att = linear_att = quad_att = falloff_ang = falloff_exp = None
-        cattnode = pnode.find( collada.tag('constant_attenuation') )
-        lattnode = pnode.find( collada.tag('linear_attenuation') )
-        qattnode = pnode.find( collada.tag('quadratic_attenuation') )
-        fangnode = pnode.find( collada.tag('falloff_angle') )
-        fexpnode = pnode.find( collada.tag('falloff_exponent') )
+        cattnode = pnode.find(collada.tag('constant_attenuation'))
+        lattnode = pnode.find(collada.tag('linear_attenuation'))
+        qattnode = pnode.find(collada.tag('quadratic_attenuation'))
+        fangnode = pnode.find(collada.tag('falloff_angle'))
+        fexpnode = pnode.find(collada.tag('falloff_exponent'))
         try:
             if cattnode is not None:
                 constant_att = float(cattnode.text)
@@ -422,7 +420,7 @@ class SpotLight(Light):
         except ValueError as ex:
             raise DaeMalformedError('Corrupted values in spot light definition')
         return SpotLight(node.get('id'), color, constant_att, linear_att,
-                quad_att, falloff_ang, falloff_exp, xmlnode = node)
+                         quad_att, falloff_ang, falloff_exp, xmlnode=node)
 
     def bind(self, matrix):
         """Binds this light to a transform matrix.
@@ -452,7 +450,7 @@ class BoundPointLight(BoundLight):
         light is instantiated in a scene. Do not create this manually."""
 
     def __init__(self, plight, matrix):
-        self.position = numpy.dot( matrix[:3,:3], plight.position ) + matrix[:3,3]
+        self.position = numpy.dot(matrix[:3, :3], plight.position) + matrix[:3, 3]
         """Numpy array of length 3 representing the position of the light in the scene"""
         self.color = plight.color
         """Either a tuple of size 3 containing the RGB color value
@@ -487,11 +485,11 @@ class BoundSpotLight(BoundLight):
         light is instantiated in a scene. Do not create this manually."""
 
     def __init__(self, slight, matrix):
-        self.position = matrix[:3,3]
+        self.position = matrix[:3, 3]
         """Numpy array of length 3 representing the position of the light in the scene"""
-        self.direction = -matrix[:3,2]
+        self.direction = -matrix[:3, 2]
         """Direction of the spot light"""
-        self.up = matrix[:3,1]
+        self.up = matrix[:3, 1]
         """Up vector of the spot light"""
         self.matrix = matrix
         """Transform matrix for the bound light"""
@@ -528,12 +526,13 @@ class BoundSpotLight(BoundLight):
     def __repr__(self):
         return str(self)
 
+
 class BoundDirectionalLight(BoundLight):
     """Directional light bound to a scene with transformation. This gets created when a
         light is instantiated in a scene. Do not create this manually."""
 
     def __init__(self, dlight, matrix):
-        self.direction = numpy.dot( matrix[:3,:3], dlight.direction )
+        self.direction = numpy.dot(matrix[:3, :3], dlight.direction)
         """Numpy array of length 3 representing the direction of the light in the scene"""
         self.color = dlight.color
         """Either a tuple of size 3 containing the RGB color value
@@ -547,6 +546,7 @@ class BoundDirectionalLight(BoundLight):
 
     def __repr__(self):
         return str(self)
+
 
 class BoundAmbientLight(BoundLight):
     """Ambient light bound to a scene with transformation. This gets created when a
@@ -565,4 +565,3 @@ class BoundAmbientLight(BoundLight):
 
     def __repr__(self):
         return str(self)
-

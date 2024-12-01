@@ -1,12 +1,14 @@
 import copy
 import math
 import numpy as np
+from direct.task.TaskManagerGlobal import taskMgr
+
 import visualization.panda.world as wd
 import modeling.geometric_model as gm
 import modeling.collision_model as cm
 import grasping.planning.antipodal as gpa
 import robot_sim.end_effectors.gripper.dh60.dh60 as dh
-import robot_sim.robots.gofa5.gofa5 as gf5
+import robot_sim.robots.gofa5.GOFA5 as gf5
 import manipulation.pick_place_planner as ppp
 import motion.probabilistic.rrt_connect as rrtc
 import basis.robot_math as rm
@@ -21,13 +23,11 @@ if __name__ == '__main__':
     rrtc_s = rrtc.RRTConnect(rbt_s)
     ppp_s = ppp.PickPlacePlanner(rbt_s)
 
-
-
     rbt_s.hnd.open()
     rbt_s.gen_meshmodel().attach_to(base)
     manipulator_name = "arm"
     # start_conf = rbt_s.get_jnt_values(manipulator_name)
-    start_conf = np.array([0.0439823 , -0.53023103  ,1.05243354 , 0.0143117  , 1.55351757 , 1.57079633])
+    start_conf = np.array([0.0439823, -0.53023103, 1.05243354, 0.0143117, 1.55351757, 1.57079633])
     # rbt_s.fk("arm", start_conf)
     # pos, rot = rbt_s.get_gl_tcp("arm")
     # rbt_s.ik(manipulator_name, pos, rot)
@@ -41,13 +41,13 @@ if __name__ == '__main__':
     objcm_name = "box"
     obj = cm.CollisionModel(f"objects/{objcm_name}.stl")
     obj.set_rgba([.9, .75, .35, 1])
-    obj.set_pos(np.array([.4,-.2,.015]))
-    obj.set_rotmat(rm.rotmat_from_axangle(axis=[0,0,1], angle=-np.pi/4))
+    obj.set_pos(np.array([.4, -.2, .015]))
+    obj.set_rotmat(rm.rotmat_from_axangle(axis=[0, 0, 1], angle=-np.pi / 4))
     obj.attach_to(base)
 
     obj_goal = cm.CollisionModel(f"objects/{objcm_name}.stl")
     obj_goal.set_rgba([1, 1, 1, 1])
-    obj_goal.set_pos(np.array([.3,.4,.015]))
+    obj_goal.set_pos(np.array([.3, .4, .015]))
     obj_goal.set_rotmat()
     obj_goal.attach_to(base)
     # base.run()
@@ -62,7 +62,7 @@ if __name__ == '__main__':
         pos = rm.homomat_transform_points(homomat, hnd_pos)
         # gripper_s.grip_at_with_jcpose(pos, jaw_center_rotmat, jaw_width)
         # gripper_s.
-        gripper_s.fix_to(pos=pos,rotmat=obj.get_rotmat().dot(hnd_rotmat))
+        gripper_s.fix_to(pos=pos, rotmat=obj.get_rotmat().dot(hnd_rotmat))
         gripper_s.gen_meshmodel(rgba=[0, 1, 0, .1]).attach_to(base)
         # gm.gen_sphere(pos).attach_to(base)
         gm.gen_frame(pos, obj.get_rotmat().dot(hnd_rotmat)).attach_to(base)
@@ -70,20 +70,19 @@ if __name__ == '__main__':
         # rbt_s.gen_meshmodel().attach_to(base)
         try:
             jnts = rbt_s.ik("arm", np.asarray([jaw_center_pos + obj.get_pos()]), obj.get_rotmat().dot(hnd_rotmat))
-            rbt_s.fk("arm", jnt_values = jnts)
+            rbt_s.fk("arm", jnt_values=jnts)
             pos, rot = rbt_s.get_gl_tcp("arm")
             # print()
             if not rbt_s.is_collided():
                 rbt_s.gen_meshmodel().attach_to(base)
-            # print("here")
-            #     jnts = rbt_s.ik("arm", pos+np.array([0,0,0.1]), rot)
-            #     pos, rot = rbt_s.fk("arm", jnt_values=jnts)
+                # print("here")
+                #     jnts = rbt_s.ik("arm", pos+np.array([0,0,0.1]), rot)
+                #     pos, rot = rbt_s.fk("arm", jnt_values=jnts)
                 # rbt_s.gen_meshmodel().attach_to(base)
                 break
         except:
             pass
     base.run()
-
 
     obgl_start_homomat = rm.homomat_from_posrot(obj.get_pos(), obj.get_rotmat())
     obgl_goal_homomat = rm.homomat_from_posrot(obj_goal.get_pos(), obj_goal.get_rotmat())

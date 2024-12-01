@@ -1,6 +1,7 @@
 import numpy as np
 import gimpact as gi
 
+
 # util functions
 def gen_cdmesh_vvnf(vertices, vertex_normals, faces):
     """
@@ -10,6 +11,7 @@ def gen_cdmesh_vvnf(vertices, vertex_normals, faces):
     date: 20210118
     """
     return gi.TriMesh(vertices, faces.flatten())
+
 
 def is_collided(objcm0, objcm1):
     """
@@ -24,7 +26,8 @@ def is_collided(objcm0, objcm1):
     obj1 = gen_cdmesh_vvnf(*objcm1.extract_rotated_vvnf())
     contacts = gi.trimesh_trimesh_collision(obj0, obj1)
     contact_points = [ct.point for ct in contacts]
-    return (True, contact_points) if len(contact_points)>0 else (False, contact_points)
+    return (True, contact_points) if len(contact_points) > 0 else (False, contact_points)
+
 
 def gen_plane_cdmesh(updirection=np.array([0, 0, 1]), offset=0, name='autogen'):
     """
@@ -89,20 +92,20 @@ if __name__ == '__main__':
 
     wd.World(cam_pos=[1.0, 1, .0, 1.0], lookat_pos=[0, 0, 0])
     objpath = os.path.join(basis.__path__[0], 'objects', 'yumifinger.stl')
-    objcm1= cm.CollisionModel(objpath, cdmesh_type='triangles')
-    homomat = np.array([[ 5.00000060e-01,  7.00629234e-01,  5.09036899e-01, -3.43725011e-02],
-                        [ 8.66025329e-01, -4.04508471e-01, -2.93892622e-01,  5.41121606e-03],
-                        [-2.98023224e-08,  5.87785244e-01, -8.09016943e-01,  1.13636881e-01],
-                        [ 0.00000000e+00,  0.00000000e+00,  0.00000000e+00,  1.00000000e+00]])
-    homomat = np.array([[ 1.00000000e+00,  2.38935501e-16,  3.78436685e-17, -7.49999983e-03],
-                        [ 2.38935501e-16, -9.51056600e-01, -3.09017003e-01,  2.04893537e-02],
-                        [-3.78436685e-17,  3.09017003e-01, -9.51056600e-01,  1.22025304e-01],
-                        [ 0.00000000e+00,  0.00000000e+00,  0.00000000e+00,  1.00000000e+00]])
+    objcm1 = cm.CollisionModel(objpath, cdmesh_type='triangles')
+    homomat = np.array([[5.00000060e-01, 7.00629234e-01, 5.09036899e-01, -3.43725011e-02],
+                        [8.66025329e-01, -4.04508471e-01, -2.93892622e-01, 5.41121606e-03],
+                        [-2.98023224e-08, 5.87785244e-01, -8.09016943e-01, 1.13636881e-01],
+                        [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 1.00000000e+00]])
+    homomat = np.array([[1.00000000e+00, 2.38935501e-16, 3.78436685e-17, -7.49999983e-03],
+                        [2.38935501e-16, -9.51056600e-01, -3.09017003e-01, 2.04893537e-02],
+                        [-3.78436685e-17, 3.09017003e-01, -9.51056600e-01, 1.22025304e-01],
+                        [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 1.00000000e+00]])
     objcm1.set_homomat(homomat)
-    objcm1.set_rgba([1,1,.3,.2])
+    objcm1.set_rgba([1, 1, .3, .2])
 
     objpath = os.path.join(basis.__path__[0], 'objects', 'tubebig.stl')
-    objcm2= cm.CollisionModel(objpath, cdmesh_type='triangles')
+    objcm2 = cm.CollisionModel(objpath, cdmesh_type='triangles')
     iscollided, contact_points = is_collided(objcm1, objcm2)
     # objcm1.show_cdmesh(type='box')
     # show_triangles_cdmesh(objcm1)

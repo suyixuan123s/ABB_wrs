@@ -72,7 +72,7 @@ class RRTStar(rrt.RRT):
                 new_nid = random.randint(0, 1e16)
                 # find nearby_nid_list
                 nearby_nid_list = self._get_nearby_nid_with_min_cost(roadmap, new_conf, ext_dist)
-                print(nearby_nid_list) # 20210523 cannot continue to simplify
+                print(nearby_nid_list)  # 20210523 cannot continue to simplify
                 # costs
                 nodes_cost_dict = dict(roadmap.nodes(data='cost'))
                 nearby_cost_list = itemgetter(*nearby_nid_list)(nodes_cost_dict)
@@ -138,7 +138,7 @@ class RRTStar(rrt.RRT):
         tic = time.time()
         n = 0
         for _ in range(max_iter):
-            n+=1
+            n += 1
             toc = time.time()
             if max_time > 0.0:
                 if toc - tic > max_time:
@@ -173,7 +173,6 @@ class RRTStar(rrt.RRT):
 
 if __name__ == '__main__':
     import robot_sim.robots.xybot.xybot as xyb
-
 
     # ====Search Path with RRT====
     obstacle_list = [

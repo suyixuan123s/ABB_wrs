@@ -2,6 +2,7 @@ import copy
 from panda3d.core import NodePath
 from direct.showbase.ShowBase import ShowBase
 
+
 class MyApp(ShowBase):
 
     def __init__(self):

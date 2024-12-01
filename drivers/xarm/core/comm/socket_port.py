@@ -19,6 +19,7 @@ from ..utils.log import logger
 from .base import Port
 from ..config.x_config import XCONF
 
+
 # try:
 #     if platform.system() == 'Linux':
 #         import fcntl
@@ -146,4 +147,3 @@ class SocketPort(Port):
             logger.info('{} connect {} failed, {}'.format(self.port_type, server_ip, e))
             # logger.error('{} connect {}:{} failed, {}'.format(self.port_type, server_ip, server_port, e))
             self._connected = False
-

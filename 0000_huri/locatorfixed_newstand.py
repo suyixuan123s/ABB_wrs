@@ -6,9 +6,11 @@ import utiltools.thirdparty.o3dhelper as o3dh
 import utiltools.robotmath as rm
 import utiltools.thirdparty.p3dhelper as p3dh
 
+
 class LocatorFixed(object):
 
-    def __init__(self, directory=None, homomatfilename_start="rightfixture_light_homomat1", homomatfilename_goal="rightfixture_light_homomat2"):
+    def __init__(self, directory=None, homomatfilename_start="rightfixture_light_homomat1",
+                 homomatfilename_goal="rightfixture_light_homomat2"):
         self.__directory = directory
         if directory is None:
             self.bgdepth = pickle.load(open("./databackground/bgdepth.pkl", "rb"))
@@ -17,17 +19,19 @@ class LocatorFixed(object):
             self.tubestandcm = cm.CollisionModel("./objects/tubestand_light.stl")
             self.tubebigcm = cm.CollisionModel("./objects/tubebig_capped.stl", type="cylinder", expand_radius=2)
             self.tubesmallcm = cm.CollisionModel("./objects/tubesmall_capped.stl", type="cylinder", expand_radius=2)
-            self.tubestandhomomat_start = pickle.load(open("./datafixture/"+homomatfilename_start+".pkl", "rb"))
-            self.tubestandhomomat_goal = pickle.load(open("./datafixture/"+homomatfilename_goal+".pkl", "rb"))
+            self.tubestandhomomat_start = pickle.load(open("./datafixture/" + homomatfilename_start + ".pkl", "rb"))
+            self.tubestandhomomat_goal = pickle.load(open("./datafixture/" + homomatfilename_goal + ".pkl", "rb"))
         else:
-            self.bgdepth = pickle.load(open(directory+"/databackground/bgdepth.pkl", "rb"))
-            self.bgpcd = pickle.load(open(directory+"/databackground/bgpcd.pkl", "rb"))
+            self.bgdepth = pickle.load(open(directory + "/databackground/bgdepth.pkl", "rb"))
+            self.bgpcd = pickle.load(open(directory + "/databackground/bgpcd.pkl", "rb"))
             self.sensorhomomat = pickle.load(open(directory + "/datacalibration/calibmat.pkl", "rb"))
             self.tubestandcm = cm.CollisionModel(directory + "/objects/tubestand_light.stl")
-            self.tubebigcm = cm.CollisionModel(directory + "/objects/tubebig_capped.stl", type="cylinder", expand_radius=2)
-            self.tubesmallcm = cm.CollisionModel(directory + "/objects/tubesmall_capped.stl", type="cylinder", expand_radius=2)
-            self.tubestandhomomat_start = pickle.load(open("./datafixture/"+homomatfilename_start+".pkl", "rb"))
-            self.tubestandhomomat_goal = pickle.load(open("./datafixture/"+homomatfilename_goal+".pkl", "rb"))
+            self.tubebigcm = cm.CollisionModel(directory + "/objects/tubebig_capped.stl", type="cylinder",
+                                               expand_radius=2)
+            self.tubesmallcm = cm.CollisionModel(directory + "/objects/tubesmall_capped.stl", type="cylinder",
+                                                 expand_radius=2)
+            self.tubestandhomomat_start = pickle.load(open("./datafixture/" + homomatfilename_start + ".pkl", "rb"))
+            self.tubestandhomomat_goal = pickle.load(open("./datafixture/" + homomatfilename_goal + ".pkl", "rb"))
 
         # down x, right y
         tubeholecenters = []
@@ -39,9 +43,9 @@ class LocatorFixed(object):
         self.tubeholesize = np.array([17, 16.5])
         self.tubestandsize = np.array([97, 191])
         # initialize the registered tubes, a dictionary with the template of each tube type in a list (multiple values allowed)
-        self.registeredtubetemps = {1:[], 2:[]}
+        self.registeredtubetemps = {1: [], 2: []}
 
-    def _crop_pcd_overahole(self, tgtpcd_intsframe, holecenter_x, holecenter_y, crop_ratio = .9, crop_height = 70):
+    def _crop_pcd_overahole(self, tgtpcd_intsframe, holecenter_x, holecenter_y, crop_ratio=.9, crop_height=70):
         """
 
         crop the point cloud over a hole in the tubestand frame
@@ -57,10 +61,10 @@ class LocatorFixed(object):
         """
 
         # squeeze the hole size by half, make it a bit smaller than a half
-        tmppcd = tgtpcd_intsframe[tgtpcd_intsframe[:, 0] < (holecenter_x + self.tubeholesize[0]*crop_ratio/2)]
-        tmppcd = tmppcd[tmppcd[:, 0] > (holecenter_x - self.tubeholesize[0]*crop_ratio/2)]
-        tmppcd = tmppcd[tmppcd[:, 1] < (holecenter_y + self.tubeholesize[1]*crop_ratio/2)]
-        tmppcd = tmppcd[tmppcd[:, 1] > (holecenter_y - self.tubeholesize[1]*crop_ratio/2)]
+        tmppcd = tgtpcd_intsframe[tgtpcd_intsframe[:, 0] < (holecenter_x + self.tubeholesize[0] * crop_ratio / 2)]
+        tmppcd = tmppcd[tmppcd[:, 0] > (holecenter_x - self.tubeholesize[0] * crop_ratio / 2)]
+        tmppcd = tmppcd[tmppcd[:, 1] < (holecenter_y + self.tubeholesize[1] * crop_ratio / 2)]
+        tmppcd = tmppcd[tmppcd[:, 1] > (holecenter_y - self.tubeholesize[1] * crop_ratio / 2)]
         tmppcd = tmppcd[tmppcd[:, 2] > crop_height]
 
         return tmppcd
@@ -209,7 +213,7 @@ class LocatorFixed(object):
                 objpcdmerged = np.vstack((objpcdmerged, objpcd))
 
         # further crop x
-        objpcdmerged = objpcdmerged[objpcdmerged[:,0]>200]
+        objpcdmerged = objpcdmerged[objpcdmerged[:, 0] > 200]
 
         return objpcdmerged
 
@@ -226,7 +230,7 @@ class LocatorFixed(object):
 
         return rm.homotransformpointarray(self.sensorhomomat, pcdarray)
 
-    def gentubestand(self, homomat, rgba = np.array([0, .5, .7, 1.])):
+    def gentubestand(self, homomat, rgba=np.array([0, .5, .7, 1.])):
         """
 
         :param homomat:
@@ -242,7 +246,7 @@ class LocatorFixed(object):
 
         return tubestandcm
 
-    def gentubeandstandboxcm(self, homomat, wrapheight = 120, rgba = np.array([.5, .5, .5, .3])):
+    def gentubeandstandboxcm(self, homomat, wrapheight=120, rgba=np.array([.5, .5, .5, .3])):
         """
         gen a solid box to wrap both a stand and the tubes in it
 
@@ -254,8 +258,9 @@ class LocatorFixed(object):
         """
 
         homomat_copy = copy.deepcopy(homomat)
-        homomat_copy[:3, 3] = homomat_copy[:3, 3] + homomat_copy[:3,2]* wrapheight/2
-        tubeandstandboxcm = cm.CollisionModel(p3dh.genbox(np.array([self.tubestandsize[0], self.tubestandsize[1], 120]), homomat_copy))
+        homomat_copy[:3, 3] = homomat_copy[:3, 3] + homomat_copy[:3, 2] * wrapheight / 2
+        tubeandstandboxcm = cm.CollisionModel(
+            p3dh.genbox(np.array([self.tubestandsize[0], self.tubestandsize[1], 120]), homomat_copy))
         tubeandstandboxcm.setColor(rgba[0], rgba[1], rgba[2], rgba[3])
 
         return tubeandstandboxcm
@@ -305,7 +310,8 @@ if __name__ == '__main__':
     import environment.collisionmodel as cm
 
     yhx = robothelper.RobotHelperX(usereal=False, startworld=True)
-    loc = LocatorFixed(homomatfilename_start="rightfixture_light_homomat1", homomatfilename_goal="rightfixture_light_homomat2")
+    loc = LocatorFixed(homomatfilename_start="rightfixture_light_homomat1",
+                       homomatfilename_goal="rightfixture_light_homomat2")
 
     # bgdepth = pickle.load(open("./databackground/bgdepth.pkl", "rb"))
     # bgpcd = pickle.load(open("./databackground/bgpcd.pkl", "rb"))
@@ -342,7 +348,8 @@ if __name__ == '__main__':
 
     elearray, eleconfidencearray = loc.findtubes(loc.tubestandhomomat_start, objpcd, toggledebug=False)
     # local axis
-    yhx.p3dh.genframe(pos=loc.tubestandhomomat_start[:3,3], rotmat=loc.tubestandhomomat_start[:3,:3]).reparentTo(yhx.base.render)
+    yhx.p3dh.genframe(pos=loc.tubestandhomomat_start[:3, 3], rotmat=loc.tubestandhomomat_start[:3, :3]).reparentTo(
+        yhx.base.render)
     rbtnp = yhx.rbtmesh.genmnp(yhx.rbt)
     rbtnp.reparentTo(yhx.base.render)
     # pcdnp = p3dh.genpointcloudnodepath(objpcd, pntsize=5)

@@ -11,7 +11,7 @@ import motion.probabilistic.rrt_differential_wheel_connect as rrtdwc
 base = wd.World(cam_pos=[10, 1, 5], lookat_pos=[0, 0, 0])
 gm.gen_frame().attach_to(base)
 # robot_s
-component_name='agv'
+component_name = 'agv'
 robot_s = xss.XArmShuidi()
 robot_s.gen_meshmodel().attach_to(base)
 m_mat = robot_s.manipulability_axmat("arm", type="rotational")

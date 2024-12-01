@@ -10,7 +10,7 @@ import motion.probabilistic.rrt_connect as rrtc
 base = wd.World(cam_pos=[4, -1, 2], lookat_pos=[0, 0, 0])
 gm.gen_frame().attach_to(base)
 # object
-object_box = cm.gen_box(extent=[.15,.15,.15])
+object_box = cm.gen_box(extent=[.15, .15, .15])
 object_box.set_pos(np.array([.4, .3, .4]))
 object_box.set_rgba([.5, .7, .3, 1])
 object_box.attach_to(base)
@@ -19,14 +19,14 @@ component_name = 'lft_arm_waist'
 robot_s = nxt.Nextage()
 
 start_pos = np.array([.4, .1, .1])
-start_rotmat = rm.rotmat_from_axangle([0,1,0], -math.pi/2)
-gm.gen_frame(pos=start_pos,rotmat=start_rotmat).attach_to(base)
+start_rotmat = rm.rotmat_from_axangle([0, 1, 0], -math.pi / 2)
+gm.gen_frame(pos=start_pos, rotmat=start_rotmat).attach_to(base)
 robot_s.gen_meshmodel(toggle_tcpcs=True).attach_to(base)
 # base.run()
 start_conf = robot_s.ik(component_name, start_pos, start_rotmat)
 goal_pos = np.array([.3, .5, .6])
-goal_rotmat = rm.rotmat_from_axangle([1, 0, 0], -math.pi/2).dot(rm.rotmat_from_axangle([0, 1, 0], math.pi))
-gm.gen_frame(pos=goal_pos,rotmat=goal_rotmat).attach_to(base)
+goal_rotmat = rm.rotmat_from_axangle([1, 0, 0], -math.pi / 2).dot(rm.rotmat_from_axangle([0, 1, 0], math.pi))
+gm.gen_frame(pos=goal_pos, rotmat=goal_rotmat).attach_to(base)
 # base.run()
 goal_conf = robot_s.ik(component_name, goal_pos, goal_rotmat)
 rrtc_planner = rrtc.RRTConnect(robot_s)
@@ -45,12 +45,12 @@ for pose in path[1:-2]:
 for pose in [path[0]]:
     print(pose)
     robot_s.fk(component_name, pose)
-    robot_meshmodel = robot_s.gen_meshmodel(rgba=[1,0,0,.3])
+    robot_meshmodel = robot_s.gen_meshmodel(rgba=[1, 0, 0, .3])
     robot_meshmodel.attach_to(base)
 for pose in [path[-1]]:
     print(pose)
     robot_s.fk(component_name, pose)
-    robot_meshmodel = robot_s.gen_meshmodel(rgba=[0,1,0,.3])
+    robot_meshmodel = robot_s.gen_meshmodel(rgba=[0, 1, 0, .3])
     robot_meshmodel.attach_to(base)
     # robot_s.gen_stickmodel().attach_to(base)
 

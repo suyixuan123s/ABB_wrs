@@ -11,6 +11,7 @@ from robotconn.rpc.nxtrobot.nxtlib.command.gripper_command import GripperCommand
 from robotconn.rpc.nxtrobot.nxtlib.command.handlight_command import HandlightCommand
 from robotconn.rpc.nxtrobot.nxtlib.command.toolchanger_command import ToolchangerCommand
 
+
 class Hands05(BaseHands):
     """
     This class holds methods to operate the hands of NEXTAGE OPEN, based on the

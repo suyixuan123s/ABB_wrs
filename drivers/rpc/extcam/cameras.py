@@ -5,11 +5,12 @@ from panda3d.core import *
 import utiltools.robotmath as rm
 import cv2.aruco as aruco
 
+
 class ExtCam(object):
 
     def __init__(self):
         self.camcapid = 0
-        self.camcap = cv2.VideoCapture(self.camcapid+cv2.CAP_DSHOW)
+        self.camcap = cv2.VideoCapture(self.camcapid + cv2.CAP_DSHOW)
         self.camcap.set(cv2.CAP_PROP_FRAME_WIDTH, 3840)
         self.camcap.set(cv2.CAP_PROP_FRAME_HEIGHT, 2160)
         # self.camcap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
@@ -21,8 +22,10 @@ class ExtCam(object):
         self.camcap.read()
         return self.camcap.read()[1]
 
+
 if __name__ == "__main__":
     import time
+
     ec = ExtCam()
     while True:
         # ifnpa = pickle.loads(rkint.root.getifarray())

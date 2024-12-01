@@ -183,17 +183,17 @@ class TubePuzzle(object):
         # mask_br = np.array([[0, 0, 1], [0, 0, 1], [1, 1, 1]])
         ## fillable
         fillablegrid = np.zeros_like(node.grid)
-        fillablegrid[self.standpattern==1] = node.grid[self.standpattern==1]
+        fillablegrid[self.standpattern == 1] = node.grid[self.standpattern == 1]
         cf_ucbc = ss.correlate2d(fillablegrid, mask_ucbc)[1:-1, 1:-1]
         cf_crcl = ss.correlate2d(fillablegrid, mask_crcl)[1:-1, 1:-1]
-        cf = ((cf_ucbc==0)+(cf_crcl==0))*(node.grid==0)
+        cf = ((cf_ucbc == 0) + (cf_crcl == 0)) * (node.grid == 0)
         # fillable 1
         fillable_type1 = [np.asarray(np.where((self.goalpattern == 1) * cf)).T[0]]
         # fillable 2
         fillable_type2 = [np.asarray(np.where((self.goalpattern == 2) * cf)).T[0]]
         ## graspable
         fillablegrid = np.zeros_like(node.grid)
-        fillablegrid[self.standpattern==0] = node.grid[self.standpattern==0]
+        fillablegrid[self.standpattern == 0] = node.grid[self.standpattern == 0]
         cm_ucbc = ss.correlate2d(fillablegrid, mask_ucbc)[1:-1, 1:-1]
         cm_crcl = ss.correlate2d(fillablegrid, mask_crcl)[1:-1, 1:-1]
         cm_ucbc[node.grid == 0] = -1

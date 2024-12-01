@@ -40,7 +40,7 @@ class Kinodynamics(object):
             # dynamics
             avg_speed = (current_speed + next_speed) / 2
             next_angle = state1[2] + avg_speed[1] * self.time_interval
-            avg_angle = (state1[2]+next_angle)/2.0
+            avg_angle = (state1[2] + next_angle) / 2.0
             avg_annihilating_array = np.array([[np.cos(avg_angle), np.sin(avg_angle), 0], [0, 0, 1]])
             new_state_conf = state1[:3] + (avg_speed * self.time_interval).dot(avg_annihilating_array)
             next_annihilating_array = np.array([[np.cos(next_angle), np.sin(next_angle), 0], [0, 0, 1]])
@@ -89,8 +89,8 @@ class RRTConnectKinodynamic(object):
         if random.randint(0, 99) < rand_rate:
             rand_conf = self.robot_s.rand_conf(component_name=component_name)
             # return np.hstack((rand_conf, np.zeros_like(rand_conf)))
-            rand_speed = np.random.rand(3)-1
-            rand_speed[:2] = rand_speed[:2]*2
+            rand_speed = np.random.rand(3) - 1
+            rand_speed[:2] = rand_speed[:2] * 2
             return np.hstack((rand_conf, rand_speed))
         else:
             return default_conf
@@ -200,7 +200,7 @@ class RRTConnectKinodynamic(object):
                                             obstacle_list=obstacle_list,
                                             otherrobot_list=otherrobot_list,
                                             animation=animation)
-            if last_nid != -1: # not trapped:
+            if last_nid != -1:  # not trapped:
                 goal_nid = last_nid
                 tree_b_goal_conf = tree_a.nodes[goal_nid]['conf']
                 last_nid = self._extend_roadmap(component_name=component_name,
@@ -282,7 +282,6 @@ class RRTConnectKinodynamic(object):
 
 if __name__ == '__main__':
     import robot_sim.robots.xybot.xybot as xyb
-
 
     # ====Search Path with RRT====
     obstacle_list = [

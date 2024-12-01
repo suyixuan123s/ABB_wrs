@@ -7,7 +7,6 @@ import modeling.geometric_model as gm
 import modeling.collision_model as cm
 import robot_sim.robots.xarm_shuidi.xarm_shuidi as xav
 
-
 if __name__ == '__main__':
     import copy
     import motion.probabilistic.rrt_connect as rrtc
@@ -35,15 +34,16 @@ if __name__ == '__main__':
     # remote code
     rvc = rv_client.RVizClient(host="localhost:182001")
     rvc.reset()
-    rvc.load_common_definition(__file__, line_ids = range(1,8))
-    rvc.change_campos_and_lookatpos(np.array([5,0,2]), np.array([0,0,.5]))
+    rvc.load_common_definition(__file__, line_ids=range(1, 8))
+    rvc.change_campos_and_lookatpos(np.array([5, 0, 2]), np.array([0, 0, .5]))
     # copy to remote
     rmt_global_frame = rvc.showmodel_to_remote(global_frame)
     rmt_bunny = rvc.showmodel_to_remote(obj)
     rmt_robot_s = rvc.copy_to_remote(robot_s)
     # rvc.show_stationary_obj(rmt_obj)
     robot_component_name = 'arm'
-    robot_s.fk(component_name=robot_component_name, jnt_values=np.array([0, math.pi * 2 / 3, 0, math.pi, 0, -math.pi / 6, 0]))
+    robot_s.fk(component_name=robot_component_name,
+               jnt_values=np.array([0, math.pi * 2 / 3, 0, math.pi, 0, -math.pi / 6, 0]))
     rrtc_planner = rrtc.RRTConnect(robot_s)
     path = rrtc_planner.plan(start_conf=np.array([0, math.pi * 2 / 3, 0, math.pi, 0, -math.pi / 6, 0]),
                              goal_conf=np.array([math.pi / 3, math.pi * 1 / 3, 0, math.pi / 2, 0, math.pi / 6, 0]),

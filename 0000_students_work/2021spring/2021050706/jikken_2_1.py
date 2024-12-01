@@ -25,4 +25,3 @@ if __name__ == '__main__':
     object2.show_cdmesh()
 
     base.run()
-

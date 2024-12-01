@@ -161,7 +161,7 @@ if __name__ == '__main__':
                         v = 0
                         for next_state in transition_probs:
                             v += transition_probs[next_state] * (
-                                        self.env.reward_func(next_state)[0] + gamma * self.V[next_state])
+                                    self.env.reward_func(next_state)[0] + gamma * self.V[next_state])
                         expected_values.append(v)
                     max_value = max(expected_values)
                     delta = max(delta, abs(max_value - self.V[s]))

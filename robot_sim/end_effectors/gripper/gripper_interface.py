@@ -59,7 +59,7 @@ class GripperInterface(object):
                         objcm.show_cdmesh()
                     for point in collided_points:
                         import modeling.geometric_model as gm
-                        gm.gen_sphere(point, radius=.001).attach_to(base)
+                        gm.gen_sphere(point, radius=.001).attach_to(jl.base)
                     print("collided")
                 return True
         return False

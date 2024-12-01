@@ -4,6 +4,7 @@ import pickle
 import struct
 import numpy as np
 
+
 class EtherSenseClient(ab.AsyncClient):
     def __init__(self, address, port):
         super().__init__(address=address, port=port)
@@ -90,15 +91,16 @@ class EtherSenseClient(ab.AsyncClient):
     def handle_pointcloud_frame(self):
         # convert the frame from string to numerical data
         imdata = pickle.loads(self.buffer)
-        self._return_value = np.frombuffer(imdata, dtype=np.float32).reshape(-1,3)
+        self._return_value = np.frombuffer(imdata, dtype=np.float32).reshape(-1, 3)
         self.buffer = bytearray()
 
     def handle_rgb_pointcloud_frame(self):
         # convert the frame from string to numerical data
         imdata = pickle.loads(self.buffer)
-        self._return_value = np.frombuffer(imdata, dtype=np.float32).reshape(-1,6)
-        self._return_value[:, 3:] = self._return_value[:, 3:]/255.0 # regulate to 0-1
+        self._return_value = np.frombuffer(imdata, dtype=np.float32).reshape(-1, 6)
+        self._return_value[:, 3:] = self._return_value[:, 3:] / 255.0  # regulate to 0-1
         self.buffer = bytearray()
+
 
 if __name__ == '__main__':
     import time
@@ -115,9 +117,10 @@ if __name__ == '__main__':
 
     import visualization.panda.rpc.rviz_client as rv_client
     import modeling.geometric_model as gm
+
     rvc = rv_client.RVizClient(host="localhost:182001")
     rvc.reset()
-    last_rmt= None
+    last_rmt = None
     while True:
         pcd = gm.GeometricModel(initor=client.get_rgb_pointcloud())
         current_rmt = rvc.showmodel_to_remote(pcd)

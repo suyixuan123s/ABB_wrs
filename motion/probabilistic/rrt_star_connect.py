@@ -234,7 +234,7 @@ if __name__ == '__main__':
     # Draw final path
     print(path)
     rrtsc.draw_wspace([rrtsc.roadmap_start, rrtsc.roadmap_goal],
-                     rrtsc.start_conf, rrtsc.goal_conf, obstacle_list, delay_time=0)
+                      rrtsc.start_conf, rrtsc.goal_conf, obstacle_list, delay_time=0)
     plt.plot([conf[0] for conf in path], [conf[1] for conf in path], linewidth=7, linestyle='-', color='c')
     # plt.savefig(str(rrtc.img_counter)+'.jpg')
     # pathsm = smoother.pathsmoothing(path, rrt, 30)

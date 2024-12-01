@@ -22,7 +22,7 @@ space.setAutoCollideJointGroup(contactgroup)
 box = loader.loadModel("box")
 # Make sure its center is at 0, 0, 0 like OdeBoxGeom
 box.setPos(-.5, -.5, -.5)
-box.flattenLight() # Apply transform
+box.flattenLight()  # Apply transform
 box.setTextureOff()
 
 # Add a random amount of boxes
@@ -31,7 +31,7 @@ for i in range(randint(5, 10)):
     # Setup the geometry
     boxNP = box.copyTo(render)
     # boxNP.setPos(randint(-10, 10), randint(-10, 10), 10 + random())
-    boxNP.setPos(random()*10, random()*10, 10 + random())
+    boxNP.setPos(random() * 10, random() * 10, 10 + random())
     boxNP.setColor(random(), random(), random(), 1)
     boxNP.setHpr(randint(-45, 45), randint(-45, 45), randint(-45, 45))
     # Create the body and set the mass
@@ -53,7 +53,8 @@ for i in range(randint(5, 10)):
 cm = CardMaker("ground")
 cm.setFrame(-20, 20, -20, 20)
 ground = render.attachNewNode(cm.generate())
-ground.setPos(0, 0, 0); ground.lookAt(0, 0, -1)
+ground.setPos(0, 0, 0);
+ground.lookAt(0, 0, -1)
 groundGeom = OdePlaneGeom(space, Vec4(0, 0, 1, 0))
 # groundGeom = OdeTriMeshGeom(space, OdeTriMeshData(ground, True))
 groundGeom.setCollideBits(BitMask32(0x00000001))
@@ -64,15 +65,17 @@ base.disableMouse()
 base.camera.setPos(40, 40, 20)
 base.camera.lookAt(0, 0, 0)
 
+
 # The task for our simulation
 def simulationTask(task):
-    space.autoCollide() # Setup the contact joints
+    space.autoCollide()  # Setup the contact joints
     # Step the simulation and set the new positions
     world.quickStep(globalClock.getDt())
     for np, body in boxes:
         np.setPosQuat(render, body.getPosition(), Quat(body.getQuaternion()))
-    contactgroup.empty() # Clear the contact joints
+    contactgroup.empty()  # Clear the contact joints
     return task.cont
+
 
 # Wait a split second, then start the simulation
 taskMgr.doMethodLater(0.5, simulationTask, "Physics Simulation")

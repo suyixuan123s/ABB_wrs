@@ -47,5 +47,6 @@ def get_common_collisionfree_graspids(hnd, grasp_info_list, goal_info_list, obst
     final_avilable_graspids = previously_available_graspids
     return final_avilable_graspids, intermediate_available_graspids
 
+
 if __name__ == '__main__':
     pass

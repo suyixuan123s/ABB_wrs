@@ -177,7 +177,8 @@ if __name__ == '__main__':
     objcm.show_cdprimit()
     objcmlist = []
     for i in range(100):
-        objcmlist.append(cm.CollisionModel(os.path.join(basis.__path__[0], 'objects', 'housing.stl'), cdprimit_type='box'))
+        objcmlist.append(
+            cm.CollisionModel(os.path.join(basis.__path__[0], 'objects', 'housing.stl'), cdprimit_type='box'))
         objcmlist[-1].set_pos(np.random.random_sample((3,)))
         objcmlist[-1].set_rgba(np.array([1, .5, 0, 1]))
         objcmlist[-1].attach_to(base)
@@ -229,4 +230,3 @@ if __name__ == '__main__':
     # for ct_pnt in contact_points:
     #     gm.gen_sphere(ct_pnt, radius=.001).attach_to(base)
     # base.run()
-

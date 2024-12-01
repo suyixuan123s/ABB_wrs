@@ -11,6 +11,7 @@ import collections
 from drivers.urx import ur_realtime_monitor
 from drivers.urx import ur_secondary_monitor
 
+
 class RobotException(Exception):
     pass
 
@@ -24,6 +25,7 @@ class URRobot(object):
     The RT interfaces is only used for the get_force related methods
     Rmq: A program sent to the robot_s i executed immendiatly and any running program is stopped
     """
+
     def __init__(self, host, use_rt=False):
         self.logger = logging.getLogger("urx")
         self.host = host
@@ -91,8 +93,8 @@ class URRobot(object):
         tcpf = self.get_tcp_force(wait)
         force = 0
         for i in tcpf:
-            force += i**2
-        return force**0.5
+            force += i ** 2
+        return force ** 0.5
 
     def set_tcp(self, tcp):
         """
@@ -215,7 +217,9 @@ class URRobot(object):
                     return
                 count += 1
                 if count > timeout * 10:
-                    raise RobotException("Goal not reached but no program has been running for {} seconds. dist is {}, threshold is {}, target is {}, current pose is {}".format(timeout, dist, threshold, target, URRobot.getl(self)))
+                    raise RobotException(
+                        "Goal not reached but no program has been running for {} seconds. dist is {}, threshold is {}, target is {}, current pose is {}".format(
+                            timeout, dist, threshold, target, URRobot.getl(self)))
             else:
                 count = 0
 
@@ -247,7 +251,8 @@ class URRobot(object):
         get joints position
         """
         jts = self.secmon.get_joint_data(wait)
-        return [jts["q_actual0"], jts["q_actual1"], jts["q_actual2"], jts["q_actual3"], jts["q_actual4"], jts["q_actual5"]]
+        return [jts["q_actual0"], jts["q_actual1"], jts["q_actual2"], jts["q_actual3"], jts["q_actual4"],
+                jts["q_actual5"]]
 
     def speedx(self, command, velocities, acc, min_time):
         vels = [round(i, self.max_float_length) for i in velocities]
@@ -341,7 +346,7 @@ class URRobot(object):
         to robot_s make the robot_s stop
         """
         return URRobot.movexs(self, "movej", joint_positions_list, acc, vel, radius,
-                           wait, threshold=threshold)
+                              wait, threshold=threshold)
 
     def movels(self, pose_list, acc=0.01, vel=0.01, radius=0.01,
                wait=True, threshold=None):
@@ -404,7 +409,7 @@ class URRobot(object):
             if command == 'movel':
                 self._wait_for_move(target=pose_list[-1], threshold=threshold, joints=False)
             elif command == 'movej':
-                self._wait_for_move(target=pose_list[-1], threshold=threshold, joints=True)                
+                self._wait_for_move(target=pose_list[-1], threshold=threshold, joints=True)
             return self.getl()
 
     def stopl(self, acc=0.5):

@@ -14,27 +14,27 @@ print("Send SERVICE_START packet")
 
 ### set Parameter
 Name = ""
-Provider="CaoProv.DENSO.VRC"
+Provider = "CaoProv.DENSO.VRC"
 Machine = ("localhost")
 Option = ("")
 
 ### Connect to RC8 (RC8(VRC)provider)
-hCtrl = m_bcapclient.controller_connect(Name,Provider,Machine,Option)
+hCtrl = m_bcapclient.controller_connect(Name, Provider, Machine, Option)
 print("Connect RC8")
 ### get Robot Object Handl
-HRobot = m_bcapclient.controller_getrobot(hCtrl,"Arm","")
+HRobot = m_bcapclient.controller_getrobot(hCtrl, "Arm", "")
 print("AddRobot")
 
 ### TakeArm
 Command = "TakeArm"
-Param = [0,0]
-m_bcapclient.robot_execute(HRobot,Command,Param)
+Param = [0, 0]
+m_bcapclient.robot_execute(HRobot, Command, Param)
 print("TakeArm")
 
 ###Motor On
 Command = "Motor"
-Param = [1,0]
-m_bcapclient.robot_execute(HRobot,Command,Param)
+Param = [1, 0]
+m_bcapclient.robot_execute(HRobot, Command, Param)
 print("Motor On")
 
 ###set ExtSpeed Speed,Accel,Decel
@@ -42,15 +42,15 @@ Command = "ExtSpeed"
 Speed = 100
 Accel = 100
 Decel = 100
-Param = [Speed,Accel,Decel]
-m_bcapclient.robot_execute(HRobot,Command,Param)
+Param = [Speed, Accel, Decel]
+m_bcapclient.robot_execute(HRobot, Command, Param)
 print("ExtSpeed")
 
 ## Move Initialize Position
-Comp=1
-Pos_value = [0.0 , 0.0 , 70.0 , 0.0 , 90.0 , 0.0]
-Pose = [Pos_value,"J","@E"]
-m_bcapclient.robot_move(HRobot,Comp,Pose,"")
+Comp = 1
+Pos_value = [0.0, 0.0, 70.0, 0.0, 90.0, 0.0]
+Pose = [Pos_value, "J", "@E"]
+m_bcapclient.robot_move(HRobot, Comp, Pose, "")
 print("Complete Move P,@E J(0.0, 0.0, 90.0, 0.0, 90.0, 0.0)")
 
 print(m_bcapclient.robot_execute(HRobot, "CurJnt", None))

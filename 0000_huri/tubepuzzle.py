@@ -2,6 +2,7 @@ import numpy as np
 import copy
 import math
 
+
 class Node(object):
 
     def __init__(self, grid):
@@ -18,21 +19,21 @@ class Node(object):
         self.grid = grid
         self._nrow = grid.shape[0]
         self._ncolumn = grid.shape[1]
-        self.ngrids = self._nrow*self._ncolumn
+        self.ngrids = self._nrow * self._ncolumn
         self.tubes = np.unique(self.grid)[1:]
         self.ntubes = self.tubes.shape[0]
         if self.ntubes > 5:
             print("We do not allow more than 4 types of tubes!")
         elif self.ntubes == 4:
-            self.boundids = [[0,1,10,11,20,21,30,31,40,41], [3,4,13,14,23,24,33,34,43,44],
-                             [6,7,16,17,26,27,36,37,46,47], [8,9,18,19,28,29,38,39,48,49]]
+            self.boundids = [[0, 1, 10, 11, 20, 21, 30, 31, 40, 41], [3, 4, 13, 14, 23, 24, 33, 34, 43, 44],
+                             [6, 7, 16, 17, 26, 27, 36, 37, 46, 47], [8, 9, 18, 19, 28, 29, 38, 39, 48, 49]]
         elif self.ntubes == 3:
-            self.boundids = [[0,1,2,10,11,12,20,21,22,30,31,32,40,41,42],
-                              [4,5,6,14,15,16,24,25,26,34,35,36,44,45,46],
-                              [7,8,9,17,18,19,27,28,29,37,38,39,47,48,49]]
+            self.boundids = [[0, 1, 2, 10, 11, 12, 20, 21, 22, 30, 31, 32, 40, 41, 42],
+                             [4, 5, 6, 14, 15, 16, 24, 25, 26, 34, 35, 36, 44, 45, 46],
+                             [7, 8, 9, 17, 18, 19, 27, 28, 29, 37, 38, 39, 47, 48, 49]]
         elif self.ntubes == 2:
-            self.boundids = [[0,1,2,3,10,11,12,13,20,21,22,23,30,31,32,33,40,41,42,43],
-                              [6,7,8,9,16,17,18,19,26,27,28,29,36,37,38,39,46,47,48,49]]
+            self.boundids = [[0, 1, 2, 3, 10, 11, 12, 13, 20, 21, 22, 23, 30, 31, 32, 33, 40, 41, 42, 43],
+                             [6, 7, 8, 9, 16, 17, 18, 19, 26, 27, 28, 29, 36, 37, 38, 39, 46, 47, 48, 49]]
         elif self.ntubes < 2:
             print("We require at least 2 types of tubes!")
         self.parent = None
@@ -71,7 +72,7 @@ class Node(object):
         date: 20190828
         """
 
-        return i*self._ncolumn+j
+        return i * self._ncolumn + j
 
     def _litoai(self, i):
         """
@@ -85,7 +86,7 @@ class Node(object):
         date: 20190828
         """
 
-        return [np.floor(i/self._ncolumn), i%self._ncolumn]
+        return [np.floor(i / self._ncolumn), i % self._ncolumn]
 
     def isdone(self):
         """
@@ -98,7 +99,7 @@ class Node(object):
 
         gridflatten = self.grid.flatten()
         for i, tubeid in enumerate(self.tubes):
-            tubegridids = np.where(gridflatten==tubeid)[0]
+            tubegridids = np.where(gridflatten == tubeid)[0]
             ndiff = len(np.setdiff1d(tubegridids, self.boundids[i]))
             if ndiff > 0:
                 return False
@@ -121,7 +122,7 @@ class Node(object):
         ndiff = 0
         gridflatten = self.grid.flatten()
         for i, tubeid in enumerate(self.tubes):
-            tubegridids = np.where(gridflatten==tubeid)[0]
+            tubegridids = np.where(gridflatten == tubeid)[0]
             # ndiff = ndiff+np.where(tubegridids>self.ngrids*(i+1)/self.ntubes)[0].shape[0]+np.where(tubegridids<self.ngrids*(i)/self.ntubes)[0].shape[0]
             # ndiff = ndiff+np.where(tubegridids<i*(math.ceil(self._nrow/self.ntubes)+1)*self._ncolumn)[0].shape[0]+np.where(tubegridids>i*(math.ceil(self._nrow/self.ntubes)+1)*self._ncolumn)[0].shape[0]
             # print(tubegridids)
@@ -139,7 +140,7 @@ class Node(object):
         while parent is not None:
             gs += 1
             parent = parent.parent
-        return hs+gs, hs, gs
+        return hs + gs, hs, gs
 
     def __repr__(self):
         """
@@ -158,12 +159,13 @@ class Node(object):
             else:
                 outstring += " ["
             for j in range(self._ncolumn):
-                outstring = outstring+str(self.grid[i][j])+","
+                outstring = outstring + str(self.grid[i][j]) + ","
             outstring = outstring[:-1] + "]"
             outstring += ",\n"
         outstring = outstring[:-2] + "]]"
 
         return outstring
+
 
 class TubePuzzle(object):
 
@@ -189,15 +191,15 @@ class TubePuzzle(object):
         if self.ntubes > 5:
             print("We do not allow more than 4 types of tubes!")
         elif self.ntubes == 4:
-            self.boundids = [[0,1,10,11,20,21,30,31,40,41], [3,4,13,14,23,24,33,34,43,44],
-                             [6,7,16,17,26,27,36,37,46,47], [8,9,18,19,28,29,38,39,48,49]]
+            self.boundids = [[0, 1, 10, 11, 20, 21, 30, 31, 40, 41], [3, 4, 13, 14, 23, 24, 33, 34, 43, 44],
+                             [6, 7, 16, 17, 26, 27, 36, 37, 46, 47], [8, 9, 18, 19, 28, 29, 38, 39, 48, 49]]
         elif self.ntubes == 3:
-            self.boundids = [[0,1,2,10,11,12,20,21,22,30,31,32,40,41,42],
-                              [4,5,6,14,15,16,24,25,26,34,35,36,44,45,46],
-                              [7,8,9,17,18,19,27,28,29,37,38,39,47,48,49]]
+            self.boundids = [[0, 1, 2, 10, 11, 12, 20, 21, 22, 30, 31, 32, 40, 41, 42],
+                             [4, 5, 6, 14, 15, 16, 24, 25, 26, 34, 35, 36, 44, 45, 46],
+                             [7, 8, 9, 17, 18, 19, 27, 28, 29, 37, 38, 39, 47, 48, 49]]
         elif self.ntubes == 2:
-            self.boundids = [[0,1,2,3,10,11,12,13,20,21,22,23,30,31,32,33,40,41,42,43],
-                              [6,7,8,9,16,17,18,19,26,27,28,29,36,37,38,39,46,47,48,49]]
+            self.boundids = [[0, 1, 2, 3, 10, 11, 12, 13, 20, 21, 22, 23, 30, 31, 32, 33, 40, 41, 42, 43],
+                             [6, 7, 8, 9, 16, 17, 18, 19, 26, 27, 28, 29, 36, 37, 38, 39, 46, 47, 48, 49]]
         elif self.ntubes == 2:
             print("We require at least 2 types of tubes!")
 
@@ -213,7 +215,7 @@ class TubePuzzle(object):
         date: 20190828
         """
 
-        return i*self._ncolumn+j
+        return i * self._ncolumn + j
 
     def _litoai(self, i):
         """
@@ -227,7 +229,7 @@ class TubePuzzle(object):
         date: 20190828
         """
 
-        return [np.int(np.floor(i/self._ncolumn)), i%self._ncolumn]
+        return [np.int(np.floor(i / self._ncolumn)), i % self._ncolumn]
 
     def _eleexist(self, i, j):
         """
@@ -241,7 +243,7 @@ class TubePuzzle(object):
         date: 20190828
         """
 
-        if (i>=0 and i<self._nrow) and (j>=0 and j<self._ncolumn):
+        if (i >= 0 and i < self._nrow) and (j >= 0 and j < self._ncolumn):
             return True
         else:
             return False
@@ -273,11 +275,10 @@ class TubePuzzle(object):
         :return:
         """
 
-        if (not self._eleexist(i,j)) or (not self._occupied(node, i,j)):
+        if (not self._eleexist(i, j)) or (not self._occupied(node, i, j)):
             return 1
         else:
             return 0
-
 
     def _setValues(self, elearray):
         """
@@ -313,20 +314,20 @@ class TubePuzzle(object):
         for i in range(self._nrow):
             for j in range(self._ncolumn):
                 if node[i][j] > 0:
-                    iup = i-1
+                    iup = i - 1
                     jup = j
-                    idown = i+1
+                    idown = i + 1
                     jdown = j
                     ileft = i
-                    jleft = j-1
+                    jleft = j - 1
                     iright = i
-                    jright = j+1
-                    nclear = self._isclear(node, iup, jup)+\
-                             self._isclear(node, idown, jdown)+\
-                             self._isclear(node, ileft, jleft)+\
+                    jright = j + 1
+                    nclear = self._isclear(node, iup, jup) + \
+                             self._isclear(node, idown, jdown) + \
+                             self._isclear(node, ileft, jleft) + \
                              self._isclear(node, iright, jright)
                     if nclear >= 2:
-                        returnlist.append((i,j))
+                        returnlist.append((i, j))
         return returnlist
 
     def getFillableIds(self, node):
@@ -343,21 +344,21 @@ class TubePuzzle(object):
         returnlist = []
         for i in range(self._nrow):
             for j in range(self._ncolumn):
-                if node[i][j] == 0 and (i in [0,4]):
-                    iup = i-1
+                if node[i][j] == 0 and (i in [0, 4]):
+                    iup = i - 1
                     jup = j
-                    idown = i+1
+                    idown = i + 1
                     jdown = j
                     ileft = i
-                    jleft = j-1
+                    jleft = j - 1
                     iright = i
-                    jright = j+1
-                    nclear = self._isclear(node, iup, jup)+\
-                             self._isclear(node, idown, jdown)+\
-                             self._isclear(node, ileft, jleft)+\
+                    jright = j + 1
+                    nclear = self._isclear(node, iup, jup) + \
+                             self._isclear(node, idown, jdown) + \
+                             self._isclear(node, ileft, jleft) + \
                              self._isclear(node, iright, jright)
                     if nclear >= 2:
-                        returnlist.append((i,j))
+                        returnlist.append((i, j))
         return returnlist
 
     def getMovableFillablePair(self, node):
@@ -377,57 +378,57 @@ class TubePuzzle(object):
             for id in self.boundids[bid]:
                 i, j = self._litoai(id)
                 if node[i][j] == 0:
-                    iup = i-1
+                    iup = i - 1
                     jup = j
-                    idown = i+1
+                    idown = i + 1
                     jdown = j
                     ileft = i
-                    jleft = j-1
+                    jleft = j - 1
                     iright = i
-                    jright = j+1
-                    nclear1 = self._isclear(node, iup, jup)+\
-                             self._isclear(node, idown, jdown)
-                    nclear2 = self._isclear(node, ileft, jleft)+\
-                             self._isclear(node, iright, jright)
-                    nclear3 = self._isclear(node, iup, jright)+\
-                             self._isclear(node, idown, jleft)
-                    nclear4 = self._isclear(node, iup, jleft)+\
-                             self._isclear(node, idown, jright)
+                    jright = j + 1
+                    nclear1 = self._isclear(node, iup, jup) + \
+                              self._isclear(node, idown, jdown)
+                    nclear2 = self._isclear(node, ileft, jleft) + \
+                              self._isclear(node, iright, jright)
+                    nclear3 = self._isclear(node, iup, jright) + \
+                              self._isclear(node, idown, jleft)
+                    nclear4 = self._isclear(node, iup, jleft) + \
+                              self._isclear(node, idown, jright)
                     # nclear = self._isclear(node, iup, jup)+\
                     #          self._isclear(node, idown, jdown)+\
                     #          self._isclear(node, ileft, jleft)+\
                     #          self._isclear(node, iright, jright)
                     if nclear1 == 2 or nclear2 == 2 or nclear3 == 2 or nclear4 == 2:
-                        fillableinbounds.append((i,j))
+                        fillableinbounds.append((i, j))
             fillablegridsids.append(fillableinbounds)
 
         returnlist = []
         for i in range(self._nrow):
             for j in range(self._ncolumn):
                 if node[i][j] > 0:
-                    iup = i-1
+                    iup = i - 1
                     jup = j
-                    idown = i+1
+                    idown = i + 1
                     jdown = j
                     ileft = i
-                    jleft = j-1
+                    jleft = j - 1
                     iright = i
-                    jright = j+1
-                    nclear1 = self._isclear(node, iup, jup)+\
-                             self._isclear(node, idown, jdown)
-                    nclear2 = self._isclear(node, ileft, jleft)+\
-                             self._isclear(node, iright, jright)
-                    nclear3 = self._isclear(node, iup, jright)+\
-                             self._isclear(node, idown, jleft)
-                    nclear4 = self._isclear(node, iup, jleft)+\
-                             self._isclear(node, idown, jright)
+                    jright = j + 1
+                    nclear1 = self._isclear(node, iup, jup) + \
+                              self._isclear(node, idown, jdown)
+                    nclear2 = self._isclear(node, ileft, jleft) + \
+                              self._isclear(node, iright, jright)
+                    nclear3 = self._isclear(node, iup, jright) + \
+                              self._isclear(node, idown, jleft)
+                    nclear4 = self._isclear(node, iup, jleft) + \
+                              self._isclear(node, idown, jright)
                     # nclear = self._isclear(node, iup, jup)+\
                     #          self._isclear(node, idown, jdown)+\
                     #          self._isclear(node, ileft, jleft)+\
                     #          self._isclear(node, iright, jright)
                     if nclear1 == 2 or nclear2 == 2 or nclear3 == 2 or nclear4 == 2:
-                        for grid in fillablegridsids[node[i][j]-1]:
-                            returnlist.append(((i,j), grid))
+                        for grid in fillablegridsids[node[i][j] - 1]:
+                            returnlist.append(((i, j), grid))
         return returnlist
 
     def _reorderopenlist(self):
@@ -501,23 +502,23 @@ class TubePuzzle(object):
                 self._reorderopenlist()
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     # down x, right y
-    elearray = np.array([[1,0,0,0,1,0,0,0,0,0],
-                         [0,0,0,0,0,0,0,2,0,2],
-                         [0,0,0,0,0,0,0,0,2,0],
-                         [1,0,0,0,0,0,0,0,2,2],
-                         [1,0,0,0,0,0,0,2,0,2]])
-    elearray = np.array([[0,0,0,0,0,0,0,0,0,0],
-                         [0,0,0,0,0,0,0,0,0,0],
-                         [2,2,0,2,1,0,0,0,0,0],
-                         [1,1,0,1,2,0,0,0,0,2],
-                         [0,2,0,0,0,0,0,0,0,2]])
-    elearray = np.array([[0,0,0,0,0,0,0,0,0,0],
-                         [0,0,0,2,2,2,2,0,0,0],
-                         [0,0,2,1,1,1,0,0,0,0],
-                         [0,0,2,1,2,2,0,0,0,0],
-                         [0,0,0,0,2,0,0,0,0,0]])
+    elearray = np.array([[1, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 2, 0, 2],
+                         [0, 0, 0, 0, 0, 0, 0, 0, 2, 0],
+                         [1, 0, 0, 0, 0, 0, 0, 0, 2, 2],
+                         [1, 0, 0, 0, 0, 0, 0, 2, 0, 2]])
+    elearray = np.array([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                         [2, 2, 0, 2, 1, 0, 0, 0, 0, 0],
+                         [1, 1, 0, 1, 2, 0, 0, 0, 0, 2],
+                         [0, 2, 0, 0, 0, 0, 0, 0, 0, 2]])
+    elearray = np.array([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 2, 2, 2, 2, 0, 0, 0],
+                         [0, 0, 2, 1, 1, 1, 0, 0, 0, 0],
+                         [0, 0, 2, 1, 2, 2, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 2, 0, 0, 0, 0, 0]])
     tp = TubePuzzle(elearray)
     path = tp.atarSearch()
     for node in path:

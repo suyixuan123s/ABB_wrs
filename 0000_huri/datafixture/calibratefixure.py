@@ -26,8 +26,10 @@ class CalibrateFixture(object):
             self.tstpcdnp = pickle.load(
                 open(directory + "/dataobjtemplate/tubestandtemplatepcd.pkl", "rb"))  # tstpcd, tube stand template
             self.tubestandcm = cm.CollisionModel(directory + "/objects/tubestand.stl")
-            self.tubebigcm = cm.CollisionModel(directory + "/objects/tubebig_capped.stl", type="cylinder", expand_radius=0)
-            self.tubesmallcm = cm.CollisionModel(directory + "/objects/tubesmall_capped.stl", type="cylinder", expand_radius=0)
+            self.tubebigcm = cm.CollisionModel(directory + "/objects/tubebig_capped.stl", type="cylinder",
+                                               expand_radius=0)
+            self.tubesmallcm = cm.CollisionModel(directory + "/objects/tubesmall_capped.stl", type="cylinder",
+                                                 expand_radius=0)
 
     def findtubestand_matchonobb(self, tgtpcdnp, toggledebug=False):
         """
@@ -161,7 +163,7 @@ class CalibrateFixture(object):
                 objpcdmerged = objpcd
             else:
                 objpcdmerged = np.vstack((objpcdmerged, objpcd))
-        objpcdmerged = objpcdmerged[objpcdmerged[:,0]>200]
+        objpcdmerged = objpcdmerged[objpcdmerged[:, 0] > 200]
 
         return objpcdmerged
 
@@ -203,8 +205,8 @@ if __name__ == '__main__':
     yhx = robothelper.RobotHelperX(usereal=False, startworld=True)
     cf = CalibrateFixture(directory=yhx.root)
 
-    bgdepth = pickle.load(open(yhx.root+"/databackground/bgdepth.pkl", "rb"))
-    bgpcd = pickle.load(open(yhx.root+"/databackground/bgpcd.pkl", "rb"))
+    bgdepth = pickle.load(open(yhx.root + "/databackground/bgdepth.pkl", "rb"))
+    bgpcd = pickle.load(open(yhx.root + "/databackground/bgpcd.pkl", "rb"))
 
     objpcd = cf.capturecorrectedpcd(yhx.pxc, ncapturetimes=1)
     pcdnp = p3dh.genpointcloudnodepath(objpcd, pntsize=5)

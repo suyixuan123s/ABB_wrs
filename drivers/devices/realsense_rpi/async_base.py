@@ -14,6 +14,7 @@ server_opt = {
     4: 'READ_RGB_PTC'
 }
 
+
 class AsyncServer:
     def __init__(self, address="localhost", port=8888):
         self.address = address

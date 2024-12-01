@@ -9,15 +9,13 @@ import modeling.geometric_model as gm
 import robot_sim.end_effectors.handgripper.finger.leftfinger.leftfinger as lfgr
 import time
 
-
 if __name__ == '__main__':
-
     start = time.time()
     base = wd.World(cam_pos=[1, 1, .5], lookat_pos=[0, 0, .2])
     gm.gen_frame().attach_to(base)
 
     finger = lfgr.Leftfinger(enable_cc=True)
-    goal_jnt_list = np.array([10*np.pi/180, 10*np.pi/180, 10*np.pi/180])
+    goal_jnt_list = np.array([10 * np.pi / 180, 10 * np.pi / 180, 10 * np.pi / 180])
     start_jnt_list = np.array([0, 0, 0])
     finger_mesh = finger.gen_meshmodel()
     finger_mesh.attach_to(base)

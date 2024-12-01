@@ -48,7 +48,7 @@ if __name__ == "__main__":
     trajopt_gen = pwpo.PWPOpt(method="quintic")
     interpolated_confs, interpolated_spds, interpolated_accs, interpolated_x, original_x = \
         trajopt_gen.interpolate_by_max_spdacc(jnt_values_list, control_frequency=control_frequency, max_spds=None,
-                                           toggle_debug=True)
+                                              toggle_debug=True)
     for i in range(len(tcp_list) - 1):
         spos = tcp_list[i][0]
         srotmat = tcp_list[i][1]

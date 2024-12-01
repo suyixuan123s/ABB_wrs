@@ -6,8 +6,8 @@ Author: Jacky Liang
 import pickle
 import copy
 
-class GoFaMotionLogger:
 
+class GoFaMotionLogger:
     _SUFFIX = '.yml'
 
     def __init__(self):
@@ -26,15 +26,15 @@ class GoFaMotionLogger:
 
     def append_actual(self, actual):
         self._actual.append(actual)
-        
+
     @property
     def times(self):
         return copy.copy(self._times)
-        
+
     @property
     def expected(self):
         return copy.copy(self._expected)
-        
+
     @property
     def actual(self):
         return copy.copy(self._actual)

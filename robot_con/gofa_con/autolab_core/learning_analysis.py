@@ -30,8 +30,10 @@ import ruamel.yaml as yaml
 import sklearn.metrics as sm
 import scipy.stats as ss
 
+
 class ConfusionMatrix(object):
     """ Confusion matrix for classification errors """
+
     def __init__(self, num_categories):
         self.num_categories = num_categories
 
@@ -42,6 +44,7 @@ class ConfusionMatrix(object):
         num_pred = predictions.shape[0]
         for i in range(num_pred):
             self.data[labels[i].astype(np.uint16), predictions[i].astype(np.uint16)] += 1
+
 
 class ClassificationResult(object):
     def __init__(self, pred_probs, labels):
@@ -57,16 +60,16 @@ class ClassificationResult(object):
         if not isinstance(pred_probs, np.ndarray):
             pred_probs = np.array(pred_probs)
         if not isinstance(labels, np.ndarray):
-            labels = np.array(labels)        
+            labels = np.array(labels)
         self.pred_probs = pred_probs.astype(np.float32)
         self.labels = labels.astype(np.uint32)
 
     @property
     def error_rate(self):
         return 100.0 - (
-            100.0 *
-            np.sum(self.predictions == self.labels) /
-            self.num_datapoints)
+                100.0 *
+                np.sum(self.predictions == self.labels) /
+                self.num_datapoints)
 
     @property
     def accuracy(self):
@@ -76,12 +79,12 @@ class ClassificationResult(object):
         predictions_arr = self.top_k_predictions(k)
         labels_arr = np.zeros(predictions_arr.shape)
         for i in range(k):
-            labels_arr[:,i] = self.labels
+            labels_arr[:, i] = self.labels
 
         return 100.0 - (
-            100.0 *
-            np.sum(predictions_arr == labels_arr) /
-            self.num_datapoints)
+                100.0 *
+                np.sum(predictions_arr == labels_arr) /
+                self.num_datapoints)
 
     @property
     def fpr(self):
@@ -108,7 +111,7 @@ class ClassificationResult(object):
     @property
     def num_categories(self):
         return self.pred_probs.shape[1]
-        
+
     @property
     def predictions(self):
         return np.argmax(self.pred_probs, 1)
@@ -134,7 +137,7 @@ class ClassificationResult(object):
         new_labels = np.zeros(self.num_datapoints)
         for i in range(self.num_datapoints):
             for j in range(self.num_categories):
-                new_probs[i,mapping[j]] += self.pred_probs[i,j]
+                new_probs[i, mapping[j]] += self.pred_probs[i, j]
             new_labels[i] = mapping[self.labels[i]]
         return ClassificationResult([new_probs], [new_labels])
 
@@ -148,14 +151,15 @@ class ClassificationResult(object):
         labels_vec = label_mat.ravel()
         return pred_probs_vec, labels_vec
 
-    def precision_recall_curve(self, plot=False, line_width=2, font_size=15, color='b', style='-', label='', marker=None):
+    def precision_recall_curve(self, plot=False, line_width=2, font_size=15, color='b', style='-', label='',
+                               marker=None):
         pred_probs_vec, labels_vec = self.label_vectors
         precision, recall, thresholds = sm.precision_recall_curve(labels_vec, pred_probs_vec)
         if plot:
             import matplotlib.pyplot as plt
             plt.plot(recall, precision, linewidth=line_width, color=color, linestyle=style, label=label, marker=marker)
-            plt.xlim(0,1)
-            plt.ylim(0,1)
+            plt.xlim(0, 1)
+            plt.ylim(0, 1)
             plt.xlabel('Recall', fontsize=font_size)
             plt.ylabel('Precision', fontsize=font_size)
         return precision, recall, thresholds
@@ -190,12 +194,12 @@ class ClassificationResult(object):
         except:
             pass
         return auc
-            
+
     @property
     def pearson_correlation(self):
         pred_probs_vec, labels_vec = self.label_vectors
         pcorr_coef = np.corrcoef(labels_vec, pred_probs_vec)
-        pearson_coef = pcorr_coef[0,1]
+        pearson_coef = pcorr_coef[0, 1]
         return pearson_coef
 
     @property
@@ -213,7 +217,7 @@ class ClassificationResult(object):
     def save(self, filename):
         if not os.path.exists(filename):
             os.mkdir(filename)
-        
+
         pred_filename = os.path.join(filename, 'predictions.npz')
         np.savez_compressed(pred_filename, self.pred_probs)
 
@@ -223,7 +227,7 @@ class ClassificationResult(object):
     @staticmethod
     def load(filename):
         if not os.path.exists(filename):
-            raise ValueError('File %s does not exists' %(filename))
+            raise ValueError('File %s does not exists' % (filename))
 
         pred_filename = os.path.join(filename, 'predictions.npz')
         pred_probs = np.load(pred_filename)['arr_0']
@@ -259,12 +263,12 @@ class ClassificationResult(object):
         """
         table_key_list = ['error_rate', 'recall_at_99_precision', 'average_precision', 'precision', 'recall']
         num_fields = len(table_key_list)
-        
+
         import matplotlib.pyplot as plt
         ax = plt.subplot(111, frame_on=False)
         ax.xaxis.set_visible(False)
         ax.yaxis.set_visible(False)
-        
+
         data = np.zeros([num_fields, 2])
         data_dict = dict()
 
@@ -277,9 +281,10 @@ class ClassificationResult(object):
             data_dict[name]['recall'] = result.recall * 100
 
             precision_array, recall_array, _ = result.precision_recall_curve()
-            recall_at_99_precision = recall_array[np.argmax(precision_array > 0.99)] * 100  # to put it in percentage terms
+            recall_at_99_precision = recall_array[
+                                         np.argmax(precision_array > 0.99)] * 100  # to put it in percentage terms
             data_dict[name]['recall_at_99_precision'] = recall_at_99_precision
-                        
+
             for i, key in enumerate(table_key_list):
                 data_dict[name][key] = float("{0:.2f}".format(data_dict[name][key]))
                 j = names.index(name)
@@ -289,7 +294,7 @@ class ClassificationResult(object):
 
         fig = plt.gcf()
         fig.subplots_adjust(bottom=0.15)
-        
+
         if plot:
             plt.show()
 
@@ -297,12 +302,13 @@ class ClassificationResult(object):
         if save_dir is not None and save:
             fig_filename = os.path.join(save_dir, prepend + 'summary.png')
             yaml_filename = os.path.join(save_dir, prepend + 'summary.yaml')
-            
+
             yaml.dump(data_dict, open(yaml_filename, 'w'), default_flow_style=False)
             fig.savefig(fig_filename, bbox_inches="tight")
-            
+
         return data_dict, fig
-    
+
+
 class RegressionResult(object):
     def __init__(self, predictions, labels):
         """ Creates a classification result.
@@ -317,10 +323,10 @@ class RegressionResult(object):
         """
         self.predictions = predictions
         self.labels = labels
-        
+
     @property
     def mse(self):
-        return np.sum((self.predictions - self.labels)**2) / self.num_datapoints
+        return np.sum((self.predictions - self.labels) ** 2) / self.num_datapoints
 
     @property
     def num_datapoints(self):
@@ -329,7 +335,7 @@ class RegressionResult(object):
     def save(self, filename):
         if not os.path.exists(filename):
             os.mkdir(filename)
-        
+
         pred_filename = os.path.join(filename, 'predictions.npz')
         np.savez_compressed(pred_filename, self.predictions)
 
@@ -339,7 +345,7 @@ class RegressionResult(object):
     @staticmethod
     def load(filename):
         if not os.path.exists(filename):
-            raise ValueError('File %s does not exists' %(filename))
+            raise ValueError('File %s does not exists' % (filename))
 
         pred_filename = os.path.join(filename, 'predictions.npz')
         predictions = np.load(pred_filename)['arr_0']
@@ -347,6 +353,7 @@ class RegressionResult(object):
         labels_filename = os.path.join(filename, 'labels.npz')
         labels = np.load(labels_filename)['arr_0']
         return RegressionResult(predictions, labels)
+
 
 class BinaryClassificationResult(ClassificationResult):
     def __init__(self, pred_probs, labels, threshold=0.5):
@@ -414,7 +421,7 @@ class BinaryClassificationResult(ClassificationResult):
     @property
     def false_negative_indices(self):
         return np.where((self.labels == 1) & (self.predictions == 0))[0]
-    
+
     @property
     def num_true_pos(self):
         return np.sum(self.labels)
@@ -430,7 +437,7 @@ class BinaryClassificationResult(ClassificationResult):
     @property
     def num_false_neg(self):
         return self.false_negative_indices.shape[0]
-    
+
     @property
     def pct_true_pos(self):
         return np.mean(self.labels)
@@ -453,12 +460,12 @@ class BinaryClassificationResult(ClassificationResult):
         probs[probs == 1.0] = 0.99999
         probs[probs == 0.0] = 0.00001
         return -np.mean(self.labels * np.log(probs) + (1.0 - self.labels) * np.log(1.0 - probs))
-    
+
     @property
     def sorted_values(self):
         # sort by prob
         labels_and_probs = zip(self.labels, self.pred_probs)
-        labels_and_probs.sort(key = lambda x: x[1])
+        labels_and_probs.sort(key=lambda x: x[1])
         labels = [l[0] for l in labels_and_probs]
         probs = [l[1] for l in labels_and_probs]
         return labels, probs
@@ -472,17 +479,17 @@ class BinaryClassificationResult(ClassificationResult):
         # compute area
         app = 0
         total = 0
-        for k in range(len(precisions)-1):
+        for k in range(len(precisions) - 1):
             # read cur data
             cur_prec = precisions[k]
             cur_pp = pct_pred_pos[k]
             cur_tau = taus[k]
 
             # read next data
-            next_prec = precisions[k+1]
-            next_pp = pct_pred_pos[k+1]
-            next_tau = taus[k+1]
-            
+            next_prec = precisions[k + 1]
+            next_pp = pct_pred_pos[k + 1]
+            next_tau = taus[k + 1]
+
             # approximate with rectangles
             mid_prec = (cur_prec + next_prec) / 2.0
             width_pp = np.abs(next_pp - cur_pp)
@@ -491,13 +498,14 @@ class BinaryClassificationResult(ClassificationResult):
 
         return app
 
-    def precision_recall_curve(self, plot=False, line_width=2, font_size=15, color='b', style='-', label='', marker=None):
+    def precision_recall_curve(self, plot=False, line_width=2, font_size=15, color='b', style='-', label='',
+                               marker=None):
         precision, recall, thresholds = sm.precision_recall_curve(self.labels, self.pred_probs)
         if plot:
             import matplotlib.pyplot as plt
             plt.plot(recall, precision, linewidth=line_width, color=color, linestyle=style, label=label, marker=marker)
-            plt.xlim(0,1)
-            plt.ylim(0,1)
+            plt.xlim(0, 1)
+            plt.ylim(0, 1)
             plt.xlabel('Recall', fontsize=font_size)
             plt.ylabel('Precision', fontsize=font_size)
         return precision, recall, thresholds
@@ -511,7 +519,7 @@ class BinaryClassificationResult(ClassificationResult):
             plt.xlabel('FPR', fontsize=font_size)
             plt.ylabel('TPR', fontsize=font_size)
         return fpr, tpr, thresholds
-    
+
     def accuracy_curve(self, delta_tau=0.01):
         """ Computes the relationship between probability threshold
         and classification accuracy. """
@@ -670,7 +678,7 @@ class BinaryClassificationResult(ClassificationResult):
                 precisions.append(self.precision)
                 pct_pred_pos.append(self.pct_pred_pos)
                 taus.append(tau)
-                
+
                 # update threshold
                 tau = sorted_probs[k]
 
@@ -681,7 +689,7 @@ class BinaryClassificationResult(ClassificationResult):
                 precisions.append(self.precision)
                 pct_pred_pos.append(self.pct_pred_pos)
                 taus.append(tau)
-                
+
                 # update threshold
                 tau += delta_tau
 
@@ -698,4 +706,3 @@ class BinaryClassificationResult(ClassificationResult):
 
         self.threshold = orig_thresh
         return precisions, pct_pred_pos, taus
-

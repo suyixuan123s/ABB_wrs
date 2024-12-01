@@ -5,6 +5,7 @@ import cv2
 import time
 import scipy.signal as ss
 
+
 class Node(object):
 
     def __init__(self, grid):
@@ -19,7 +20,7 @@ class Node(object):
 
         self.grid = copy.deepcopy(grid)
         self._nrow, self._ncolumn = self.grid.shape
-        self.ngrids = self._nrow*self._ncolumn
+        self.ngrids = self._nrow * self._ncolumn
         self.parent = None
         self.gs = 0
 
@@ -62,12 +63,13 @@ class Node(object):
             else:
                 outstring += " ["
             for j in range(self._ncolumn):
-                outstring = outstring+str(self.grid[i][j])+","
+                outstring = outstring + str(self.grid[i][j]) + ","
             outstring = outstring[:-1] + "]"
             outstring += ",\n"
         outstring = outstring[:-2] + "]]"
 
         return outstring
+
 
 class TubePuzzle(object):
 
@@ -88,12 +90,11 @@ class TubePuzzle(object):
         self.openlist = []
         self.closelist = []
         self._setValues(elearray)
-        self.goalpattern = np.array([[1,1,1,1,0,0,2,2,2,2],
-                                     [1,1,1,1,0,0,2,2,2,2],
-                                     [1,1,1,1,0,0,2,2,2,2],
-                                     [1,1,1,0,0,0,0,2,2,2],
-                                     [1,1,1,0,0,0,0,2,2,2]])
-
+        self.goalpattern = np.array([[1, 1, 1, 1, 0, 0, 2, 2, 2, 2],
+                                     [1, 1, 1, 1, 0, 0, 2, 2, 2, 2],
+                                     [1, 1, 1, 1, 0, 0, 2, 2, 2, 2],
+                                     [1, 1, 1, 0, 0, 0, 0, 2, 2, 2],
+                                     [1, 1, 1, 0, 0, 0, 0, 2, 2, 2]])
 
     def _setValues(self, elearray):
         """
@@ -121,7 +122,7 @@ class TubePuzzle(object):
         date: 20200104
         """
 
-        return np.sum((self.goalpattern!=1)*(node.grid==1)+(self.goalpattern!=2)*(node.grid==2))
+        return np.sum((self.goalpattern != 1) * (node.grid == 1) + (self.goalpattern != 2) * (node.grid == 2))
 
     def isdone(self, node):
         """
@@ -132,7 +133,7 @@ class TubePuzzle(object):
         date: 20190828
         """
 
-        if np.any((self.goalpattern != 1)*(node.grid==1)) or np.any((self.goalpattern != 2)*(node.grid==2)):
+        if np.any((self.goalpattern != 1) * (node.grid == 1)) or np.any((self.goalpattern != 2) * (node.grid == 2)):
             return False
         return True
 
@@ -153,53 +154,53 @@ class TubePuzzle(object):
         """
 
         # filtering
-        mask_ulbr = np.array([[1,0,0],[0,0,0],[0,0,1]])
-        mask_urbl = np.array([[0,0,1],[0,0,0],[1,0,0]])
+        mask_ulbr = np.array([[1, 0, 0], [0, 0, 0], [0, 0, 1]])
+        mask_urbl = np.array([[0, 0, 1], [0, 0, 0], [1, 0, 0]])
         # mask_ulbr2 = np.array([[1,0,0],[1,0,0],[0,1,1]])
         # mask_urbl2 = np.array([[0,1,1],[1,0,0],[1,0,0]])
         # mask_ulbr2_flp = np.array([[1,1,0],[0,0,1],[0,0,1]])
         # mask_urbl2_flp = np.array([[0,0,1],[0,0,1],[1,1,0]])
-        mask_ucbc = np.array([[0,1,0],[0,0,0],[0,1,0]])
-        mask_crcl = np.array([[0,0,0],[1,0,1],[0,0,0]])
-        cg_ulbr = ss.correlate2d(node.grid, mask_ulbr)[1:-1,1:-1]
-        cg_urbl = ss.correlate2d(node.grid, mask_urbl)[1:-1,1:-1]
+        mask_ucbc = np.array([[0, 1, 0], [0, 0, 0], [0, 1, 0]])
+        mask_crcl = np.array([[0, 0, 0], [1, 0, 1], [0, 0, 0]])
+        cg_ulbr = ss.correlate2d(node.grid, mask_ulbr)[1:-1, 1:-1]
+        cg_urbl = ss.correlate2d(node.grid, mask_urbl)[1:-1, 1:-1]
         # cg_ulbr2_flp = ss.correlate2d(node.grid, mask_ulbr2_flp)[1:-1,1:-1]
         # cg_urbl2_flp = ss.correlate2d(node.grid, mask_urbl2_flp)[1:-1,1:-1]
         # cg_ulbr2_flp = ss.correlate2d(node.grid, mask_ulbr2_flp)[1:-1,1:-1]
         # cg_urbl2_flp = ss.correlate2d(node.grid, mask_urbl2_flp)[1:-1,1:-1]
-        cg_ucbc = ss.correlate2d(node.grid, mask_ucbc)[1:-1,1:-1]
-        cg_crcl = ss.correlate2d(node.grid, mask_crcl)[1:-1,1:-1]
+        cg_ucbc = ss.correlate2d(node.grid, mask_ucbc)[1:-1, 1:-1]
+        cg_crcl = ss.correlate2d(node.grid, mask_crcl)[1:-1, 1:-1]
         # cf = ((cg_ulbr==0)+(cg_urbl==0)+(cg_ulbr_flp==0)+(cg_urbl_flp==0)+(cg_ucbc==0)+(cg_crcl==0))*(node.grid==0)
-        cf = ((cg_ulbr==0)+(cg_urbl==0)+(cg_ucbc==0)+(cg_crcl==0))*(node.grid==0)
+        cf = ((cg_ulbr == 0) + (cg_urbl == 0) + (cg_ucbc == 0) + (cg_crcl == 0)) * (node.grid == 0)
         # fillable 1
-        fillable_type1 = np.asarray(np.where((self.goalpattern==1)*cf)).T
+        fillable_type1 = np.asarray(np.where((self.goalpattern == 1) * cf)).T
         # fillable 2
-        fillable_type2 = np.asarray(np.where((self.goalpattern==2)*cf)).T
-        cg_ulbr[node.grid==0]=-1
-        cg_urbl[node.grid==0]=-1
+        fillable_type2 = np.asarray(np.where((self.goalpattern == 2) * cf)).T
+        cg_ulbr[node.grid == 0] = -1
+        cg_urbl[node.grid == 0] = -1
         # cg_ulbr_flp[node.grid==0]=-1
         # cg_urbl_flp[node.grid==0]=-1
-        cg_ucbc[node.grid==0]=-1
-        cg_crcl[node.grid==0]=-1
+        cg_ucbc[node.grid == 0] = -1
+        cg_crcl[node.grid == 0] = -1
         # cg = (cg_ulbr==0)+(cg_urbl==0)+(cg_ulbr_flp==0)+(cg_urbl_flp==0)+(cg_ucbc==0)+(cg_crcl==0)
-        cg = (cg_ulbr==0)+(cg_urbl==0)+(cg_ucbc==0)+(cg_crcl==0)
+        cg = (cg_ulbr == 0) + (cg_urbl == 0) + (cg_ucbc == 0) + (cg_crcl == 0)
         # movable 1
-        movable_type1 = np.asarray(np.where(cg*(node.grid==1))).T
+        movable_type1 = np.asarray(np.where(cg * (node.grid == 1))).T
         # movable 2
-        movable_type2 = np.asarray(np.where(cg*(node.grid==2))).T
+        movable_type2 = np.asarray(np.where(cg * (node.grid == 2))).T
         movable_expanded_type1 = np.repeat(movable_type1, len(fillable_type1), axis=0)
         movable_expanded_type2 = np.repeat(movable_type2, len(fillable_type2), axis=0)
-        if len(movable_expanded_type1)==0:
+        if len(movable_expanded_type1) == 0:
             movableeles = movable_expanded_type2
-        elif len(movable_expanded_type2)==0:
+        elif len(movable_expanded_type2) == 0:
             movableeles = movable_expanded_type1
         else:
             movableeles = np.concatenate((movable_expanded_type1, movable_expanded_type2), axis=0)
-        fillable_expanded_type1 = np.tile(fillable_type1, (len(movable_type1),1))
-        fillable_expanded_type2 = np.tile(fillable_type2, (len(movable_type2),1))
-        if len(fillable_expanded_type1)==0:
+        fillable_expanded_type1 = np.tile(fillable_type1, (len(movable_type1), 1))
+        fillable_expanded_type2 = np.tile(fillable_type2, (len(movable_type2), 1))
+        if len(fillable_expanded_type1) == 0:
             fillableeles = fillable_expanded_type2
-        elif len(fillable_expanded_type2)==0:
+        elif len(fillable_expanded_type2) == 0:
             fillableeles = fillable_expanded_type1
         else:
             fillableeles = np.concatenate((fillable_expanded_type1, fillable_expanded_type2), axis=0)
@@ -248,7 +249,7 @@ class TubePuzzle(object):
                 fi, fj = fillableeles[i]
                 tmpelearray = copy.deepcopy(self.closelist[-1])
                 tmpelearray.parent = self.closelist[-1]
-                tmpelearray.gs = self.closelist[-1].gs+1
+                tmpelearray.gs = self.closelist[-1].gs + 1
                 tmpelearray[fi][fj] = tmpelearray[mi][mj]
                 tmpelearray[mi][mj] = 0
                 #  check if path is found
@@ -281,23 +282,24 @@ class TubePuzzle(object):
                     # not in openlist append and sort openlist
                     self.openlist.append(tmpelearray)
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     # down x, right y
-    elearray = np.array([[1,0,0,0,1,0,0,0,0,0],
-                         [0,0,0,0,0,0,0,2,0,2],
-                         [0,0,0,0,0,0,0,0,2,0],
-                         [1,0,0,0,0,0,0,0,2,2],
-                         [1,0,0,0,0,0,0,2,0,2]])
-    elearray = np.array([[0,0,0,0,0,0,0,0,0,0],
-                         [0,0,0,0,0,0,0,0,0,0],
-                         [2,2,0,2,1,0,0,0,0,0],
-                         [1,1,0,1,2,0,0,0,0,2],
-                         [0,2,0,0,0,0,0,0,0,2]])
-    elearray = np.array([[0,0,0,0,0,0,0,0,0,0],
-                         [0,0,0,2,2,2,2,0,0,0],
-                         [0,0,2,1,1,1,0,0,0,0],
-                         [0,0,2,1,2,2,0,0,0,0],
-                         [0,0,0,0,2,0,0,0,0,0]])
+    elearray = np.array([[1, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 2, 0, 2],
+                         [0, 0, 0, 0, 0, 0, 0, 0, 2, 0],
+                         [1, 0, 0, 0, 0, 0, 0, 0, 2, 2],
+                         [1, 0, 0, 0, 0, 0, 0, 2, 0, 2]])
+    elearray = np.array([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                         [2, 2, 0, 2, 1, 0, 0, 0, 0, 0],
+                         [1, 1, 0, 1, 2, 0, 0, 0, 0, 2],
+                         [0, 2, 0, 0, 0, 0, 0, 0, 0, 2]])
+    elearray = np.array([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 2, 2, 2, 2, 0, 0, 0],
+                         [0, 0, 2, 1, 1, 1, 0, 0, 0, 0],
+                         [0, 0, 2, 1, 2, 2, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 2, 0, 0, 0, 0, 0]])
     tp = TubePuzzle(elearray)
     # tp.getMovableIds(Node(state))
     # print(Node(state).fcost())

@@ -4,6 +4,8 @@ import math
 import toppra as ta
 import toppra.constraint as constraint
 import toppra.algorithm as algo
+
+
 # use pip install git+https://github.com/hungpham2511/toppra to install toppra
 # webpage is at: https://hungpham2511.github.io/toppra/installation.html
 
@@ -66,7 +68,7 @@ class PiecewisePolyTOPPRA(object):
         jnt_traj = instance.compute_trajectory()
         duration = jnt_traj.duration
         print("Found optimal trajectory with duration {:f} sec".format(duration))
-        ts = np.linspace(0, duration, math.ceil(duration/control_frequency))
+        ts = np.linspace(0, duration, math.ceil(duration / control_frequency))
         interpolated_confs = jnt_traj.eval(ts)
         interpolated_spds = jnt_traj.evald(ts)
         interpolated_accs = jnt_traj.evaldd(ts)

@@ -5,7 +5,8 @@ import utiltools.robotmath as rm
 import utiltools.thirdparty.o3dhelper as o3dh
 from scipy.optimize import leastsq
 
-def getcenter(img, pcd, aruco_dict, parameters, tgtids=[0,1]):
+
+def getcenter(img, pcd, aruco_dict, parameters, tgtids=[0, 1]):
     """
     get the center of two markers
 
@@ -33,6 +34,7 @@ def getcenter(img, pcd, aruco_dict, parameters, tgtids=[0,1]):
 
     return pos
 
+
 def phoxi_computeeeinphx(yhx, pxc, armname, actionpos, actionrot, parameters, aruco_dict, criteriaradius=None):
     """
 
@@ -53,13 +55,14 @@ def phoxi_computeeeinphx(yhx, pxc, armname, actionpos, actionrot, parameters, ar
     def fitfunc(p, coords):
         x0, y0, z0, R = p
         x, y, z = coords.T
-        return np.sqrt((x-x0)**2 + (y-y0)**2 + (z-z0)**2)
+        return np.sqrt((x - x0) ** 2 + (y - y0) ** 2 + (z - z0) ** 2)
+
     errfunc = lambda p, x: fitfunc(p, x) - p[3]
 
     coords = []
-    rangex = [np.array([1,0,0]), [-30,-15,0,15,30]]
-    rangey = [np.array([0,1,0]), [-30,-15,15,30]]
-    rangez = [np.array([0,0,1]), [-90,-60,-30,30,60]]
+    rangex = [np.array([1, 0, 0]), [-30, -15, 0, 15, 30]]
+    rangey = [np.array([0, 1, 0]), [-30, -15, 15, 30]]
+    rangez = [np.array([0, 0, 1]), [-90, -60, -30, 30, 60]]
     rangeaxis = [rangex, rangey, rangez]
     lastarmjnts = yhx.robot_s.initrgtjnts
     for axisid in range(3):
@@ -96,9 +99,10 @@ def phoxi_computeeeinphx(yhx, pxc, armname, actionpos, actionrot, parameters, ar
     # except:
     #     return [None, None]
     if criteriaradius is not None:
-        if abs(finalestimate[3]-criteriaradius) > 5:
+        if abs(finalestimate[3] - criteriaradius) > 5:
             return [None, None]
     return np.array(finalestimate[:3]), finalestimate[3]
+
 
 def phoxi_computeboardcenterinhand(yhx, pxc, armname, parameters, aruco_dict, criteriaradius=None):
     """
@@ -115,8 +119,8 @@ def phoxi_computeboardcenterinhand(yhx, pxc, armname, parameters, aruco_dict, cr
     date: 20190110
     """
 
-    actionpos = np.array([300,-50,200])
-    actionrot = np.array([[0,0,1],[1,0,0],[0,1,0]]).T
+    actionpos = np.array([300, -50, 200])
+    actionrot = np.array([[0, 0, 1], [1, 0, 0], [0, 1, 0]]).T
     eeposinphx, bcradius = phoxi_computeeeinphx(yhx, pxc, armname, actionpos, actionrot, parameters, aruco_dict)
 
     # moveback
@@ -130,7 +134,7 @@ def phoxi_computeboardcenterinhand(yhx, pxc, armname, parameters, aruco_dict, cr
     print(hcinphx)
 
     movedist = 100
-    actionpos_hx = actionpos+actionrot[:,0]*movedist
+    actionpos_hx = actionpos + actionrot[:, 0] * movedist
     armjnts = yhx.movetoposrot(eepos=actionpos_hx, eerot=actionrot, armname=armname)
     if armjnts is not None and not yhx.pcdchecker.isSelfCollided(yhx.robot_s):
         yhx.movetox(armjnts, armname=armname)
@@ -141,7 +145,7 @@ def phoxi_computeboardcenterinhand(yhx, pxc, armname, parameters, aruco_dict, cr
     print(hxinphx)
 
     movedist = 100
-    actionpos_hy = actionpos+actionrot[:,1]*movedist
+    actionpos_hy = actionpos + actionrot[:, 1] * movedist
     armjnts = yhx.movetoposrot(eepos=actionpos_hy, eerot=actionrot, armname=armname)
     if armjnts is not None and not yhx.pcdchecker.isSelfCollided(yhx.robot_s):
         yhx.movetox(armjnts, armname=armname)
@@ -152,7 +156,7 @@ def phoxi_computeboardcenterinhand(yhx, pxc, armname, parameters, aruco_dict, cr
     print(hyinphx)
 
     movedist = 100
-    actionpos_hz = actionpos+actionrot[:,2]*movedist
+    actionpos_hz = actionpos + actionrot[:, 2] * movedist
     armjnts = yhx.movetoposrot(eepos=actionpos_hz, eerot=actionrot, armname=armname)
     if armjnts is not None and not yhx.pcdchecker.isSelfCollided(yhx.robot_s):
         yhx.movetox(armjnts, armname=armname)
@@ -162,9 +166,9 @@ def phoxi_computeboardcenterinhand(yhx, pxc, armname, parameters, aruco_dict, cr
         hzinphx = getcenter(img, pcd, aruco_dict, parameters)
     print(hzinphx)
 
-    frameinphx = np.array([hxinphx-hcinphx, hyinphx-hcinphx, hzinphx-hcinphx]).T
+    frameinphx = np.array([hxinphx - hcinphx, hyinphx - hcinphx, hzinphx - hcinphx]).T
     frameinphx, r = np.linalg.qr(frameinphx)
-    bcinhnd = np.dot(frameinphx.T, hcinphx-eeposinphx)
+    bcinhnd = np.dot(frameinphx.T, hcinphx - eeposinphx)
     print(bcinhnd)
 
 
@@ -184,7 +188,7 @@ def phoxi_calibbyestinee(yhx, pxc, armname, parameters, aruco_dict):
     phxposlist = []
 
     actionpos = np.array([350, 0, 200])
-    actionrot = np.array([[0,0,1],[1,0,0],[0,1,0]]).T
+    actionrot = np.array([[0, 0, 1], [1, 0, 0], [0, 1, 0]]).T
     # estimate a criteriaradius
     phxpos, criteriaradius = phoxi_computeeeinphx(yhx, pxc, armname, actionpos, actionrot, parameters, aruco_dict)
     print(phxpos, criteriaradius)
@@ -196,7 +200,8 @@ def phoxi_calibbyestinee(yhx, pxc, armname, parameters, aruco_dict):
         for y in [-180, 180]:
             for z in [150, 250]:
                 actionpos = np.array([x, y, z])
-                phxpos, _ = phoxi_computeeeinphx(yhx, pxc, armname, actionpos, actionrot, parameters, aruco_dict, criteriaradius)
+                phxpos, _ = phoxi_computeeeinphx(yhx, pxc, armname, actionpos, actionrot, parameters, aruco_dict,
+                                                 criteriaradius)
                 if phxpos is not None:
                     realposlist.append(np.array([x, y, z]))
                     phxposlist.append(phxpos)
@@ -212,6 +217,7 @@ def phoxi_calibbyestinee(yhx, pxc, armname, parameters, aruco_dict):
     pickle.dump(amat, open(os.path.join(yhx.root, "datacalibration", "calibmat.pkl"), "wb"))
     print(amat)
     return amat
+
 
 def phoxi_calib(yhx, pxc, armname, relpos, parameters, aruco_dict):
     """
@@ -230,7 +236,7 @@ def phoxi_calib(yhx, pxc, armname, relpos, parameters, aruco_dict):
     phxposlist = []
 
     lastarmjnts = yhx.robot_s.initrgtjnts
-    eerot = np.array([[0,0,1],[1,0,0],[0,1,0]]).T # horizontal, facing right
+    eerot = np.array([[0, 0, 1], [1, 0, 0], [0, 1, 0]]).T  # horizontal, facing right
     for x in [300, 360, 420]:
         for y in range(-200, 201, 200):
             for z in [70, 90, 130, 200]:
@@ -256,6 +262,7 @@ def phoxi_calib(yhx, pxc, armname, relpos, parameters, aruco_dict):
     print(amat)
     return amat
 
+
 def phoxi_calib_refinewithmodel(yhx, pxc, rawamat, armname):
     """
     The performance of this refining method using cad model is not good.
@@ -275,7 +282,7 @@ def phoxi_calib_refinewithmodel(yhx, pxc, rawamat, armname):
     newhomomatlist = []
 
     lastarmjnts = yhx.robot_s.initrgtjnts
-    eerot = np.array([[1,0,0],[0,0,-1],[0,1,0]]).T # horizontal, facing right
+    eerot = np.array([[1, 0, 0], [0, 0, -1], [0, 1, 0]]).T  # horizontal, facing right
     for x in [300, 360, 420]:
         for y in range(-200, 201, 200):
             for z in [70, 90, 130, 200]:
@@ -284,20 +291,20 @@ def phoxi_calib_refinewithmodel(yhx, pxc, rawamat, armname):
                     lastarmjnts = armjnts
                     yhx.movetox(armjnts, armname=armname)
                     tcppos, tcprot = yhx.robot_s.gettcp()
-                    initpos = tcppos+tcprot[:,2]*7
+                    initpos = tcppos + tcprot[:, 2] * 7
                     initrot = tcprot
                     inithomomat = rm.homobuild(initpos, initrot)
                     pxc.triggerframe()
                     pcd = pxc.getpcd()
                     realpcd = rm.homotransformpointarray(rawamat, pcd)
-                    minx = tcppos[0]-100
-                    maxx = tcppos[0]+100
+                    minx = tcppos[0] - 100
+                    maxx = tcppos[0] + 100
                     miny = tcppos[1]
-                    maxy = tcppos[1]+140
+                    maxy = tcppos[1] + 140
                     minz = tcppos[2]
-                    maxz = tcppos[2]+70
+                    maxz = tcppos[2] + 70
                     realpcdcrop = o3dh.crop_nx3_nparray(realpcd, [minx, maxx], [miny, maxy], [minz, maxz])
-                    if len(realpcdcrop) < len(handpalmtemplate)/2:
+                    if len(realpcdcrop) < len(handpalmtemplate) / 2:
                         continue
                     # yhx.rbtmesh.genmnp(yhx.robot_s).reparentTo(base.render)
                     # yhx.p3dh.genframe(tcppos, tcprot, thickness=10). reparentTo(base.render)
@@ -322,9 +329,10 @@ def phoxi_calib_refinewithmodel(yhx, pxc, rawamat, armname):
 
 
 def get_amat(amat_path="calibmat.pkl"):
-    filepath = os.path.dirname(os.path.abspath(__file__))+"\\"+amat_path
+    filepath = os.path.dirname(os.path.abspath(__file__)) + "\\" + amat_path
     amat = pickle.load(open(filepath, "rb"))
     return amat
+
 
 def transformpcd(amat, pcd):
     """
@@ -343,6 +351,7 @@ def transformpcd(amat, pcd):
 
     return realpcd[:, :3]
 
+
 if __name__ == '__main__':
     import os
     import pickle
@@ -351,7 +360,7 @@ if __name__ == '__main__':
     parameters = aruco.DetectorParameters_create()
     aruco_dict = aruco.getPredefinedDictionary(aruco.DICT_4X4_250)
 
-    armname="rgt"
+    armname = "rgt"
     yhx = robothelper.RobotHelperX(usereal=True)
     yhx.env.reparentTo(yhx.base.render)
 

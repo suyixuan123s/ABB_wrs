@@ -5,6 +5,7 @@ import os
 import math
 from utiltools.thirdparty import p3dhelper as p3dh
 
+
 class PickPlacePlanner(object):
     def __init__(self, obj, rhx):
         """
@@ -103,12 +104,14 @@ class PickPlacePlanner(object):
                     isobjcollided = False  # for future use
                     if (not isrbtcollided) and (not isobjcollided):
                         if toggledebug:
-                            rbtmg.genmnp(rbt, drawhand=False, togglejntscoord=False, toggleendcoord=False, rgbargt=[0, 1, 0, .5]).reparentTo(
+                            rbtmg.genmnp(rbt, drawhand=False, togglejntscoord=False, toggleendcoord=False,
+                                         rgbargt=[0, 1, 0, .5]).reparentTo(
                                 self.rhx.base.render)
                         availablegraspsatinit.append(idpre)
                     elif (not isobjcollided):
                         if toggledebug:
-                            rbtmg.genmnp(rbt, drawhand=False, togglejntscoord=False, toggleendcoord=False, rgbargt=[1, 0, 1, .5]).reparentTo(
+                            rbtmg.genmnp(rbt, drawhand=False, togglejntscoord=False, toggleendcoord=False,
+                                         rgbargt=[1, 0, 1, .5]).reparentTo(
                                 self.rhx.base.render)
                 else:
                     ikfailedgraspsnum += 1
@@ -167,7 +170,8 @@ class PickPlacePlanner(object):
                         if (not isrbtcollided) and (not isobjcollided):
                             tmpresult.append(idavailableinit)
                             if toggledebug:
-                                rbtmg.genmnp(rbt, togglejntscoord=False, toggleendcoord=False, rgbalft=[0, 1, 0, .5]).reparentTo(
+                                rbtmg.genmnp(rbt, togglejntscoord=False, toggleendcoord=False,
+                                             rgbalft=[0, 1, 0, .5]).reparentTo(
                                     self.rhx.base.render)
                         elif (not isobjcollided):
                             if toggledebug:
@@ -288,12 +292,14 @@ class PickPlacePlanner(object):
                     isobjcollided = False  # for future use
                     if (not isrbtcollided) and (not isobjcollided):
                         if toggledebug:
-                            rbtmg.genmnp(rbt, drawhand=False, togglejntscoord=False, toggleendcoord=False, rgbargt=[0, 1, 0, .5]).reparentTo(
+                            rbtmg.genmnp(rbt, drawhand=False, togglejntscoord=False, toggleendcoord=False,
+                                         rgbargt=[0, 1, 0, .5]).reparentTo(
                                 self.rhx.base.render)
                         availablegraspsatinit.append(idpre)
                     elif (not isobjcollided):
                         if toggledebug:
-                            rbtmg.genmnp(rbt, drawhand=False, togglejntscoord=False, toggleendcoord=False, rgbargt=[1, 0, 1, .5]).reparentTo(
+                            rbtmg.genmnp(rbt, drawhand=False, togglejntscoord=False, toggleendcoord=False,
+                                         rgbargt=[1, 0, 1, .5]).reparentTo(
                                 self.rhx.base.render)
                 else:
                     ikfailedgraspsnum += 1
@@ -363,7 +369,8 @@ class PickPlacePlanner(object):
                             if (not isrbtcollided) and (not isobjcollided):
                                 tmpresult.append(idavailableinit)
                                 if toggledebug:
-                                    rbtmg.genmnp(rbt, togglejntscoord=False, toggleendcoord=False, rgbalft=[0, 1, 0, .5]).reparentTo(
+                                    rbtmg.genmnp(rbt, togglejntscoord=False, toggleendcoord=False,
+                                                 rgbalft=[0, 1, 0, .5]).reparentTo(
                                         self.rhx.base.render)
                             elif (not isobjcollided):
                                 if toggledebug:
@@ -777,12 +784,13 @@ class PickPlacePlanner(object):
         return [None, None, None]
 
     def findppmotion_symmetric_err(self, objinithomomat, objgoalhomomat, obscmlist=[], symmetricaxis="z", nangles=9,
-                               armname='rgt', rbtinitarmjnts=None, rbtgoalarmjnts=None, finalstate="io",
-                               primitivedirection_init_forward=None, primitivedirection_init_backward=None,
-                               primitivedistance_init_foward=150, premitivedistance_init_backward=150,
-                               primitivedirection_final_forward=None, primitivedirection_final_backward=None,
-                               primitivedistance_final_foward=150, premitivedistance_final_backward=150, userrt=True,
-                               toggledebug=False):
+                                   armname='rgt', rbtinitarmjnts=None, rbtgoalarmjnts=None, finalstate="io",
+                                   primitivedirection_init_forward=None, primitivedirection_init_backward=None,
+                                   primitivedistance_init_foward=150, premitivedistance_init_backward=150,
+                                   primitivedirection_final_forward=None, primitivedirection_final_backward=None,
+                                   primitivedistance_final_foward=150, premitivedistance_final_backward=150,
+                                   userrt=True,
+                                   toggledebug=False):
         """
         this function performs findsharedgrasps and genppmotion in a loop
         the postfix err indicates this function will return the error type
@@ -950,7 +958,8 @@ class PickPlacePlanner(object):
                         if (not isrbtcollided) and (not isobjcollided):
                             finalsharedgrasps.append(idavailableinit)
                             if toggledebug:
-                                rbtmg.genmnp(rbt, togglejntscoord=False, toggleendcoord=False, rgbargt=[0, 1, 0, .5]).reparentTo(
+                                rbtmg.genmnp(rbt, togglejntscoord=False, toggleendcoord=False,
+                                             rgbargt=[0, 1, 0, .5]).reparentTo(
                                     self.rhx.base.render)
                                 # rbtmg.genmnp(robot_s, togglejntscoord=False).reparentTo(self.rhx.base.render)
                                 # # toggle the following one in case both the common start and goal shall be rendered
@@ -1072,7 +1081,8 @@ class PickPlacePlanner(object):
                                              armname=armname, obstaclecmlist=obscmlist)
                     if initpickup is None:
                         if toggledebug and rotangle == candidateangles[-1]:
-                            predefinedjawwidth, predefinedhndfc, predefinedhandhomomat = predefinedgrasps[candidatepredgid]
+                            predefinedjawwidth, predefinedhndfc, predefinedhandhomomat = predefinedgrasps[
+                                candidatepredgid]
                             hndmat4 = np.dot(objinithomomat, predefinedhandhomomat)
                             eepos = rm.homotransformpoint(objinithomomat, predefinedhndfc)
                             eerot = hndmat4[:3, :3]
@@ -1083,7 +1093,8 @@ class PickPlacePlanner(object):
                                                                            primitivedistance_init_foward,
                                                                            amjnts, armname)
                                 if pickmotion is None:
-                                    rbtmg.genmnp(rbt, togglejntscoord=False, toggleendcoord=False, rgbargt=np.array([1, 0, 0, .7])).reparentTo(self.rhx.base.render)
+                                    rbtmg.genmnp(rbt, togglejntscoord=False, toggleendcoord=False,
+                                                 rgbargt=np.array([1, 0, 0, .7])).reparentTo(self.rhx.base.render)
                                     if candidatepredgid == finalsharedgrasps[-1]:
                                         base.run()
                             rbt.movearmfk(rbt.initrgtjnts, armname="rgt")
@@ -1098,7 +1109,8 @@ class PickPlacePlanner(object):
                                              armname=armname, msc=initpickup[1][-1], obstaclecmlist=obscmlist)
                     if goalpickup is None:
                         if toggledebug and rotangle == candidateangles[-1]:
-                            predefinedjawwidth, predefinedhndfc, predefinedhandhomomat = predefinedgrasps[candidatepredgid]
+                            predefinedjawwidth, predefinedhndfc, predefinedhandhomomat = predefinedgrasps[
+                                candidatepredgid]
                             hndmat4 = np.dot(objinithomomat, predefinedhandhomomat)
                             eepos = rm.homotransformpoint(objinithomomat, predefinedhndfc)
                             eerot = hndmat4[:3, :3]
@@ -1264,7 +1276,8 @@ class PickPlacePlanner(object):
                                 jawwidthmsmp.append(jawwidthmp)
                                 objmsmp.append(objmp)
                         else:
-                            print("There is possible sequence but no collision free motion at " + str(rotangle) + ", trying the next...")
+                            print("There is possible sequence but no collision free motion at " + str(
+                                rotangle) + ", trying the next...")
                     else:
                         if finalstate[0] in ["i", "u"]:
                             numikmp, jawwidthmp, objmp = self.formulatemotionpath([initpose], armname,
@@ -1375,18 +1388,21 @@ class PickPlacePlanner(object):
                                 rbt.opengripper(armname="rgt", jawwidth=jawwidthmsmp[i][j][0])
                                 rbt.opengripper(armname="lft", jawwidth=jawwidthmsmp[i][j][1])
                                 if j == 0 or j == len(numikms):
-                                    rbtmg.genmnp(rbt, togglejntscoord=False, toggleendcoord=False, rgbargt=np.array([0, 1, 0, 1])).reparentTo(self.rhx.base.render)
+                                    rbtmg.genmnp(rbt, togglejntscoord=False, toggleendcoord=False,
+                                                 rgbargt=np.array([0, 1, 0, 1])).reparentTo(self.rhx.base.render)
                                 else:
-                                    rbtmg.genmnp(rbt, togglejntscoord=False, toggleendcoord=False, rgbargt=np.array([.5, .5, .5, .5])).reparentTo(self.rhx.base.render)
-                                if j < len(numikms)-1:
-                                    numiknxt = numikms[j+1][1]
+                                    rbtmg.genmnp(rbt, togglejntscoord=False, toggleendcoord=False,
+                                                 rgbargt=np.array([.5, .5, .5, .5])).reparentTo(self.rhx.base.render)
+                                if j < len(numikms) - 1:
+                                    numiknxt = numikms[j + 1][1]
                                     thispos, _ = rbt.getee(armname="rgt")
                                     rbt.movearmfk(numiknxt, armname="rgt")
                                     nxtpos, _ = rbt.getee(armname="rgt")
-                                    p3dh.genlinesegnodepath([thispos, nxtpos], colors=[1,0,1,1], thickness=3.7).reparentTo(base.render)
+                                    p3dh.genlinesegnodepath([thispos, nxtpos], colors=[1, 0, 1, 1],
+                                                            thickness=3.7).reparentTo(base.render)
                                 objcp = copy.deepcopy(self.objcm)
                                 objcp.set_homomat(objmsmp[i][j])
-                                objcp.setColor(1,1,0,1)
+                                objcp.setColor(1, 1, 0, 1)
                                 objcp.reparentTo(base.render)
                         base.run()
 

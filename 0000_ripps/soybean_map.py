@@ -87,8 +87,6 @@ def gen_rotmat_list(nsample=None):
     return return_rotmat
 
 
-
-
 def gen_bad_rotmat_list(nsample=None):
     rotmats = rm.gen_icorotmats(icolevel=2,
                                 rotation_interval=math.radians(30),
@@ -139,7 +137,7 @@ base = wd.World(cam_pos=[1, 1, 1], auto_cam_rotate=False)
 # base.run()
 
 main_stem = Stem(pos=np.array([0, 0, .1]), ndof=main_stem_ndof)
-main_stem.fk(jnt_values=[math.pi / 36, math.pi / 36, 0, -math.pi / 36, -math.pi / 36, 0, 0,0,0,0,0])
+main_stem.fk(jnt_values=[math.pi / 36, math.pi / 36, 0, -math.pi / 36, -math.pi / 36, 0, 0, 0, 0, 0, 0])
 main_stem.gen_meshmodel(rgba=map_list[-1]).attach_to(base)
 
 # rotmat_list = gen_rotmat_list(2 ** main_stem_ndof)
@@ -188,7 +186,7 @@ for id, rotmat in enumerate(rotmat_list[::4]):
     #     select_id = 4
     # map_color = map_list[select_id]
     branch = Stem(ndof=1, pos=branch_pos,
-                  rotmat=rotmat, base_length=.1 / (height)**(1/2), base_thickness=.002)
+                  rotmat=rotmat, base_length=.1 / (height) ** (1 / 2), base_thickness=.002)
     branch.gen_meshmodel(rgba=map_color).attach_to(base)
     # main_stem.fk(jnt_values=[math.pi/36,math.pi/36, 0,-math.pi/36,-math.pi/36,0])
     # stem1.gen_meshmodel().attach_to(base)

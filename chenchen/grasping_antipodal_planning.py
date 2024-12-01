@@ -30,7 +30,7 @@ for grasp_info in grasp_info_list:
     # print(gripper_a.pos)
     jaw_width, jaw_center_pos, jaw_center_rotmat, hnd_pos, hnd_rotmat = grasp_info
     gm.gen_sphere(jaw_center_pos, rgba=[0, 0, 1, 1]).attach_to(base)
-    gm.gen_sphere(hnd_pos, rgba = [0,1,0,1]).attach_to(base)
+    gm.gen_sphere(hnd_pos, rgba=[0, 1, 0, 1]).attach_to(base)
     # cm.gen_sphere(pos=gripper_s.jaw_center_pos, radius=0.005, rgba=[0, 1, 0, 1]).attach_to(base)
     # cm.gen_sphere(pos=hnd_pos, radius=0.002, rgba=[1, 0, 0, 1]).attach_to(base)
     gripper_s.grip_at_with_jcpose(jaw_center_pos, jaw_center_rotmat, jaw_width)

@@ -16,13 +16,13 @@ if __name__ == '__main__':
     objcm.show_localframe()
     grasp_info_list = []
     for height in [.08, .095]:
-        for roll_angle in [math.pi*.1, math.pi*.2]:
-            gl_hndz = rm.rotmat_from_axangle(np.array([1,0,0]), roll_angle).dot(np.array([0,0,-1]))
+        for roll_angle in [math.pi * .1, math.pi * .2]:
+            gl_hndz = rm.rotmat_from_axangle(np.array([1, 0, 0]), roll_angle).dot(np.array([0, 0, -1]))
             grasp_info_list += gutil.define_grasp_with_rotation(gripper_instance,
                                                                 objcm,
                                                                 gl_jaw_center_pos=np.array([0, 0, height]),
                                                                 gl_jaw_center_z=gl_hndz,
-                                                                gl_hndx=np.array([1,0,0]),
+                                                                gl_hndx=np.array([1, 0, 0]),
                                                                 jaw_width=.025,
                                                                 gl_rotation_ax=np.array([0, 0, 1]))
     for grasp_info in grasp_info_list:

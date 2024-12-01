@@ -13,6 +13,8 @@ height = (int(video1.get(cv2.CAP_PROP_FRAME_HEIGHT)))
 pointcloud = None
 
 pcdm = []
+
+
 def update(video1, pcdm, task):
     if len(pcdm) != 0:
         for one_pcdm in pcdm:
@@ -26,9 +28,11 @@ def update(video1, pcdm, task):
     ret, frame = video1.read()
     frame = cv2.resize(frame, (int(width), int(height)), interpolation=cv2.INTER_CUBIC)
     depth, hm = itd_cvter.convert(frame)
-    pcdm[0] = gm.GeometricModel(depth*.001)
+    pcdm[0] = gm.GeometricModel(depth * .001)
     pcdm[0].attach_to(base)
     return task.again
+
+
 taskMgr.doMethodLater(0.01, update, "update",
                       extraArgs=[video1, pcdm],
                       appendTask=True)

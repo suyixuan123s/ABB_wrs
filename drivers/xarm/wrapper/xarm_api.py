@@ -199,7 +199,7 @@ class XArmAPI(object):
         xArm sn
         """
         return self._arm.sn
-    
+
     @property
     def control_box_sn(self):
         """
@@ -906,7 +906,8 @@ class XArmAPI(object):
                 code >= 0: the last_used_angles/last_used_joint_speed/last_used_joint_acc will be modified
         """
         return self._arm.set_servo_angle(servo_id=servo_id, angle=angle, speed=speed, mvacc=mvacc, mvtime=mvtime,
-                                         relative=relative, is_radian=is_radian, wait=wait, timeout=timeout, radius=radius, **kwargs)
+                                         relative=relative, is_radian=is_radian, wait=wait, timeout=timeout,
+                                         radius=radius, **kwargs)
 
     def set_servo_angle_j(self, angles, speed=None, mvacc=None, mvtime=None, is_radian=None, **kwargs):
         """
@@ -924,9 +925,11 @@ class XArmAPI(object):
         :return: code
             code: See the [API Code Documentation](./xarm_api_code.md#api-code) for details.
         """
-        return self._arm.set_servo_angle_j(angles, speed=speed, mvacc=mvacc, mvtime=mvtime, is_radian=is_radian, **kwargs)
+        return self._arm.set_servo_angle_j(angles, speed=speed, mvacc=mvacc, mvtime=mvtime, is_radian=is_radian,
+                                           **kwargs)
 
-    def set_servo_cartesian(self, mvpose, speed=None, mvacc=None, mvtime=0, is_radian=None, is_tool_coord=False, **kwargs):
+    def set_servo_cartesian(self, mvpose, speed=None, mvacc=None, mvtime=0, is_radian=None, is_tool_coord=False,
+                            **kwargs):
         """
         Set the servo cartesian, execute only the last instruction, need to be set to servo motion mode(self.set_mode(1))
 
@@ -990,7 +993,8 @@ class XArmAPI(object):
         :return: code
             code: See the [API Code Documentation](./xarm_api_code.md#api-code) for details.
         """
-        return self._arm.move_gohome(speed=speed, mvacc=mvacc, mvtime=mvtime, is_radian=is_radian, wait=wait, timeout=timeout, **kwargs)
+        return self._arm.move_gohome(speed=speed, mvacc=mvacc, mvtime=mvtime, is_radian=is_radian, wait=wait,
+                                     timeout=timeout, **kwargs)
 
     def move_arc_lines(self, paths, is_radian=None, times=1, first_pause_time=0.1, repeat_pause_time=0,
                        automatic_calibration=True, speed=None, mvacc=None, mvtime=None, wait=False):
@@ -1018,7 +1022,8 @@ class XArmAPI(object):
         :param wait: whether to wait for the arm to complete, default is False
         """
         return self._arm.move_arc_lines(paths, is_radian=is_radian, times=times, first_pause_time=first_pause_time,
-                                        repeat_pause_time=repeat_pause_time, automatic_calibration=automatic_calibration,
+                                        repeat_pause_time=repeat_pause_time,
+                                        automatic_calibration=automatic_calibration,
                                         speed=speed, mvacc=mvacc, mvtime=mvtime, wait=wait)
 
     def set_servo_attach(self, servo_id=None):
@@ -1700,7 +1705,8 @@ class XArmAPI(object):
             angles: [angle-1(rad or °), angle-2, ..., angle-(Number of axes)] or []
                 Note: the returned angle value is radians if return_is_radian is True, else °
         """
-        return self._arm.get_inverse_kinematics(pose, input_is_radian=input_is_radian, return_is_radian=return_is_radian)
+        return self._arm.get_inverse_kinematics(pose, input_is_radian=input_is_radian,
+                                                return_is_radian=return_is_radian)
 
     def get_forward_kinematics(self, angles, input_is_radian=None, return_is_radian=None):
         """
@@ -1714,7 +1720,8 @@ class XArmAPI(object):
             pose: [x(mm), y(mm), z(mm), roll(rad or °), pitch(rad or °), yaw(rad or °)] or []
                 Note: the roll/pitch/yaw value is radians if return_is_radian is True, else °
         """
-        return self._arm.get_forward_kinematics(angles, input_is_radian=input_is_radian, return_is_radian=return_is_radian)
+        return self._arm.get_forward_kinematics(angles, input_is_radian=input_is_radian,
+                                                return_is_radian=return_is_radian)
 
     def is_tcp_limit(self, pose, is_radian=None):
         """
@@ -1791,7 +1798,8 @@ class XArmAPI(object):
         :return: code
             code: See the [API Code Documentation](./xarm_api_code.md#api-code) for details.
         """
-        return self._arm.set_gripper_position(pos, wait=wait, speed=speed, auto_enable=auto_enable, timeout=timeout, **kwargs)
+        return self._arm.set_gripper_position(pos, wait=wait, speed=speed, auto_enable=auto_enable, timeout=timeout,
+                                              **kwargs)
 
     def set_gripper_speed(self, speed, **kwargs):
         """
@@ -2415,7 +2423,8 @@ class XArmAPI(object):
         return self._arm.config_io_reset_when_stop(0, on_off)
 
     def set_position_aa(self, axis_angle_pose, speed=None, mvacc=None, mvtime=None,
-                        is_radian=None, is_tool_coord=False, relative=False, wait=False, timeout=None, radius=None, **kwargs):
+                        is_radian=None, is_tool_coord=False, relative=False, wait=False, timeout=None, radius=None,
+                        **kwargs):
         """
         Set the pose represented by the axis angle pose
         
@@ -2442,7 +2451,8 @@ class XArmAPI(object):
                                          is_radian=is_radian, is_tool_coord=is_tool_coord, relative=relative,
                                          wait=wait, timeout=timeout, radius=radius, **kwargs)
 
-    def set_servo_cartesian_aa(self, axis_angle_pose, speed=None, mvacc=None, is_radian=None, is_tool_coord=False, relative=False, **kwargs):
+    def set_servo_cartesian_aa(self, axis_angle_pose, speed=None, mvacc=None, is_radian=None, is_tool_coord=False,
+                               relative=False, **kwargs):
         """
         Set the servo cartesian represented by the axis angle pose, execute only the last instruction, need to be set to servo motion mode(self.set_mode(1))
         Note:
@@ -2535,7 +2545,7 @@ class XArmAPI(object):
         :param timeout: seconds
         """
         return self._arm.set_timeout(timeout)
-    
+
     def set_baud_checkset_enable(self, enable):
         """
         Enable auto checkset the baudrate of the end IO board or not
@@ -2788,7 +2798,8 @@ class XArmAPI(object):
         :return: code
             code: See the [API Code Documentation](./xarm_api_code.md#api-code) for details.
         """
-        return self._arm.set_tgpio_modbus_timeout(timeout, is_transparent_transmission=is_transparent_transmission, **kwargs)
+        return self._arm.set_tgpio_modbus_timeout(timeout, is_transparent_transmission=is_transparent_transmission,
+                                                  **kwargs)
 
     def set_tgpio_modbus_baudrate(self, baud):
         """
@@ -2811,7 +2822,8 @@ class XArmAPI(object):
         """
         return self._arm.get_tgpio_modbus_baudrate()
 
-    def getset_tgpio_modbus_data(self, datas, min_res_len=0, host_id=9, is_transparent_transmission=False, use_503_port=False, **kwargs):
+    def getset_tgpio_modbus_data(self, datas, min_res_len=0, host_id=9, is_transparent_transmission=False,
+                                 use_503_port=False, **kwargs):
         """
         Send the modbus data to the tool gpio
         
@@ -2830,7 +2842,9 @@ class XArmAPI(object):
             code: See the [API Code Documentation](./xarm_api_code.md#api-code) for details.
             modbus_response: modbus response data
         """
-        return self._arm.getset_tgpio_modbus_data(datas, min_res_len=min_res_len, host_id=host_id, is_transparent_transmission=is_transparent_transmission, use_503_port=use_503_port, **kwargs)
+        return self._arm.getset_tgpio_modbus_data(datas, min_res_len=min_res_len, host_id=host_id,
+                                                  is_transparent_transmission=is_transparent_transmission,
+                                                  use_503_port=use_503_port, **kwargs)
 
     def set_report_tau_or_i(self, tau_or_i=0):
         """
@@ -2922,7 +2936,8 @@ class XArmAPI(object):
         :return: code
             code: See the [API Code Documentation](./xarm_api_code.md#api-code) for details.
         """
-        return self._arm.vc_set_joint_velocity(speeds, is_radian=is_radian, is_sync=is_sync, duration=duration, **kwargs)
+        return self._arm.vc_set_joint_velocity(speeds, is_radian=is_radian, is_sync=is_sync, duration=duration,
+                                               **kwargs)
 
     def vc_set_cartesian_velocity(self, speeds, is_radian=None, is_tool_coord=False, duration=-1, **kwargs):
         """
@@ -2941,7 +2956,8 @@ class XArmAPI(object):
         :return: code
             code: See the [API Code Documentation](./xarm_api_code.md#api-code) for details.
         """
-        return self._arm.vc_set_cartesian_velocity(speeds, is_radian=is_radian, is_tool_coord=is_tool_coord, duration=duration, **kwargs)
+        return self._arm.vc_set_cartesian_velocity(speeds, is_radian=is_radian, is_tool_coord=is_tool_coord,
+                                                   duration=duration, **kwargs)
 
     def calibrate_tcp_coordinate_offset(self, four_points, is_radian=None):
         """
@@ -2971,9 +2987,11 @@ class XArmAPI(object):
             code: See the [API Code Documentation](./xarm_api_code.md#api-code) for details.
             rpy_offset: calculated rpy TCP offset, [roll, pitch, yaw]
         """
-        return self._arm.calibrate_tcp_orientation_offset(rpy_be, rpy_bt, input_is_radian=input_is_radian, return_is_radian=return_is_radian)
+        return self._arm.calibrate_tcp_orientation_offset(rpy_be, rpy_bt, input_is_radian=input_is_radian,
+                                                          return_is_radian=return_is_radian)
 
-    def calibrate_user_orientation_offset(self, three_points, mode=0, trust_ind=0, input_is_radian=None, return_is_radian=None):
+    def calibrate_user_orientation_offset(self, three_points, mode=0, trust_ind=0, input_is_radian=None,
+                                          return_is_radian=None):
         """
         Three-point method teaches user coordinate system posture offset
         Note:
@@ -2992,8 +3010,10 @@ class XArmAPI(object):
             code: See the [API Code Documentation](./xarm_api_code.md#api-code) for details.
             rpy_offset: calculated rpy user offset, [roll, pitch, yaw]
         """
-        return self._arm.calibrate_user_orientation_offset(three_points, mode=mode, trust_ind=trust_ind, input_is_radian=input_is_radian, return_is_radian=return_is_radian)
-    
+        return self._arm.calibrate_user_orientation_offset(three_points, mode=mode, trust_ind=trust_ind,
+                                                           input_is_radian=input_is_radian,
+                                                           return_is_radian=return_is_radian)
+
     def calibrate_user_coordinate_offset(self, rpy_ub, pos_b_uorg, is_radian=None):
         """
         An additional teaching point determines the position offset of the user coordinate system.
@@ -3139,7 +3159,8 @@ class XArmAPI(object):
         :return: code
             code: See the [API Code Documentation](./xarm_api_code.md#api-code) for details.
         """
-        return self._arm.ft_sensor_cali_load(iden_result_list, association_setting_tcp_load=association_setting_tcp_load, **kwargs)
+        return self._arm.ft_sensor_cali_load(iden_result_list,
+                                             association_setting_tcp_load=association_setting_tcp_load, **kwargs)
 
     def ft_sensor_enable(self, on_off):
         """

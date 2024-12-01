@@ -6,9 +6,7 @@ import modeling.geometric_model as gm
 import time
 import gripperhelper as gh
 
-
 if __name__ == '__main__':
-
     base = wd.World(cam_pos=[1, 1, 0.5], lookat_pos=[0, 0, .2])
     gm.gen_frame().attach_to(base)
     gripper = cbt.Handgripper()
@@ -29,8 +27,6 @@ if __name__ == '__main__':
     # print("继续执行任务...")
     # base.run()
 
-
-
     # 六十度
     # rgt_start_pos = [0, -0.010, 0.207]
     # rgt_start_rot = [[1, 0, 0],
@@ -48,7 +44,6 @@ if __name__ == '__main__':
     # lft_end_rot = [[-1, 0, 0],
     #                [0, math.cos(60 / 180 * math.pi), math.sin(60 / 180 * math.pi)],
     #                [0, math.sin(60 / 180 * math.pi), math.cos(60 / 180 * math.pi)]]
-
 
     # 八十度
     # rgt_start_pos = [0, -0.010, 0.207]
@@ -68,7 +63,6 @@ if __name__ == '__main__':
     #                [0, math.cos(80 / 180 * math.pi), math.sin(80 / 180 * math.pi)],
     #                [0, math.sin(80 / 180 * math.pi), math.cos(80 / 180 * math.pi)]]
 
-
     # 九十度
     # rgt_start_pos = [0, -0.010, 0.207]
     # rgt_start_rot = [[1, 0, 0],
@@ -87,7 +81,6 @@ if __name__ == '__main__':
     #                [0, math.cos(90 / 180 * math.pi), math.sin(90 / 180 * math.pi)],
     #                [0, math.sin(90 / 180 * math.pi), math.cos(90 / 180 * math.pi)]]
 
-
     # 一百度
     rgt_start_pos = [0, -0.010, 0.215]
     rgt_start_rot = [[1, 0, 0],
@@ -105,10 +98,12 @@ if __name__ == '__main__':
     lft_end_rot = [[-1, 0, 0],
                    [0, math.cos(100 / 180 * math.pi), math.sin(100 / 180 * math.pi)],
                    [0, math.sin(100 / 180 * math.pi), math.cos(100 / 180 * math.pi)]]
-    lf_path = ghw.get_linear_motion(lft_start_pos, lft_start_rot, lft_end_pos, lft_end_rot, moveinterval=100, finger='lftfinger')
-    rg_path = ghw.get_linear_motion(rgt_start_pos, rgt_start_rot, rgt_end_pos, rgt_end_rot, moveinterval=300, finger='rgtfinger')
-    ghw.move_con(lf_path = lf_path,rg_path=rg_path, finger='lft')
-    ghw.disable_torque(id = 0)
-    ghw.disable_torque(id = 1)
-    ghw.disable_torque(id = 2)
+    lf_path = ghw.get_linear_motion(lft_start_pos, lft_start_rot, lft_end_pos, lft_end_rot, moveinterval=100,
+                                    finger='lftfinger')
+    rg_path = ghw.get_linear_motion(rgt_start_pos, rgt_start_rot, rgt_end_pos, rgt_end_rot, moveinterval=300,
+                                    finger='rgtfinger')
+    ghw.move_con(lf_path=lf_path, rg_path=rg_path, finger='lft')
+    ghw.disable_torque(id=0)
+    ghw.disable_torque(id=1)
+    ghw.disable_torque(id=2)
     # base.run()

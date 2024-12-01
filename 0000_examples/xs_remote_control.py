@@ -59,8 +59,8 @@ while True:
         rbt_x.arm_jaw_to(jawwidth=100)
     elif pressed_keys["p"] and sum(values_list) == 1:  # if key 'q' is pressed
         rbt_x.arm_jaw_to(jawwidth=0)
-    elif any(pressed_keys[item] for item in ['r', 't', 'f', 'g', 'v', 'b', 'y', 'u', 'h', 'j', 'n', 'm']) and\
-            sum(values_list) == 1: # global
+    elif any(pressed_keys[item] for item in ['r', 't', 'f', 'g', 'v', 'b', 'y', 'u', 'h', 'j', 'n', 'm']) and \
+            sum(values_list) == 1:  # global
         tic = time.time()
         current_jnt_values = rbt_s.get_jnt_values()
         current_arm_tcp_pos, current_arm_tcp_rotmat = rbt_s.get_gl_tcp()
@@ -79,21 +79,22 @@ while True:
         elif pressed_keys['b']:
             rel_pos = np.array([0, 0, -arm_linear_speed * .5])
         elif pressed_keys['y']:
-            rel_rotmat = rm.rotmat_from_euler(arm_angular_speed*.5, 0, 0)
+            rel_rotmat = rm.rotmat_from_euler(arm_angular_speed * .5, 0, 0)
         elif pressed_keys['u']:
-            rel_rotmat = rm.rotmat_from_euler(-arm_angular_speed*.5, 0, 0)
+            rel_rotmat = rm.rotmat_from_euler(-arm_angular_speed * .5, 0, 0)
         elif pressed_keys['h']:
-            rel_rotmat = rm.rotmat_from_euler(0, arm_angular_speed*.5, 0)
+            rel_rotmat = rm.rotmat_from_euler(0, arm_angular_speed * .5, 0)
         elif pressed_keys['j']:
             rel_rotmat = rm.rotmat_from_euler(0, -arm_angular_speed * .5, 0)
         elif pressed_keys['n']:
-            rel_rotmat = rm.rotmat_from_euler(0, 0, arm_angular_speed*.5)
+            rel_rotmat = rm.rotmat_from_euler(0, 0, arm_angular_speed * .5)
         elif pressed_keys['m']:
-            rel_rotmat = rm.rotmat_from_euler(0, 0, -arm_angular_speed*.5)
-        new_arm_tcp_pos = current_arm_tcp_pos+rel_pos
+            rel_rotmat = rm.rotmat_from_euler(0, 0, -arm_angular_speed * .5)
+        new_arm_tcp_pos = current_arm_tcp_pos + rel_pos
         new_arm_tcp_rotmat = rel_rotmat.dot(current_arm_tcp_rotmat)
         last_jnt_values = rbt_s.get_jnt_values()
-        new_jnt_values = rbt_s.ik(tgt_pos=new_arm_tcp_pos, tgt_rotmat=new_arm_tcp_rotmat, seed_jnt_values=current_jnt_values)
+        new_jnt_values = rbt_s.ik(tgt_pos=new_arm_tcp_pos, tgt_rotmat=new_arm_tcp_rotmat,
+                                  seed_jnt_values=current_jnt_values)
         if new_jnt_values is None:
             continue
         rbt_s.fk(jnt_values=new_jnt_values)

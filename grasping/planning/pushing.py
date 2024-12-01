@@ -70,7 +70,7 @@ if __name__ == '__main__':
     objcm.attach_to(base)
     objcm.show_localframe()
     push_info_list = plan_pushing(gripper_s, objcm, cone_angle=math.radians(60),
-                                   local_rotation_interval=math.radians(45), toggle_debug=False)
+                                  local_rotation_interval=math.radians(45), toggle_debug=False)
     for push_info in push_info_list:
         gl_push_pos, gl_push_rotmat, hnd_pos, hnd_rotmat = push_info
         gic = gripper_s.copy()

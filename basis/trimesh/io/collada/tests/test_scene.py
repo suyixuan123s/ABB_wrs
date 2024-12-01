@@ -16,7 +16,7 @@ class TestScene(unittest.TestCase):
         self.yourcam = collada.camera.PerspectiveCamera("yourcam", 45.0, 0.01, 1000.0)
         self.dummy.cameras.append(self.yourcam)
 
-        self.yourdirlight = collada.light.DirectionalLight("yourdirlight", (1,1,1))
+        self.yourdirlight = collada.light.DirectionalLight("yourdirlight", (1, 1, 1))
         self.dummy.lights.append(self.yourdirlight)
 
         cimage = collada.material.CImage("mycimage", "./whatever.tga", self.dummy)
@@ -24,25 +24,27 @@ class TestScene(unittest.TestCase):
         sampler2d = collada.material.Sampler2D("mysampler2d", surface)
         mymap = collada.material.Map(sampler2d, "TEX0")
         self.effect = collada.material.Effect("myeffect", [surface, sampler2d], "phong",
-                       emission = (0.1, 0.2, 0.3),
-                       ambient = (0.4, 0.5, 0.6),
-                       diffuse = mymap,
-                       specular = (0.3, 0.2, 0.1))
+                                              emission=(0.1, 0.2, 0.3),
+                                              ambient=(0.4, 0.5, 0.6),
+                                              diffuse=mymap,
+                                              specular=(0.3, 0.2, 0.1))
         self.effect2 = collada.material.Effect("youreffect", [], "phong",
-                       emission = (0.1, 0.2, 0.3),
-                       ambient = (0.4, 0.5, 0.6),
-                       specular = (0.3, 0.2, 0.1))
+                                               emission=(0.1, 0.2, 0.3),
+                                               ambient=(0.4, 0.5, 0.6),
+                                               specular=(0.3, 0.2, 0.1))
         self.dummy.materials.append(self.effect)
         self.dummy.materials.append(self.effect2)
 
-        self.floatsource = collada.source.FloatSource("myfloatsource", numpy.array([0.1,0.2,0.3]), ('X', 'Y', 'Z'))
-        self.geometry = collada.geometry.Geometry(self.dummy, "geometry0", "mygeometry", {"myfloatsource":self.floatsource})
-        self.geometry2 = collada.geometry.Geometry(self.dummy, "geometry1", "yourgeometry", {"myfloatsource":self.floatsource})
+        self.floatsource = collada.source.FloatSource("myfloatsource", numpy.array([0.1, 0.2, 0.3]), ('X', 'Y', 'Z'))
+        self.geometry = collada.geometry.Geometry(self.dummy, "geometry0", "mygeometry",
+                                                  {"myfloatsource": self.floatsource})
+        self.geometry2 = collada.geometry.Geometry(self.dummy, "geometry1", "yourgeometry",
+                                                   {"myfloatsource": self.floatsource})
         self.dummy.geometries.append(self.geometry)
         self.dummy.geometries.append(self.geometry2)
 
     def test_scene_light_node_saving(self):
-        dirlight = collada.light.DirectionalLight("mydirlight", (1,1,1))
+        dirlight = collada.light.DirectionalLight("mydirlight", (1, 1, 1))
         lightnode = collada.scene.LightNode(dirlight)
         bindtest = list(lightnode.objects('light'))
         self.assertEqual(lightnode.light, dirlight)
@@ -107,16 +109,16 @@ class TestScene(unittest.TestCase):
         self.assertAlmostEqual(loaded_scale.z, 0.3)
 
     def test_scene_matrix_node(self):
-        matrix = collada.scene.MatrixTransform(numpy.array([1.0,0,0,2, 0,1,0,3, 0,0,1,4, 0,0,0,1]))
+        matrix = collada.scene.MatrixTransform(numpy.array([1.0, 0, 0, 2, 0, 1, 0, 3, 0, 0, 1, 4, 0, 0, 0, 1]))
         self.assertAlmostEqual(matrix.matrix[0][0], 1.0)
         self.assertIsNotNone(str(matrix))
         loaded_matrix = collada.scene.MatrixTransform.load(self.dummy, fromstring(tostring(matrix.xmlnode)))
         self.assertAlmostEqual(loaded_matrix.matrix[0][0], 1.0)
 
     def test_scene_lookat_node(self):
-        eye = numpy.array([2.0,0,3])
-        interest = numpy.array([0.0,0,0])
-        upvector = numpy.array([0.0,1,0])
+        eye = numpy.array([2.0, 0, 3])
+        interest = numpy.array([0.0, 0, 0])
+        upvector = numpy.array([0.0, 1, 0])
         lookat = collada.scene.LookAtTransform(eye, interest, upvector)
         self.assertListEqual(list(lookat.eye), list(eye))
         self.assertListEqual(list(lookat.interest), list(interest))
@@ -309,6 +311,7 @@ class TestScene(unittest.TestCase):
         self.assertEqual(loaded_scene.nodes[0].id, 'mynode')
         self.assertEqual(loaded_scene.nodes[1].id, 'othernode')
         self.assertEqual(loaded_scene.nodes[2].id, 'anothernode')
+
 
 if __name__ == '__main__':
     unittest.main()

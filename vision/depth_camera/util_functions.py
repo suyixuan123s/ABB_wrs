@@ -61,7 +61,7 @@ def registration_ptpt(src, tgt, downsampling_voxelsize=.003, toggledebug = False
         __draw_registration_result(source_down, target_down, result_global.transformation)
     distance_threshold = downsampling_voxelsize * 0.4
     if toggledebug:
-        print(":: Point-to-point ICP_Iterative_closest_point registration is applied on original point")
+        print(":: Point-to-point ICP registration is applied on original point")
         print("   clouds to refine the alignment. This time we use a strict")
         print("   distance threshold %.3f." % distance_threshold)
     return _registration_icp_ptpt_o3d(src_o3d, tgt_o3d, result_global.transformation, toggledebug=toggledebug)
@@ -140,7 +140,7 @@ def registration_ptpln(src, tgt, downsampling_voxelsize=2, toggledebug = False):
         __draw_registration_result(source_down, target_down, result_global.transformation)
     distance_threshold = downsampling_voxelsize * 0.4
     if toggledebug:
-        print(":: Point-to-plane ICP_Iterative_closest_point registration is applied on original point")
+        print(":: Point-to-plane ICP registration is applied on original point")
         print("   clouds to refine the alignment. This time we use a strict")
         print("   distance threshold %.3f." % distance_threshold)
     result_icp = o3d.pipelines.registration.registration_icp(

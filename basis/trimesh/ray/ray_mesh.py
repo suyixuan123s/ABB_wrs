@@ -1,5 +1,4 @@
 import numpy as np
-
 from ..util import Cache, unitize
 from ..grouping import unique_rows
 from ..intersections import plane_lines

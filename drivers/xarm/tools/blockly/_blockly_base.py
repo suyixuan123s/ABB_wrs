@@ -30,7 +30,7 @@ class _BlocklyBase(_BlocklyNode):
         self._funcs = {}
         self._define_is_prime_func = False
         self._define_bin_matchs_func = False
-    
+
     def _get_field_value(self, block):
         field = self._get_node('field', root=block)
         if field is not None:

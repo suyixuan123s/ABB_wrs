@@ -33,9 +33,9 @@ for step in [1, 2, 3, 4]:
         seed1[3] = -math.pi / 2
         seed1[4] = -math.pi / 2
         for tmb_x in [0, -.2]:
-            rbt_s.fix_to(pos=np.array([-1.726-0.35+tmb_x, 2.624-0.275, 5.323]), rotmat=np.eye(3))
+            rbt_s.fix_to(pos=np.array([-1.726 - 0.35 + tmb_x, 2.624 - 0.275, 5.323]), rotmat=np.eye(3))
             try:
-                jnt_values, _ = ik_s.solve(tgt_pos=tgt_pos, tgt_rotmat=tgt_rotmat, seed_jnt_values= rbt_s.arm.homeconf)
+                jnt_values, _ = ik_s.solve(tgt_pos=tgt_pos, tgt_rotmat=tgt_rotmat, seed_jnt_values=rbt_s.arm.homeconf)
             except:
                 continue
             # try:

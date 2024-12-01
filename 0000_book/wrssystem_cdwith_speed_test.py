@@ -34,7 +34,7 @@ if __name__ == '__main__':
     for i in range(100):
         mcd_result, cd_points = object1.is_mcdwith(object2, toggle_contacts=True)
     toc = time.time()
-    print(f"new time: {toc-tic}s")
+    print(f"new time: {toc - tic}s")
     for pnt in cd_points:
         gm.gen_sphere(pos=pnt, rgba=[1, 0, 0, 1], radius=.002).attach_to(base)
     print(mcd_result)
@@ -42,13 +42,13 @@ if __name__ == '__main__':
     for i in range(100):
         mcd_result = object1.is_pcdwith(object2)
     toc = time.time()
-    print(f"primitive time: {toc-tic}s")
-    object2.set_rotmat(rm.rotmat_from_axangle([0,0,1], -math.pi/6))
+    print(f"primitive time: {toc - tic}s")
+    object2.set_rotmat(rm.rotmat_from_axangle([0, 0, 1], -math.pi / 6))
     tic = time.time()
     for i in range(100):
         mcd_result, cd_points = object1.is_mcdwith(object2, toggle_contacts=True)
     toc = time.time()
-    print(f"new time: {toc-tic}s")
+    print(f"new time: {toc - tic}s")
     for pnt in cd_points:
         gm.gen_sphere(pos=pnt, rgba=[1, 0, 0, 1], radius=.002).attach_to(base)
     print(mcd_result)
@@ -69,10 +69,9 @@ if __name__ == '__main__':
     for i in range(100):
         mcd_result, cd_points = object3.is_mcdwith(object4, toggle_contacts=True)
     toc = time.time()
-    print(f"old time: {toc-tic}s")
+    print(f"old time: {toc - tic}s")
     for pnt in cd_points:
         gm.gen_sphere(pos=pnt, rgba=[1, 0, 0, 1], radius=.002).attach_to(base)
     print(mcd_result)
-
 
     base.run()

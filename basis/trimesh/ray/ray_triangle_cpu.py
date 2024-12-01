@@ -2,7 +2,6 @@
 Narrow phase ray- triangle intersection
 '''
 import numpy as np
-
 from ..constants import tol
 from ..util import diagonal_dot
 

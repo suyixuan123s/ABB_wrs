@@ -11,7 +11,7 @@ import os
 import environment.collisionmodel as cm
 import environment.bulletcdhelper as bch
 
-base = pc.World(camp = [3000,0,3000], lookatpos= [0, 0, 0])
+base = pc.World(camp=[3000, 0, 3000], lookatpos=[0, 0, 0])
 base.pggen.plotAxis(base.render)
 
 # shape = BulletBoxShape(Vec3(50, 200, 450))
@@ -37,6 +37,7 @@ world = BulletWorld()
 world.setGravity(Vec3(0, 0, -9.8))
 world.attach(bulletnode)
 
+
 def update(task):
     dt = globalClock.getDt()
     world.doPhysics(dt)
@@ -46,6 +47,7 @@ def update(task):
     # model.setMat(base.pg.np4ToMat4(rm.homobuild(rbd.pos, rbd.rotmat)))
 
     return task.cont
+
 
 taskMgr.add(update, 'update')
 base.run()

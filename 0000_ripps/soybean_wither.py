@@ -11,7 +11,7 @@ import robot_sim._kinematics.jlchain as jlc
 leaf_rgba = [45 / 255, 90 / 255, 39 / 255, 1]
 stem_rgba = [97 / 255, 138 / 255, 61 / 255, 1]
 earth_rgba = [66 / 255, 40 / 255, 14 / 255, 1]
-wither_rgba = [145/255, 115/255, 71/255, 1]
+wither_rgba = [145 / 255, 115 / 255, 71 / 255, 1]
 
 
 class Stem(object):
@@ -85,11 +85,12 @@ def gen_rotmat_list(nsample=None):
         return return_rotmat[0:nreturn:int(nreturn / nsample)]
     return return_rotmat
 
+
 def gen_wither_rotmat_list(nsample=None):
     rotmats = rm.gen_icorotmats(icolevel=3,
                                 rotation_interval=math.radians(3),
                                 crop_normal=np.array([0, 0, 1]),
-                                crop_angle=np.pi*1.3/3,
+                                crop_angle=np.pi * 1.3 / 3,
                                 toggle_flat=True)
     # return rotmats
     return_rotmat = []
@@ -100,6 +101,7 @@ def gen_wither_rotmat_list(nsample=None):
     if nsample is not None and nsample < nreturn:
         return return_rotmat[0:nreturn:int(nreturn / nsample)]
     return return_rotmat
+
 
 map_list = [leaf_rgba]
 #
@@ -133,7 +135,7 @@ base = wd.World(cam_pos=[1, 1, 1], auto_cam_rotate=False)
 # base.run()
 
 main_stem = Stem(pos=np.array([0, 0, .1]), ndof=main_stem_ndof)
-main_stem.fk(jnt_values=[math.pi / 36, math.pi / 36, 0, -math.pi / 36, -math.pi / 36, 0, 0,0,0,0,0])
+main_stem.fk(jnt_values=[math.pi / 36, math.pi / 36, 0, -math.pi / 36, -math.pi / 36, 0, 0, 0, 0, 0, 0])
 main_stem.gen_meshmodel(rgba=wither_rgba).attach_to(base)
 
 rotmat_list = gen_rotmat_list(2 ** main_stem_ndof)
@@ -183,9 +185,9 @@ for id, rotmat in enumerate(rotmat_list):
     #     select_id = 4
     # map_color = map_list[select_id]
     if height < .25:
-        this_rotmat = wither_rotmat_list[id%len(wither_rotmat_list)]
+        this_rotmat = wither_rotmat_list[id % len(wither_rotmat_list)]
         branch = Stem(ndof=1, pos=branch_pos,
-                      rotmat=this_rotmat, base_length=.1 / (height)**(1/2), base_thickness=.002)
+                      rotmat=this_rotmat, base_length=.1 / (height) ** (1 / 2), base_thickness=.002)
         branch.gen_meshmodel(rgba=wither_rgba).attach_to(base)
         # main_stem.fk(jnt_values=[math.pi/36,math.pi/36, 0,-math.pi/36,-math.pi/36,0])
         # stem1.gen_meshmodel().attach_to(base)
@@ -203,7 +205,7 @@ for id, rotmat in enumerate(rotmat_list):
         sbl.attach_to(base)
     else:
         branch = Stem(ndof=1, pos=branch_pos,
-                      rotmat=rotmat, base_length=.1 / (height)**(1/2), base_thickness=.002)
+                      rotmat=rotmat, base_length=.1 / (height) ** (1 / 2), base_thickness=.002)
         branch.gen_meshmodel(rgba=map_color).attach_to(base)
         # main_stem.fk(jnt_values=[math.pi/36,math.pi/36, 0,-math.pi/36,-math.pi/36,0])
         # stem1.gen_meshmodel().attach_to(base)

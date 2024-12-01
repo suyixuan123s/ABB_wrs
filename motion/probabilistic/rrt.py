@@ -17,11 +17,13 @@ class RRT(object):
         author: weiwei
         date: 20220404
         """
+
         def wrapper(self, component_name, *args, **kwargs):
             jnt_values_bk = self.robot_s.get_jnt_values(component_name)
             result = foo(self, component_name, *args, **kwargs)
             self.robot_s.fk(component_name=component_name, jnt_values=jnt_values_bk)
             return result
+
         return wrapper
 
     def __init__(self, robot_s):
@@ -73,7 +75,7 @@ class RRT(object):
         """
         nodes_dict = dict(roadmap.nodes(data='conf'))
         nodes_key_list = list(nodes_dict.keys())
-        nodes_value_list = list(nodes_dict.values()) # attention, correspondence is not guanranteed in python
+        nodes_value_list = list(nodes_dict.values())  # attention, correspondence is not guanranteed in python
         # use the following alternative if correspondence is bad (a bit slower), 20210523, weiwei
         # # nodes_value_list = list(nodes_dict.values())
         # nodes_value_list = itemgetter(*nodes_key_list)(nodes_dict)
@@ -97,11 +99,11 @@ class RRT(object):
         # switch to the following code for ful extensions
         if not exact_end:
             nval = math.ceil(len / ext_dist)
-            nval = 1 if nval == 0  else nval # at least include itself
+            nval = 1 if nval == 0 else nval  # at least include itself
             conf_array = np.linspace(conf1, conf1 + nval * ext_dist * vec, nval)
         else:
             nval = math.floor(len / ext_dist)
-            nval = 1 if nval == 0  else nval # at least include itself
+            nval = 1 if nval == 0 else nval  # at least include itself
             conf_array = np.linspace(conf1, conf1 + nval * ext_dist * vec, nval)
             conf_array = np.vstack((conf_array, conf2))
         return list(conf_array)
@@ -185,7 +187,7 @@ class RRT(object):
                                          conf=conf,
                                          obstacle_list=obstacle_list,
                                          otherrobot_list=otherrobot_list)
-                                                 for conf in shortcut):
+                   for conf in shortcut):
                 smoothed_path = smoothed_path[:i] + shortcut + smoothed_path[j + 1:]
             if animation:
                 self.draw_wspace([self.roadmap], self.start_conf, self.goal_conf,

@@ -20,6 +20,7 @@ _MSG_ASK_ISSUEREPORT = 'Your report to ' + \
                        'about the issue you are seeing is appreciated.'
 _MSG_RESTART_QNX = 'You may want to restart QNX/ControllerBox afterward'
 
+
 def delete_module(modname, paranoid=None):
     from sys import modules
     try:
@@ -48,6 +49,7 @@ def delete_module(modname, paranoid=None):
                     delattr(mod, symbol)
                 except AttributeError:
                     pass
+
 
 class HrpsysConfigurator2(HrpsysConfigurator):  ## JUST FOR TEST, REMOVE WHEN YOU MERGE
     default_frame_name = 'WAIST'
@@ -258,10 +260,10 @@ class HIRONX(HrpsysConfigurator2):
     #                    [0, 0, 0, 0],
     #                    [0, 0, 0, 0]]
     InitialPose = [[0], [0, 0],
-                    [-15, 0, -143, 0, 0, 0],
-                    [15, 0, -143, 0, 0, 0],
-                    [0, 0, 0, 0],
-                    [0, 0, 0, 0]]
+                   [-15, 0, -143, 0, 0, 0],
+                   [15, 0, -143, 0, 0, 0],
+                   [0, 0, 0, 0],
+                   [0, 0, 0, 0]]
     INITPOS_TYPE_EVEN = 0
     INITPOS_TYPE_FACTORY = 1
 
@@ -278,7 +280,6 @@ class HIRONX(HrpsysConfigurator2):
     _MSG_IMPEDANCE_CALL_DONE = (" call is done. This does't necessarily mean " +
                                 "the function call was successful, since not " +
                                 "all methods internally called return status")
-
 
     def __groups2flat(self, grouplist):
         """

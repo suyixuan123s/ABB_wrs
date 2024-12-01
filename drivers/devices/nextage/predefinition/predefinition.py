@@ -1,6 +1,7 @@
 import robotconn.rpc.nxtrobot.nxtlib.nextage_client as nextage_client
 from hrpsys import rtm
 
+
 def pred():
     host = "nxtlib"
     rtm.nshost = host

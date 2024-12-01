@@ -43,7 +43,7 @@ if __name__ == '__main__':
     ee_s = cbtg.CobottaPipette()
 
     pos, rotmat = tip_rack.get_rack_hole_pose(id_x=6, id_y=3)
-    z_offset = np.array([0,0,.03])
+    z_offset = np.array([0, 0, .03])
     utils.search_reachable_configuration(rbt_s=rbt_s,
                                          ee_s=ee_s,
                                          component_name="arm",

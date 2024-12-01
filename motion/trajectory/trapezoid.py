@@ -41,7 +41,7 @@ class TrajTrap(object):
         while True:
             slctn = np.logical_or(abs(self.t_middle - (self._interval_time - self.t_begin - self.t_end)) > .001,
                                   self.t_middle < 1e-6)
-            if np.any(np.logical_and(abs(self._interval_time - self.t_begin - self.t_end)<1e-6, self.t_middle>0)):
+            if np.any(np.logical_and(abs(self._interval_time - self.t_begin - self.t_end) < 1e-6, self.t_middle > 0)):
                 raise ValueError("The required time interval is too short!")
             # print(slctn)
             if np.any(slctn):
@@ -164,7 +164,7 @@ if __name__ == '__main__':
     # control_frequency = .005１
     # time_intervals = 15.0
     # y = [[0],[math.pi*3]]
-    y = [[math.pi / 6], [math.pi/2]]
+    y = [[math.pi / 6], [math.pi / 2]]
     control_frequency = .005
     interval_time = 3
     traj = TrajTrap()
@@ -175,10 +175,10 @@ if __name__ == '__main__':
     # interpolated_spds=np.array(interpolated_spds)
     # print(interpolated_confs)
     x = np.linspace(0, interval_time * (len(y) - 1), (len(y) - 1) * math.floor(interval_time / control_frequency))
-    fig, axs = plt.subplots(3, figsize=(3.5,4.75))
+    fig, axs = plt.subplots(3, figsize=(3.5, 4.75))
     fig.tight_layout(pad=.7)
     axs[0].plot(x, interpolated_confs)
-    axs[0].plot(range(0, interval_time * (len(y)), interval_time), y, '--o',color='tab:blue')
+    axs[0].plot(range(0, interval_time * (len(y)), interval_time), y, '--o', color='tab:blue')
     axs[1].plot(x, interpolated_spds)
     axs[2].plot(x, local_accs)
     # plt.quiver(x, interpolated_confs, x, interpolated_spds, width=.001)

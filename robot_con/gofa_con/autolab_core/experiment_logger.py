@@ -17,6 +17,7 @@ from .csv_model import CSVModel
 from .yaml_config import YamlConfig
 from .utils import gen_experiment_id
 
+
 class ExperimentLogger:
     """Abstract class for experiment logging.
 
@@ -69,7 +70,7 @@ class ExperimentLogger:
                 self.log_path = self.experiment_path
             if not os.path.exists(self.log_path):
                 os.makedirs(self.log_path)
-            experiment_log = os.path.join(self.log_path, '%s.log' %(self.id))
+            experiment_log = os.path.join(self.log_path, '%s.log' % (self.id))
             formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s')
             hdlr = logging.FileHandler(experiment_log)
             hdlr.setFormatter(formatter)

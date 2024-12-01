@@ -15,9 +15,11 @@ AWB = True
 
 # Face recognition and opencv setup
 cap = cv2.VideoCapture(URL + ":81/stream")
-face_classifier = cv2.CascadeClassifier('haarcascade_frontalface_alt.xml') # insert the full path to haarcascade file if you encounter any problem
+face_classifier = cv2.CascadeClassifier(
+    'haarcascade_frontalface_alt.xml')  # insert the full path to haarcascade file if you encounter any problem
 
-def set_resolution(url: str, index: int=1, verbose: bool=False):
+
+def set_resolution(url: str, index: int = 1, verbose: bool = False):
     try:
         if verbose:
             resolutions = "10: UXGA(1600x1200)\n9: SXGA(1280x1024)\n8: XGA(1024x768)\n7: SVGA(800x600)\n6: VGA(640x480)\n5: CIF(400x296)\n4: QVGA(320x240)\n3: HQVGA(240x176)\n0: QQVGA(160x120)"
@@ -30,20 +32,23 @@ def set_resolution(url: str, index: int=1, verbose: bool=False):
     except:
         print("SET_RESOLUTION: something went wrong")
 
-def set_quality(url: str, value: int=1, verbose: bool=False):
+
+def set_quality(url: str, value: int = 1, verbose: bool = False):
     try:
-        if value >= 10 and value <=63:
+        if value >= 10 and value <= 63:
             requests.get(url + "/control?var=quality&val={}".format(value))
     except:
         print("SET_QUALITY: something went wrong")
 
-def set_awb(url: str, awb: int=1):
+
+def set_awb(url: str, awb: int = 1):
     try:
         awb = not awb
         requests.get(url + "/control?var=awb&val={}".format(1 if awb else 0))
     except:
         print("SET_QUALITY: something went wrong")
     return awb
+
 
 if __name__ == '__main__':
     set_resolution(URL, index=8)

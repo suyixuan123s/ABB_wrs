@@ -10,6 +10,7 @@ import threading
 
 from robotconn.rpc.nxtrobot.nxtlib.command.abs_hand_command import AbsractHandCommand
 
+
 class AirhandReleaseThread(threading.Thread):
     """
     With airhand, to release by blowing air needs to be stopped after certain
@@ -17,6 +18,7 @@ class AirhandReleaseThread(threading.Thread):
     to have ample time for a reaction, is a good idea. This thread is used
     in order to do so without letting the computer program halt.
     """
+
     def __init__(self, command, sleeptime):
         """
         @type command: AirhandCommand
@@ -64,7 +66,7 @@ class AirhandCommand(AbsractHandCommand):
         """
         @see abs_hand_command.AbsractHandCommand._assign_dio_names
         """
-        #DIO reassignment for the class-specific purpose
+        # DIO reassignment for the class-specific purpose
         self._DIO_SUCTION_L_1 = dio_pins[0]
         self._DIO_SUCTION_L_2 = dio_pins[1]
         self._DIO_SUCTION_R_1 = dio_pins[2]

@@ -8,15 +8,24 @@ import open3d as o3d
 import numpy as np
 
 # 加载点云数据
-source = o3d.io.read_point_cloud("source_point_cloud.ply")  # 读取源点云
-target = o3d.io.read_point_cloud("target_point_cloud.ply")  # 读取目标点云
+# source = o3d.io.read_point_cloud("source_point_cloud.ply")  # 读取源点云
+# target = o3d.io.read_point_cloud("target_point_cloud.ply")  # 读取目标点云
+
+source = o3d.io.read_point_cloud("point_cloud.ply")  # 读取源点云
+target = o3d.io.read_point_cloud(
+    r"E:\ABB-Project\ABB_wrs\suyixuan\ABB\Task4_ICP_GOFA5\point_cloud\rack_5ml_green_point_cloud.ply")  # 读取目标点云
 
 # 设置不同颜色以区分点云
 source.paint_uniform_color([1, 0, 0])  # 红色
 target.paint_uniform_color([0, 1, 0])  # 绿色
 
 # 可视化原始点云（可选）
-o3d.visualization.draw_geometries([source, target], window_name="Before Registration", width=1024, height=768)
+print("显示源点云...")
+o3d.visualization.draw_geometries([source], window_name="source Registration", width=1024, height=768)
+
+# 可视化原始点云（可选）
+print("显示目标点云...")
+o3d.visualization.draw_geometries([target], window_name="target Registration", width=1024, height=768)
 
 # 设定一个初始粗对齐变换矩阵（接近于我们之前施加的旋转和平移）
 initial_guess = np.array([
@@ -33,8 +42,6 @@ initial_guess = np.array([
 # 使用 ICP 算法进行点云配准
 # pipelines.registration 模块在较新版本的 Open3D 中适用
 max_correspondence_distance = 0.5  # 最大匹配距离
-
-
 
 reg_icp = o3d.pipelines.registration.registration_icp(
     source, target, max_correspondence_distance, init=initial_guess,
@@ -61,7 +68,6 @@ source.transform(reg_icp.transformation)
 
 # 可视化对齐后的点云
 o3d.visualization.draw_geometries([source, target], window_name="After ICP Registration", width=1024, height=768)
-
 
 '''
 Fitness: 1.0

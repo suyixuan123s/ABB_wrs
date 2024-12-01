@@ -7,6 +7,7 @@ date: 20190417
 
 from robotconn.rpc.nxtrobot.nxtlib.command.abs_hand_command import AbsractHandCommand
 
+
 class HandlightCommand(AbsractHandCommand):
     """
     Following Command design pattern, this class represents commands
@@ -66,7 +67,7 @@ class HandlightCommand(AbsractHandCommand):
         """
         _result = True
         if self._hands.HAND_L == hand:
-#            _result = self.execute(on)
+            #            _result = self.execute(on)
             self.execute(on)
             _result = False
         elif self._hands.HAND_R == hand:

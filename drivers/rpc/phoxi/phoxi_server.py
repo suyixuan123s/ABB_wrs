@@ -101,7 +101,8 @@ class PhoxiServer(pxrpc.PhoxiServicer):
         """
         rgbtextureraw = self._pcins.getrgbtexture()
         rgbtexturearray = np.array(rgbtextureraw)
-        return pxmsg.CamImg(width=self._width, height=self._height, channel=3, image=np.ndarray.tobytes(rgbtexturearray))
+        return pxmsg.CamImg(width=self._width, height=self._height, channel=3,
+                            image=np.ndarray.tobytes(rgbtexturearray))
 
 
 def serve(serialno="2019-09-051-LC3", host="127.0.0.1:18300"):
@@ -123,6 +124,7 @@ def serve(serialno="2019-09-051-LC3", host="127.0.0.1:18300"):
             time.sleep(_ONE_DAY_IN_SECONDS)
     except KeyboardInterrupt:
         server.stop(0)
+
 
 if __name__ == "__main__":
     serve(serialno="2019-04-009-LC3", host="127.0.0.1:18300")

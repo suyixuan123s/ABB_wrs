@@ -83,36 +83,41 @@ def concentric_circle_hex_equipartition(layer, radians, start_rot_angle=0.):
 
 
 def gen_regpoly(radius, nedges=12):
-    angle_list = np.linspace(0, np.pi * 2, nedges+1, endpoint=True)
+    angle_list = np.linspace(0, np.pi * 2, nedges + 1, endpoint=True)
     x_vertex = np.sin(angle_list) * radius
     y_vertex = np.cos(angle_list) * radius
     return np.column_stack((x_vertex, y_vertex))
 
+
 def gen_2d_isosceles_verts(nlevel, edge_length, nedges=12):
-    xy_array = np.asarray([[0,0]])
+    xy_array = np.asarray([[0, 0]])
     for level in range(nlevel):
-        xy_vertex = gen_regpoly(radius=edge_length*(level+1), nedges=nedges)
+        xy_vertex = gen_regpoly(radius=edge_length * (level + 1), nedges=nedges)
         for i in range(nedges):
             xy_array = np.append(xy_array,
-                                np.linspace(xy_vertex[i, :], xy_vertex[i + 1, :], num=level + 1, endpoint=False),
-                                axis=0)
+                                 np.linspace(xy_vertex[i, :], xy_vertex[i + 1, :], num=level + 1, endpoint=False),
+                                 axis=0)
     return xy_array
+
 
 def gen_2d_equilateral_verts(nlevel, edge_length):
     return gen_2d_isosceles_verts(nlevel=nlevel, edge_length=edge_length, nedges=6)
 
+
 def gen_3d_isosceles_verts(pos, rotmat, nlevel=5, edge_length=0.001, nedges=12):
     xy_array = gen_2d_isosceles_verts(nlevel=nlevel, edge_length=edge_length, nedges=nedges)
-    xyz_array = np.pad(xy_array, ((0,0), (0,1)), mode='constant', constant_values=0)
-    return rotmat.dot((xyz_array+pos).T).T
+    xyz_array = np.pad(xy_array, ((0, 0), (0, 1)), mode='constant', constant_values=0)
+    return rotmat.dot((xyz_array + pos).T).T
+
 
 def gen_3d_equilateral_verts(pos, rotmat, nlevel=5, edge_length=0.001):
     return gen_3d_isosceles_verts(pos=pos, rotmat=rotmat, nlevel=nlevel, edge_length=edge_length, nedges=6)
 
+
 def gen_2d_equilaterial_verts(nlevel, edge_length):
     nangle = 12
     levels = np.arange(1, nlevel + 1, 1) * edge_length
-    angles = np.linspace(0, np.pi * 2, nangle+1, endpoint=True)
+    angles = np.linspace(0, np.pi * 2, nangle + 1, endpoint=True)
     x_verts = np.outer(levels, np.sin(angles)).flatten()
     y_verts = np.outer(levels, np.cos(angles)).flatten()
     xy_vertex = np.row_stack((x_verts, y_verts)).T
@@ -120,9 +125,11 @@ def gen_2d_equilaterial_verts(nlevel, edge_length):
     for level in range(nlevel):
         for i in range(nangle):
             xy_list = np.append(xy_list,
-                                np.linspace(xy_vertex[level*(nangle+1)+i, :], xy_vertex[level*(nangle+1)+i + 1, :], num=level + 1, endpoint=False),
+                                np.linspace(xy_vertex[level * (nangle + 1) + i, :],
+                                            xy_vertex[level * (nangle + 1) + i + 1, :], num=level + 1, endpoint=False),
                                 axis=0)
     return xy_list
+
 
 if __name__ == "__main__":
     tic = time.time()
@@ -137,7 +144,7 @@ if __name__ == "__main__":
     print(toc1 - tic)
     tic = time.time()
     for i in range(200):
-        xy_list = gen_2d_isosceles_verts(5, 1,12)
+        xy_list = gen_2d_isosceles_verts(5, 1, 12)
     toc1 = time.time()
     print(toc1 - tic)
     # for i in range(200):
@@ -149,6 +156,6 @@ if __name__ == "__main__":
     ax = fig.add_subplot(111)
     ax.set_aspect('equal', 'box')
 
-    plot.plot(xy_list[:,0], xy_list[:,1], "o-")
+    plot.plot(xy_list[:, 0], xy_list[:, 1], "o-")
     # plot.plot(x_list[:], y_list[:], "o-")
     plot.show()

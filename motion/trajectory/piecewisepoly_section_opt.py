@@ -171,7 +171,7 @@ class PiecewisePolySectionOpt(object):
             for sec in sections:
                 print(sec)
                 local_path = path[sec[0]:sec[-1] + 1]
-                print(sec[0], sec[-1]+1, samples_back_index_x, len(samples_back_index_x))
+                print(sec[0], sec[-1] + 1, samples_back_index_x, len(samples_back_index_x))
                 sid = np.where(samples_back_index_x == sec[0])[0][0]
                 eid = np.where(samples_back_index_x == sec[-1] + 1)[0][-1]
                 print(sid, eid)

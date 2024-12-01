@@ -11,12 +11,14 @@ from robotconn.rpc.nxtrobot.nxtlib.command.gripper_command import GripperCommand
 from robotconn.rpc.nxtrobot.nxtlib.command.handlight_command import HandlightCommand
 from robotconn.rpc.nxtrobot.nxtlib.command.toolchanger_command import ToolchangerCommand
 
+
 class Iros13Hands(BaseHands):
     """
     This class holds methods to operate the hands of NEXTAGE OPEN in a specific
     configuration where a clipping hand on left and suction hand on right
     connected to toolchanger module. This was presented at IROS 2013.
     """
+
     # TODO: Unittest is needed!!
 
     def __init__(self, parent):

@@ -11,6 +11,7 @@ import colorlog
 ROOT_LOG_LEVEL = logging.INFO
 ROOT_LOG_STREAM = sys.stdout
 
+
 def configure_root():
     """Configure the path logger."""
     root_logger = logging.getLogger()
@@ -25,20 +26,21 @@ def configure_root():
 
     # configure the path logger
     root_logger.setLevel(ROOT_LOG_LEVEL)
-    hdlr = logging.StreamHandler(ROOT_LOG_STREAM) 
+    hdlr = logging.StreamHandler(ROOT_LOG_STREAM)
     formatter = colorlog.ColoredFormatter(
-                        '%(purple)s%(name)-10s %(log_color)s%(levelname)-8s%(reset)s %(white)s%(message)s',
-                        reset=True,
-                        log_colors={
-                            'DEBUG': 'cyan',
-                            'INFO': 'green',
-                            'WARNING': 'yellow',
-                            'ERROR': 'red',
-                            'CRITICAL': 'red,bg_white',
-                        } 
-                                         )   
+        '%(purple)s%(name)-10s %(log_color)s%(levelname)-8s%(reset)s %(white)s%(message)s',
+        reset=True,
+        log_colors={
+            'DEBUG': 'cyan',
+            'INFO': 'green',
+            'WARNING': 'yellow',
+            'ERROR': 'red',
+            'CRITICAL': 'red,bg_white',
+        }
+    )
     hdlr.setFormatter(formatter)
     root_logger.addHandler(hdlr)
+
 
 def add_root_log_file(log_file):
     """
@@ -57,6 +59,7 @@ def add_root_log_file(log_file):
     hdlr.setFormatter(formatter)
     root_logger.addHandler(hdlr)
     root_logger.info('Root logger now logging to {}'.format(log_file))
+
 
 class Logger(object):
     ROOT_CONFIGURED = False
@@ -101,7 +104,7 @@ class Logger(object):
         if not Logger.ROOT_CONFIGURED:
             configure_root()
         Logger.ROOT_CONFIGURED = True
-        
+
         # build a logger
         logger = logging.getLogger(name)
         logger.setLevel(log_level)
@@ -117,7 +120,8 @@ class Logger(object):
             # otherwise add it to this particular logger
             else:
                 hdlr = logging.FileHandler(log_file)
-                formatter = logging.Formatter('%(asctime)s %(name)-10s %(levelname)-8s %(message)s', datefmt='%m-%d %H:%M:%S')
+                formatter = logging.Formatter('%(asctime)s %(name)-10s %(levelname)-8s %(message)s',
+                                              datefmt='%m-%d %H:%M:%S')
                 hdlr.setFormatter(formatter)
                 logger.addHandler(hdlr)
 
@@ -145,6 +149,7 @@ class Logger(object):
             add_root_log_file(log_file)
         else:
             hdlr = logging.FileHandler(log_file)
-            formatter = logging.Formatter('%(asctime)s %(name)-10s %(levelname)-8s %(message)s', datefmt='%m-%d %H:%M:%S')
+            formatter = logging.Formatter('%(asctime)s %(name)-10s %(levelname)-8s %(message)s',
+                                          datefmt='%m-%d %H:%M:%S')
             hdlr.setFormatter(formatter)
             logger.addHandler(hdlr)

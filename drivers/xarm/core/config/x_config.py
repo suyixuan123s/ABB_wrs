@@ -463,6 +463,3 @@ class XCONF(object):
         USE_PRIMITIVES = 20  # just for judgement, threshold.
         CYLINDER = 21  # radius, height
         BOX = 22  # x, y, z in tool coordinate direction
-
-
-

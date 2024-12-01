@@ -1,4 +1,3 @@
-
 HIGHLIGHT_BLOCKS = [
     'studio_play_recording',
     'studio_run_python',

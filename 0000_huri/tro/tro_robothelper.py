@@ -15,9 +15,10 @@ import environment.bulletcdhelper as bch
 import copy
 import os
 
+
 class RobotHelper(object):
 
-    def __init__(self, startworld=True, autorotate = False):
+    def __init__(self, startworld=True, autorotate=False):
         """
         helper function to simplify everything
         :return:
@@ -43,7 +44,7 @@ class RobotHelper(object):
         self.np = np
         self.rm = rm
         if startworld:
-            self.base = self.startworld(autorotate = autorotate)
+            self.base = self.startworld(autorotate=autorotate)
 
     def planmotion(self, initjnts, goaljnts, obscmlist, armname, expanddis=30):
         """
@@ -146,7 +147,7 @@ class RobotHelper(object):
                                   starttreesamplerate=starttreesamplerate,
                                   endtreesamplerate=endtreesamplerate, expanddis=10,
                                   maxiter=400, maxtime=15.0)
-        path, _ = planner.planninghold(objcmlist, objrelmatlist,obscmlist)
+        path, _ = planner.planninghold(objcmlist, objrelmatlist, obscmlist)
         if path is None:
             print("No path found in planning hold!")
         path = self.smoother.pathsmoothinghold(path, planner, maxiter=100)
@@ -230,7 +231,8 @@ class RobotHelper(object):
         if startarmjnts is None:
             startarmjnts = self.rbt.getarmjnts(armname)
         self.ctcallback.setarmname(armname=armname)
-        path = self.ctcallback.getLinearPrimitive(startarmjnts, -direction, distance, [], [[]], obstaclecmlist, type="sink")
+        path = self.ctcallback.getLinearPrimitive(startarmjnts, -direction, distance, [], [[]], obstaclecmlist,
+                                                  type="sink")
         if len(path) > 0:
             return path
         else:
@@ -253,13 +255,14 @@ class RobotHelper(object):
         if startarmjnts is None:
             startarmjnts = self.rbt.getarmjnts(armname)
         self.ctcallback.setarmname(armname=armname)
-        path = self.ctcallback.getLinearPrimitive(startarmjnts, direction, distance, [], [[]], obstaclecmlist, type="source")
+        path = self.ctcallback.getLinearPrimitive(startarmjnts, direction, distance, [], [[]], obstaclecmlist,
+                                                  type="source")
         if len(path) > 0:
             return path
         else:
             return None
 
-    def startworld(self, autorotate = False):
+    def startworld(self, autorotate=False):
         """
 
         :return:
@@ -275,10 +278,11 @@ class RobotHelper(object):
         # base.run()
         return self.base
 
+
 class RobotHelperX(RobotHelper):
 
-    def __init__(self, startworld=True, usereal = True, autorotate = False):
-        super(RobotHelperX, self).__init__(startworld=startworld, autorotate = autorotate)
+    def __init__(self, startworld=True, usereal=True, autorotate=False):
+        super(RobotHelperX, self).__init__(startworld=startworld, autorotate=autorotate)
         import robotconn.yumirapid.yumi_robot as yr
         import robotconn.yumirapid.yumi_state as ys
         import robotconn.rpc.phoxi.phoxi_client as pcdt
@@ -315,7 +319,7 @@ class RobotHelperX(RobotHelper):
     def opengripperx(self, armname):
         armx = self.rbtx.right if armname is "rgt" else self.rbtx.left
         hndfa = self.rgthndfa if armname is "rgt" else self.lfthndfa
-        armx.move_gripper(hndfa.jawwidthopen/2000)
+        armx.move_gripper(hndfa.jawwidthopen / 2000)
 
     def closegripperx(self, armname):
         armx = self.rbtx.right if armname is "rgt" else self.rbtx.left
@@ -366,7 +370,7 @@ class RobotHelperX(RobotHelper):
         # base = pandactrl.World(camp=[2700, -2000, 2000], lookatp=[0, 0, 500])
         # rbtnp is the plot for the simulated robot_s
         rbtnp = self.rbtmesh.genmnp(self.rbt)
-        rbtnp.setColor(1,0,.3,1)
+        rbtnp.setColor(1, 0, .3, 1)
         rbtnp.reparentTo(self.base.render)
         # rbtxnp is the plot for the real robot_s
         rbt_rbtx = copy.deepcopy(self.rbt)
@@ -376,9 +380,10 @@ class RobotHelperX(RobotHelper):
         rbtxnp.reparentTo(self.base.render)
         self.base.run()
 
+
 if __name__ == "__main__":
     import motion.trajectory as traj
-    
+
     rhx = RobotHelperX(usereal=True)
     rhx.gethcimg("lft")
     # rhx.show()
@@ -392,8 +397,8 @@ if __name__ == "__main__":
     # rhx.opengripperx(arm_name="rgt")
     # rhx.opengripperx(arm_name="lft")
     rhx.show()
-    eepos = np.array([300,-100,300])
-    eerot = np.array([[0,0,1],[1,0,0],[0,1,0]]).T
+    eepos = np.array([300, -100, 300])
+    eerot = np.array([[0, 0, 1], [1, 0, 0], [0, 1, 0]]).T
     goaljnts = rhx.rbt.numik(eepos, eerot, armname="rgt")
     initjnts = rhx.getarmjntsx(armname="rgt")
     print(goaljnts)

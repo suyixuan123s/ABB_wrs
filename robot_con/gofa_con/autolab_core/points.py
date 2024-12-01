@@ -9,6 +9,7 @@ import numpy as np
 
 from .primitives import Box
 
+
 class BagOfPoints(object):
     """The abstract base class for collections of 3D point clouds.
     """
@@ -59,8 +60,8 @@ class BagOfPoints(object):
         :obj:`numpy.ndarray` of float
             The same data array, but reshapes lists to be dim x 1.
         """
-        if len(data.shape) == 1: 
-            data = data[:,np.newaxis]
+        if len(data.shape) == 1:
+            data = data[:, np.newaxis]
         return data
 
     @property
@@ -128,7 +129,7 @@ class BagOfPoints(object):
         elif file_ext == '.npz':
             np.savez_compressed(filename, self._data)
         else:
-            raise ValueError('Extension %s not supported for point saves.' %(file_ext))
+            raise ValueError('Extension %s not supported for point saves.' % (file_ext))
 
     def load_data(filename):
         """Loads data from a file.
@@ -155,7 +156,7 @@ class BagOfPoints(object):
         elif file_ext == '.npz':
             data = np.load(filename)['arr_0']
         else:
-            raise ValueError('Extension %s not supported for point reads' %(file_ext))
+            raise ValueError('Extension %s not supported for point reads' % (file_ext))
         return data
 
     def __getitem__(self, i):
@@ -173,25 +174,27 @@ class BagOfPoints(object):
         """
         if isinstance(i, int):
             if i >= self.num_points:
-                raise ValueError('Index %d is out of bounds' %(i))
-            return Point(self._data[:,i], self._frame)
+                raise ValueError('Index %d is out of bounds' % (i))
+            return Point(self._data[:, i], self._frame)
         if isinstance(i, list):
             i = np.array(i)
         if isinstance(i, np.ndarray):
             if np.max(i) >= self.num_points:
-                raise ValueError('Index %d is out of bounds' %(np.max(i)))
-            return PointCloud(self._data[:,i], self._frame)
+                raise ValueError('Index %d is out of bounds' % (np.max(i)))
+            return PointCloud(self._data[:, i], self._frame)
         if isinstance(i, slice):
-            return PointCloud(self._data[:,i], self._frame)
-        raise ValueError('Type %s not supported for indexing' %(type(i)))
+            return PointCloud(self._data[:, i], self._frame)
+        raise ValueError('Type %s not supported for indexing' % (type(i)))
 
     def __str__(self):
         return str(self.data)
+
 
 class BagOfVectors(BagOfPoints):
     """The base class for collections of 3D vectors.
     """
     pass
+
 
 class Point(BagOfPoints):
     """A single 3D point.
@@ -223,7 +226,7 @@ class Point(BagOfPoints):
             If the data is not of the correct shape.
         """
         if len(data.shape) == 2 and data.shape[1] != 1:
-            raise ValueError('Can only initialize Point from a single Nx1 array') 
+            raise ValueError('Can only initialize Point from a single Nx1 array')
 
     @property
     def vector(self):
@@ -254,7 +257,7 @@ class Point(BagOfPoints):
         """float: The point value at the given dimension.
         """
         return self.vector[dim]
-    
+
     def __add__(self, other_pt):
         """Add two Points together.
 
@@ -323,7 +326,7 @@ class Point(BagOfPoints):
         """
         if isinstance(mult, numbers.Number):
             return Point(mult * self._data, self._frame)
-        raise ValueError('Type %s not supported. Only scalar multiplication is supported' %(type(mult)))
+        raise ValueError('Type %s not supported. Only scalar multiplication is supported' % (type(mult)))
 
     def __rmul__(self, mult):
         """Multiply the point by a scalar.
@@ -364,7 +367,7 @@ class Point(BagOfPoints):
             If div is not a scalar value.
         """
         if not isinstance(div, numbers.Number):
-            raise ValueError('Type %s not supported. Only scalar division is supported' %(type(div)))
+            raise ValueError('Type %s not supported. Only scalar division is supported' % (type(div)))
         return self.__mul__(1.0 / div)
 
     @staticmethod
@@ -387,9 +390,11 @@ class Point(BagOfPoints):
         data = BagOfPoints.load_data(filename)
         return Point(data, frame)
 
+
 class Direction(BagOfVectors):
     """A single directional vector.
     """
+
     def __init__(self, data, frame):
         """Initialize a Direction.
 
@@ -417,7 +422,7 @@ class Direction(BagOfVectors):
             normed.
         """
         if len(data.shape) == 2 and data.shape[1] != 1:
-            raise ValueError('Can only initialize Direction from a single Nx1 array') 
+            raise ValueError('Can only initialize Direction from a single Nx1 array')
         if np.abs(np.linalg.norm(data) - 1.0) > 1e-4:
             raise ValueError('Direction data must have norm=1.0')
 
@@ -467,6 +472,7 @@ class Direction(BagOfVectors):
         """
         data = BagOfPoints.load_data(filename)
         return Direction(data, frame)
+
 
 class Plane3D(object):
     """A plane in three dimensions.
@@ -527,6 +533,7 @@ class Plane3D(object):
         below_data = point_cloud.data[:, below_plane]
         return PointCloud(above_data, point_cloud.frame), PointCloud(below_data, point_cloud.frame)
 
+
 class PointCloud(BagOfPoints):
     """A set of points.
     """
@@ -568,21 +575,21 @@ class PointCloud(BagOfPoints):
         """:obj:`numpy.ndarray` of float : An array containing all x coordinates
         in the cloud.
         """
-        return self._data[0,:]
+        return self._data[0, :]
 
     @property
     def y_coords(self):
         """:obj:`numpy.ndarray` of float : An array containing all y coordinates
         in the cloud.
         """
-        return self._data[1,:]
+        return self._data[1, :]
 
     @property
     def z_coords(self):
         """:obj:`numpy.ndarray` of float : An array containing all z coordinates
         in the cloud.
         """
-        return self._data[2,:]
+        return self._data[2, :]
 
     def mean(self):
         """Returns the average point in the cloud.
@@ -619,7 +626,7 @@ class PointCloud(BagOfPoints):
         if random:
             np.random.shuffle(indices)
         subsample_inds = indices[::rate]
-        subsampled_data = self._data[:,subsample_inds]
+        subsampled_data = self._data[:, subsample_inds]
         return PointCloud(subsampled_data, self._frame), subsample_inds
 
     def box_mask(self, box):
@@ -683,7 +690,7 @@ class PointCloud(BagOfPoints):
         """
         points_of_interest = np.where(self.z_coords != 0.0)[0]
         return points_of_interest
-        
+
     def remove_zero_points(self):
         """Removes points with a zero in the z-axis.
 
@@ -703,7 +710,7 @@ class PointCloud(BagOfPoints):
         """
         points_of_interest = np.where(np.all(np.isfinite(self.data), axis=0))[0]
         self._data = self.data[:, points_of_interest]
-        
+
     def __add__(self, other_pc):
         """Add two PointClouds together element-wise.
 
@@ -768,7 +775,7 @@ class PointCloud(BagOfPoints):
         """
         if isinstance(mult, numbers.Number):
             return PointCloud(mult * self._data, self._frame)
-        raise ValueError('Type %s not supported. Only scalar multiplication is supported' %(type(mult)))
+        raise ValueError('Type %s not supported. Only scalar multiplication is supported' % (type(mult)))
 
     def __rmul__(self, mult):
         """Multiply each point in the cloud by a scalar.
@@ -810,7 +817,7 @@ class PointCloud(BagOfPoints):
             If div is not a scalar value.
         """
         if not isinstance(div, numbers.Number):
-            raise ValueError('Type %s not supported. Only scalar division is supported' %(type(div)))
+            raise ValueError('Type %s not supported. Only scalar division is supported' % (type(div)))
         return self.__mul__(1.0 / div)
 
     @staticmethod
@@ -833,9 +840,11 @@ class PointCloud(BagOfPoints):
         data = BagOfPoints.load_data(filename)
         return PointCloud(data, frame)
 
+
 class NormalCloud(BagOfVectors):
     """A set of normal vectors.
     """
+
     def __init__(self, data, frame='unspecified'):
         """Initialize a NormalCloud.
 
@@ -878,21 +887,21 @@ class NormalCloud(BagOfVectors):
         """:obj:`numpy.ndarray` of float : An array containing all x coordinates
         in the cloud.
         """
-        return self._data[0,:]
+        return self._data[0, :]
 
     @property
     def y_coords(self):
         """:obj:`numpy.ndarray` of float : An array containing all y coordinates
         in the cloud.
         """
-        return self._data[1,:]
+        return self._data[1, :]
 
     @property
     def z_coords(self):
         """:obj:`numpy.ndarray` of float : An array containing all z coordinates
         in the cloud.
         """
-        return self._data[2,:]
+        return self._data[2, :]
 
     def subsample(self, rate):
         """Returns a subsampled version of the NormalCloud.
@@ -915,7 +924,7 @@ class NormalCloud(BagOfVectors):
         if type(rate) != int and rate < 1:
             raise ValueError('Can only subsample with strictly positive integer rate')
         subsample_inds = np.arange(self.num_points)[::rate]
-        subsampled_data = self._data[:,subsample_inds]
+        subsampled_data = self._data[:, subsample_inds]
         return NormalCloud(subsampled_data, self._frame)
 
     def remove_zero_normals(self):
@@ -957,6 +966,7 @@ class NormalCloud(BagOfVectors):
         """
         data = BagOfPoints.load_data(filename)
         return NormalCloud(data, frame)
+
 
 class ImageCoords(BagOfPoints):
     """A set of 2D image coordinates.
@@ -1002,14 +1012,14 @@ class ImageCoords(BagOfPoints):
         """:obj:`numpy.ndarray` of float : The set of i-coordinates
         (those in the second row of the data matrix).
         """
-        return self._data[1,:]
+        return self._data[1, :]
 
     @property
     def j_coords(self):
         """:obj:`numpy.ndarray` of float : The set of j-coordinates
         (those in the first row of the data matrix).
         """
-        return self._data[0,:]
+        return self._data[0, :]
 
     @staticmethod
     def open(filename, frame='unspecified'):
@@ -1030,6 +1040,7 @@ class ImageCoords(BagOfPoints):
         """
         data = BagOfPoints.load_data(filename)
         return ImageCoords(data, frame)
+
 
 class RgbCloud(BagOfPoints):
     """A set of colors.
@@ -1073,21 +1084,21 @@ class RgbCloud(BagOfPoints):
         """:obj:`numpy.ndarray` of uint8 : An array containing all red values
         in the cloud.
         """
-        return self._data[0,:]
+        return self._data[0, :]
 
     @property
     def green(self):
         """:obj:`numpy.ndarray` of uint8 : An array containing all green values
         in the cloud.
         """
-        return self._data[1,:]
+        return self._data[1, :]
 
     @property
     def blue(self):
         """:obj:`numpy.ndarray` of uint8 : An array containing all blue values
         in the cloud.
         """
-        return self._data[2,:]
+        return self._data[2, :]
 
     @staticmethod
     def open(filename, frame='unspecified'):
@@ -1108,6 +1119,7 @@ class RgbCloud(BagOfPoints):
         """
         data = BagOfPoints.load_data(filename)
         return RgbCloud(data, frame)
+
 
 class RgbPointCloud(object):
     """A combined set of 3D points and RGB colors.
@@ -1137,6 +1149,7 @@ class RgbPointCloud(object):
             The ith point and the ith color.
         """
         return self.point_cloud[i], self.rgb_cloud[i]
+
 
 class PointNormalCloud(object):
     """A combined set of 3D points and normal vectors.
@@ -1205,9 +1218,8 @@ class PointNormalCloud(object):
         ----
         This returns nothing and updates the NormalCloud in-place.
         """
-        points_of_interest = np.where((np.linalg.norm(self.point_cloud.data, axis=0) != 0.0)  &
+        points_of_interest = np.where((np.linalg.norm(self.point_cloud.data, axis=0) != 0.0) &
                                       (np.linalg.norm(self.normal_cloud.data, axis=0) != 0.0) &
-                                      (np.isfinite(self.normal_cloud.data[0,:])))[0]
+                                      (np.isfinite(self.normal_cloud.data[0, :])))[0]
         self.point_cloud._data = self.point_cloud.data[:, points_of_interest]
         self.normal_cloud._data = self.normal_cloud.data[:, points_of_interest]
-

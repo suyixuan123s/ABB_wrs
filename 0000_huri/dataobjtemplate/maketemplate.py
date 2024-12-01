@@ -18,20 +18,19 @@ if __name__ == '__main__':
     # base.run()
 
     # tubestand_light
-    vhcm = cm.CollisionModel(os.path.join(yhx.root,  "objects",  "vacuumhead.stl"))
+    vhcm = cm.CollisionModel(os.path.join(yhx.root, "objects", "vacuumhead.stl"))
     vhpcd, _ = vhcm.samplesurface(radius=2)
-    vhpcd = vhpcd[vhpcd[:,1]<-5]
+    vhpcd = vhpcd[vhpcd[:, 1] < -5]
     #
     pickle.dump(vhpcd, open(os.path.join(yhx.root, "dataobjtemplate", "vacuumhead_templatepcd.pkl"), "wb"))
     pcdcm = cm.CollisionModel(vhpcd)
     pcdcm.reparentTo(yhx.base.render)
     yhx.base.run()
 
-
     # tubestand_light
-    tscm = cm.CollisionModel(os.path.join(yhx.root,  "objects",  "tubestand_light.stl"))
+    tscm = cm.CollisionModel(os.path.join(yhx.root, "objects", "tubestand_light.stl"))
     tspcd, _ = tscm.samplesurface(radius=2)
-    tspcd = tspcd[tspcd[:,2]>55]
+    tspcd = tspcd[tspcd[:, 2] > 55]
     #
     pickle.dump(tspcd, open(os.path.join(yhx.root, "dataobjtemplate", "tubestand_light_templatepcd.pkl"), "wb"))
     pcdcm = cm.CollisionModel(tspcd)

@@ -76,13 +76,12 @@ if __name__ == '__main__':
     planner = rrtc.RRTConnect(rbt_s)
     ee_s = cbtg.CobottaPipette()
 
-
     id_x = 6
     id_y = 3
     tip_pos, tip_rotmat = tip_rack.get_rack_hole_pose(id_x=id_x, id_y=id_y)
     z_offset = np.array([0, 0, .02])
-    base.change_campos_and_lookat_pos(cam_pos=[.3, .0, .12], lookat_pos=tip_pos+z_offset)
-    spiral_points = rm.gen_3d_equilateral_verts(pos=tip_pos+z_offset, rotmat=tip_rotmat)
+    base.change_campos_and_lookat_pos(cam_pos=[.3, .0, .12], lookat_pos=tip_pos + z_offset)
+    spiral_points = rm.gen_3d_equilateral_verts(pos=tip_pos + z_offset, rotmat=tip_rotmat)
     print(spiral_points)
     pre_point = None
     for point in spiral_points:
@@ -100,14 +99,17 @@ if __name__ == '__main__':
                                                                         obstacle_list=[frame_bottom])
     if goal_joint_values_attachment is not None:
         rbt_s.fk(component_name=component_name, jnt_values=goal_joint_values_attachment)
-        rbt_s.gen_meshmodel(rgba=[1,1,1,.9]).attach_to(base)
+        rbt_s.gen_meshmodel(rgba=[1, 1, 1, .9]).attach_to(base)
 
     # rotated rack
-    tip_rack_rotated=tip_rack.copy()
+    tip_rack_rotated = tip_rack.copy()
     tip_rack_rotated.set_rgba([140 / 255, 110 / 255, 170 / 255, 1])
     # tip_rack_rotated.set_pose(pos=np.array([.25, 0.0, .003]), rotmat=rm.rotmat_from_axangle([0, 0, 1], np.pi / 2))
     # tip_rack_rotated.set_pose(pos=np.array([tip_pos[0], tip_pos[1],.003]), rotmat=rm.rotmat_from_axangle([0, 0, 1], np.pi / 2+np.pi/8))
-    tip_rack_rotated.set_pose(pos=np.array([tip_pos[0], tip_pos[1],.003])+rm.rotmat_from_axangle([0, 0, 1], np.pi/6).dot(np.array([.25, 0.0, .003])-np.array([tip_pos[0], tip_pos[1],.003])), rotmat=rm.rotmat_from_axangle([0, 0, 1], np.pi / 2+np.pi/6))
+    tip_rack_rotated.set_pose(
+        pos=np.array([tip_pos[0], tip_pos[1], .003]) + rm.rotmat_from_axangle([0, 0, 1], np.pi / 6).dot(
+            np.array([.25, 0.0, .003]) - np.array([tip_pos[0], tip_pos[1], .003])),
+        rotmat=rm.rotmat_from_axangle([0, 0, 1], np.pi / 2 + np.pi / 6))
     tip_rack_rotated.attach_to(base)
 
     tip_cm_list = []
