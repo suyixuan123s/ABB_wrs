@@ -162,12 +162,18 @@ class Dh60(gp.GripperInterface):
                        toggle_tcpcs=False,
                        toggle_jntscs=False,
                        toggle_connjnt=False,
-                       name='dh60'):
+                       name='lite6wrs_gripper_stickmodel'):
         stickmodel = mc.ModelCollection(name=name)
         self.coupling.gen_stickmodel(tcp_loc_pos=None,
                                      tcp_loc_rotmat=None,
                                      toggle_tcpcs=False,
                                      toggle_jntscs=toggle_jntscs).attach_to(stickmodel)
+        self.body.gen_stickmodel(tcp_jnt_id=tcp_jnt_id,
+                                 tcp_loc_pos=tcp_loc_pos,
+                                 tcp_loc_rotmat=tcp_loc_rotmat,
+                                 toggle_tcpcs=False,
+                                 toggle_jntscs=toggle_jntscs,
+                                 toggle_connjnt=toggle_connjnt).attach_to(stickmodel)
         self.lft.gen_stickmodel(tcp_jnt_id=tcp_jnt_id,
                                 tcp_loc_pos=tcp_loc_pos,
                                 tcp_loc_rotmat=tcp_loc_rotmat,
@@ -198,8 +204,13 @@ class Dh60(gp.GripperInterface):
                       toggle_tcpcs=False,
                       toggle_jntscs=False,
                       rgba=None,
-                      name='dh60'):
+                      name='xc330gripper'):
         meshmodel = mc.ModelCollection(name=name)
+        # self.coupling.gen_meshmodel(tcp_loc_pos=None,
+        #                             tcp_loc_rotmat=None,
+        #                             toggle_tcpcs=False,
+        #                             toggle_jntscs=toggle_jntscs,
+        #                             rgba=rgba).attach_to(meshmodel)
         self.lft.gen_meshmodel(tcp_jnt_id=tcp_jnt_id,
                                tcp_loc_pos=tcp_loc_pos,
                                tcp_loc_rotmat=tcp_loc_rotmat,
@@ -250,6 +261,4 @@ if __name__ == '__main__':
     grpr.open()
     # grpr.jaw_to(0.03)
     grpr.gen_meshmodel().attach_to(base)
-    grpr.show_cdprimit()
-    # grpr.gen_meshmodel().attach_to(base)
     base.run()

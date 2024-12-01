@@ -2,7 +2,7 @@ if __name__ == '__main__':
     import math
     import numpy as np
     import basis.robot_math as rm
-    import robot_sim.robots.GOFA5.GOFA5 as cbt
+    import robot_sim.robots.gofa5.gofa5 as cbt
     import robot_con.cobotta.cobotta_x as cbtx
     import motion.probabilistic.rrt_connect as rrtc
     import visualization.panda.world as wd

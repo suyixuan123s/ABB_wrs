@@ -12,16 +12,16 @@ import visualization.panda.world as wd
 from panda3d.core import CollisionNode, CollisionBox, Point3
 
 
-class GOFA5(ri.RobotInterface):  #定义机器人类：Task4_ICP_GOFA5，继承自ri.RobotInterface类
+class GOFA5(ri.RobotInterface):  # 定义机器人类：gofa5，继承自ri.RobotInterface类
 
-    def __init__(self, pos=np.zeros(3), rotmat=np.eye(3), name="Task4_ICP_GOFA5", enable_cc=True):
+    def __init__(self, pos=np.zeros(3), rotmat=np.eye(3), name="gofa5", enable_cc=True):
         super().__init__(pos=pos, rotmat=rotmat, name=name)
         this_dir, this_filename = os.path.split(__file__)
         # base plate
         self.base_stand = jl.JLChain(pos=pos,
                                      rotmat=rotmat,
                                      homeconf=np.zeros(0),
-                                     name='base_stand')          #创建一个base_stand属性，是一个jl.JLchain的实例
+                                     name='base_stand')  # 创建一个base_stand属性，是一个jl.JLchain的实例
 
         self.base_stand.lnks[0]['collision_model'] = cm.CollisionModel(
             os.path.join(this_dir, "meshes", "base_plate.stl"),
@@ -31,21 +31,21 @@ class GOFA5(ri.RobotInterface):  #定义机器人类：Task4_ICP_GOFA5，继承�
         self.base_stand.reinitialize()
         # arm
         arm_homeconf = np.zeros(6)
-        self.arm = gf.GOFA5(pos=pos,     #创建一个arm属性，是一个GOFA5类的实例
+        self.arm = gf.GOFA5(pos=pos,  # 创建一个arm属性，是一个GOFA5类的实例
                             rotmat=self.base_stand.jnts[-1]['gl_rotmatq'],
                             homeconf=arm_homeconf,
                             name='arm', enable_cc=False)
         # gripper
-        self.hnd = hnd.Robotiq85(pos=self.arm.jnts[-1 ]['gl_posq'],   #创建一个hnd属性，是一个Robotiq85类的实例
-                                   rotmat=self.arm.jnts[-1 ]['gl_rotmatq'],
-                            name='hnd_s', enable_cc=False)
+        self.hnd = hnd.Robotiq85(pos=self.arm.jnts[-1]['gl_posq'],  # 创建一个hnd属性，是一个Robotiq85类的实例
+                                 rotmat=self.arm.jnts[-1]['gl_rotmatq'],
+                                 name='hnd_s', enable_cc=False)
 
         # tool center point
-        self.arm.jlc.tcp_jnt_id = -1    #设置末端执行器的位置和姿态
+        self.arm.jlc.tcp_jnt_id = -1  # 设置末端执行器的位置和姿态
         self.arm.jlc.tcp_loc_pos = self.hnd.jaw_center_pos
         self.arm.jlc.tcp_loc_rotmat = self.hnd.jaw_center_rotmat
         # a list of detailed information about objects in hand, see CollisionChecker.add_objinhnd
-        self.oih_infos = []     #创建oih_infos属性，具体信息有待添加
+        self.oih_infos = []  # 创建oih_infos属性，具体信息有待添加
         # collision detection
         if enable_cc:
             self.enable_cc()
@@ -60,18 +60,18 @@ class GOFA5(ri.RobotInterface):  #定义机器人类：Task4_ICP_GOFA5，继承�
         collision_node = CollisionNode(name)
         # collision_primitive_c0 = CollisionBox(Point3(-0.1, 0.0, 0.14 - 0.82),
         #                                     x=.35 + radius, y=.3 + radius, z=.14 + radius)
-        #collision_node.addSolid(collision_primitive_c0)
+        # collision_node.addSolid(collision_primitive_c0)
         collision_primitive_c1 = CollisionBox(Point3(0.0, 0.0, .1),
                                               x=.112 + radius, y=.112 + radius, z=.2 + radius)
         collision_node.addSolid(collision_primitive_c1)
-        return collision_node  #创建碰撞盒模型
+        return collision_node  # 创建碰撞盒模型
 
-    def enable_cc(self):  #碰撞检测
+    def enable_cc(self):  # 碰撞检测
         # TODO when pose is changed, oih info goes wrong
         super().enable_cc()
         self.cc.add_cdlnks(self.base_stand, [0])
         self.cc.add_cdlnks(self.arm, [1, 2, 3, 4, 5, 6])
-        self.cc.add_cdlnks(self.hnd.lft_outer, [0, 1, 2, 3])   #？为什么是[0, 1, 2, 3]和[1, 2, 3]
+        self.cc.add_cdlnks(self.hnd.lft_outer, [0, 1, 2, 3])  # ？为什么是[0, 1, 2, 3]和[1, 2, 3]
         self.cc.add_cdlnks(self.hnd.rgt_outer, [1, 2, 3])
         activelist = [self.base_stand.lnks[0],
                       self.arm.lnks[1],
@@ -104,7 +104,7 @@ class GOFA5(ri.RobotInterface):  #定义机器人类：Task4_ICP_GOFA5，继承�
         self.cc.set_cdpair(fromlist, intolist)
         for oih_info in self.oih_infos:
             objcm = oih_info['collision_model']
-            self.hold(objcm)  #？确保机器人手持物体的碰撞模型与其他物体进行正确的碰撞检测
+            self.hold(objcm)  # ？确保机器人手持物体的碰撞模型与其他物体进行正确的碰撞检测
 
     def fix_to(self, pos, rotmat):
         self.pos = pos
@@ -119,8 +119,7 @@ class GOFA5(ri.RobotInterface):  #定义机器人类：Task4_ICP_GOFA5，继承�
             obj_info['gl_pos'] = gl_pos
             obj_info['gl_rotmat'] = gl_rotmat
 
-
-    def fk(self, component_name='arm', jnt_values=np.zeros(6)):     #定义fk方法
+    def fk(self, component_name='arm', jnt_values=np.zeros(6)):  # 定义fk方法
         """
         :param jnt_values: 7 or 3+7, 3=agv, 7=arm, 1=grpr; metrics: meter-radian
         :param component_name: 'arm', 'agv', or 'all'
@@ -129,7 +128,7 @@ class GOFA5(ri.RobotInterface):  #定义机器人类：Task4_ICP_GOFA5，继承�
         date: 20201208toyonaka
         """
 
-        def update_oih(component_name='arm'):   #定义了update_oih 的方法
+        def update_oih(component_name='arm'):  # 定义了update_oih 的方法
             for obj_info in self.oih_infos:
                 gl_pos, gl_rotmat = self.cvt_loc_tcp_to_gl(component_name, obj_info['rel_pos'], obj_info['rel_rotmat'])
                 obj_info['gl_pos'] = gl_pos
@@ -235,7 +234,7 @@ class GOFA5(ri.RobotInterface):  #定义机器人类：Task4_ICP_GOFA5，继承�
         self.hnd.gen_stickmodel(toggle_tcpcs=False,
                                 toggle_jntscs=toggle_jntscs).attach_to(stickmodel)
         self.machine.gen_stickmodel(toggle_tcpcs=False,
-                                toggle_jntscs=toggle_jntscs).attach_to(stickmodel)
+                                    toggle_jntscs=toggle_jntscs).attach_to(stickmodel)
         return stickmodel
 
     def gen_meshmodel(self,
@@ -266,8 +265,8 @@ class GOFA5(ri.RobotInterface):  #定义机器人类：Task4_ICP_GOFA5，继承�
                                    rgba=rgba).attach_to(meshmodel)
         if is_machine:
             self.machine.gen_meshmodel(toggle_tcpcs=False,
-                               toggle_jntscs=toggle_jntscs,
-                               rgba=rgba).attach_to(meshmodel)
+                                       toggle_jntscs=toggle_jntscs,
+                                       rgba=rgba).attach_to(meshmodel)
         for obj_info in self.oih_infos:
             objcm = obj_info['collision_model']
             objcm.set_pos(obj_info['gl_pos'])

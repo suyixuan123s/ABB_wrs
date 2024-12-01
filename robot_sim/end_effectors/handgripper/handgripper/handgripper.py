@@ -14,6 +14,7 @@ from panda3d.core import CollisionNode, CollisionBox, Point3
 import robot_sim.manipulators.machinetool.machinetool_gripper as machine
 import basis.robot_math as rm
 
+
 class Handgripper(gf.DexGripperInterface):
 
     def __init__(self, pos=np.zeros(3), rotmat=np.eye(3), name="handgripper", enable_cc=True):
@@ -21,7 +22,7 @@ class Handgripper(gf.DexGripperInterface):
         this_dir, this_filename = os.path.split(__file__)
         # base plate
         self.base_stand = jl.JLChain(pos=pos,
-                                     rotmat=rm.rotmat_from_euler(math.pi *1.5/ 3, 0, math.pi / 2),
+                                     rotmat=rm.rotmat_from_euler(math.pi * 1.5 / 3, 0, math.pi / 2),
                                      homeconf=np.zeros(0),
                                      name='hand')
 
@@ -34,16 +35,16 @@ class Handgripper(gf.DexGripperInterface):
 
         # arm
         arm_homeconf = np.zeros(3)
-        self.arm = lf.Leftfinger(pos=pos + np.array([0,-0.03919,0.09419]),
-                            rotmat=rm.rotmat_from_euler(-math.pi *3/4 , math.pi , math.pi ),
-                            homeconf=arm_homeconf,
-                            name='arm', enable_cc=False)
+        self.arm = lf.Leftfinger(pos=pos + np.array([0, -0.03919, 0.09419]),
+                                 rotmat=rm.rotmat_from_euler(-math.pi * 3 / 4, math.pi, math.pi),
+                                 homeconf=arm_homeconf,
+                                 name='arm', enable_cc=False)
         # gripper
         hnd_homeconf = np.zeros(3)
-        self.hnd = lf.Leftfinger(pos=pos + np.array([0,0.03919,0.09419]),
-                            rotmat=rm.rotmat_from_euler(math.pi *3/4 , math.pi , math.pi ),
-                            homeconf=hnd_homeconf,
-                            name='arm', enable_cc=False)
+        self.hnd = lf.Leftfinger(pos=pos + np.array([0, 0.03919, 0.09419]),
+                                 rotmat=rm.rotmat_from_euler(math.pi * 3 / 4, math.pi, math.pi),
+                                 homeconf=hnd_homeconf,
+                                 name='arm', enable_cc=False)
         # tool center point
         # self.arm.jlc.tcp_jnt_id = -1
         # self.arm.jlc.tcp_loc_pos = self.hnd.jaw_center_pos
@@ -274,8 +275,8 @@ class Handgripper(gf.DexGripperInterface):
                                    rgba=rgba).attach_to(meshmodel)
         if is_machine:
             self.machine.gen_meshmodel(toggle_tcpcs=False,
-                               toggle_jntscs=toggle_jntscs,
-                               rgba=rgba).attach_to(meshmodel)
+                                       toggle_jntscs=toggle_jntscs,
+                                       rgba=rgba).attach_to(meshmodel)
         for obj_info in self.oih_infos:
             objcm = obj_info['collision_model']
             objcm.set_pos(obj_info['gl_pos'])
@@ -307,5 +308,3 @@ if __name__ == '__main__':
     robot_mesh.show_cdprimit()
     robot_mesh.attach_to(base)
     base.run()
-
-

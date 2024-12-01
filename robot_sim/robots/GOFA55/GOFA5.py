@@ -5,16 +5,13 @@ import modeling.collision_model as cm
 import modeling.model_collection as mc
 import robot_sim._kinematics.jlchain as jl
 import robot_sim.manipulators.gofa5.gofa5 as rbt
-# import robot_sim.end_effectors.gripper.robotiq140.robotiq140 as hnd
 import robot_sim.end_effectors.gripper.ag145.ag145 as hnd
-# import robot_sim.end_effectors.gripper.dh60.dh60 as hnd
+import robot_sim.end_effectors.gripper.dh60.dh60 as hnd
 import robot_sim.robots.robot_interface as ri
 from panda3d.core import CollisionNode, CollisionBox, Point3
 import copy
-import robot_sim.manipulators.machinetool.machinetool_gripper as machine
-import basis.robot_math as rm
 
-
+# import robot_sim.end_effectors.gripper.dh60.dh60 as hnd
 
 class GOFA5(ri.RobotInterface):
 
@@ -22,7 +19,6 @@ class GOFA5(ri.RobotInterface):
     def __init__(self, pos=np.zeros(3), rotmat=np.eye(3), name="ur5e_conveyorbelt", enable_cc=True):
         super().__init__(pos=pos, rotmat=rotmat, name=name)
         this_dir, this_filename = os.path.split(__file__)
-
 
         # 初始化基座
 
@@ -48,19 +44,23 @@ class GOFA5(ri.RobotInterface):
         # arm
         arm_homeconf = np.zeros(6)
         self.arm = rbt.GOFA5(pos=pos,
-                            rotmat=self.base_stand.jnts[-1]['gl_rotmatq'],
-                            homeconf=arm_homeconf,
-                            name='arm', enable_cc=False)
+                             rotmat=self.base_stand.jnts[-1]['gl_rotmatq'],
+                             homeconf=arm_homeconf,
+                             name='arm', enable_cc=False)
         # gripper
-        self.hnd = hnd.Ag145(pos=self.arm.jnts[-1]['gl_posq'],
-                            rotmat=self.arm.jnts[-1]['gl_rotmatq'],
-                            name='hnd', enable_cc=False)
+        # self.hnd = hnd.Ag145(pos=self.arm.jnts[-1]['gl_posq'],
+        #                      rotmat=self.arm.jnts[-1]['gl_rotmatq'],
+        #                      name='hnd', enable_cc=False)
 
-       # 初始化品牌标识
+        self.hnd = hnd.Dh60(pos=self.arm.jnts[-1]['gl_posq'],
+                             rotmat=self.arm.jnts[-1]['gl_rotmatq'],
+                             name='hnd', enable_cc=False)
 
-       # 定义了两个品牌标识，并将其位置和旋转矩阵设置为与机械臂的关节位置和旋转矩阵一致。
+        # 初始化品牌标识
 
-        self.brand =  cm.CollisionModel(os.path.join(this_dir, "meshes", "logo_01.stl"))
+        # 定义了两个品牌标识，并将其位置和旋转矩阵设置为与机械臂的关节位置和旋转矩阵一致。
+
+        self.brand = cm.CollisionModel(os.path.join(this_dir, "meshes", "logo_01.stl"))
         self.brand.set_rgba([1, 0, 0, 1])
         self.brand.set_pos(self.arm.jnts[2]['gl_posq'])
         self.brand.set_rotmat(self.arm.jnts[2]['gl_rotmatq'])
@@ -104,25 +104,25 @@ class GOFA5(ri.RobotInterface):
         collision_node.addSolid(collision_primitive_c1)
         return collision_node
 
-       # 碰撞检测启用方法
+    # 碰撞检测启用方法
 
-       # 该方法配置了碰撞检测，指定了哪些链节和链节对要进行碰撞检测。
+    # 该方法配置了碰撞检测，指定了哪些链节和链节对要进行碰撞检测。
 
     def enable_cc(self):
         # TODO when pose is changed, oih info goes wrong
         super().enable_cc()
         self.cc.add_cdlnks(self.base_stand, [0])
-        #self.cc.add_cdlnks(self.machine.base, [0,1,2,3])
-        #self.cc.add_cdlnks(self.machine.fingerhigh, [0])
+        # self.cc.add_cdlnks(self.machine.base, [0,1,2,3])
+        # self.cc.add_cdlnks(self.machine.fingerhigh, [0])
         self.cc.add_cdlnks(self.arm, [1, 2, 3, 4, 5, 6])
         # self.cc.add_cdlnks(self.hnd.lft, [0, 1])
         # self.cc.add_cdlnks(self.hnd.rgt, [1])
         activelist = [self.base_stand.lnks[0],
-                      #self.machine.base.lnks[0],
-                      #self.machine.base.lnks[1],
-                      #self.machine.base.lnks[2],
-                      #self.machine.base.lnks[3],
-                      #self.machine.fingerhigh.lnks[0],
+                      # self.machine.base.lnks[0],
+                      # self.machine.base.lnks[1],
+                      # self.machine.base.lnks[2],
+                      # self.machine.base.lnks[3],
+                      # self.machine.fingerhigh.lnks[0],
                       self.arm.lnks[1],
                       self.arm.lnks[2],
                       self.arm.lnks[3],
@@ -132,11 +132,11 @@ class GOFA5(ri.RobotInterface):
                       ]
         self.cc.set_active_cdlnks(activelist)
         fromlist = [self.base_stand.lnks[0],
-                    #self.machine.base.lnks[0],
-                    #self.machine.base.lnks[1],
-                    #self.machine.base.lnks[2],
-                    #self.machine.base.lnks[3],
-                    #self.machine.fingerhigh.lnks[0],
+                    # self.machine.base.lnks[0],
+                    # self.machine.base.lnks[1],
+                    # self.machine.base.lnks[2],
+                    # self.machine.base.lnks[3],
+                    # self.machine.fingerhigh.lnks[0],
                     self.arm.lnks[1]]
         intolist = [self.arm.lnks[3],
                     self.arm.lnks[4],
@@ -217,7 +217,7 @@ class GOFA5(ri.RobotInterface):
         else:
             raise NotImplementedError
 
-    def jaw_to(self,hand_name, jawwidth=0.0):
+    def jaw_to(self, hand_name, jawwidth=0.0):
         self.hnd.jaw_to(jawwidth)
 
     def hold(self, hnd_name, objcm, jawwidth=None):

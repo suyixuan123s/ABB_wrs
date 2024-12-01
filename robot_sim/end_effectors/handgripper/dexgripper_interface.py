@@ -1,7 +1,7 @@
 import copy
 import numpy as np
 import robot_sim._kinematics.collision_checker as cc
-import basis.robot_math as rm
+
 
 class DexGripperInterface(object):
 
@@ -14,9 +14,10 @@ class DexGripperInterface(object):
         self.cc = None
         # component map for quick access
         self.manipulator_dict = {}
+        self.finger_dict = {}
         self.ft_sensor_dict = {}
         self.hnd_dict = {}
-        self.jaw_center_rotmat = np.eye(3)
+
     def change_name(self, name):
         self.name = name
 
@@ -48,7 +49,7 @@ class DexGripperInterface(object):
         return self.hnd_dict[hand_name].get_jawwidth()
 
     def ik(self,
-           component_name: str = "lftfinger",
+           component_name: str = "arm",
            tgt_pos=np.zeros(3),
            tgt_rotmat=np.eye(3),
            seed_jnt_values=None,
@@ -84,8 +85,8 @@ class DexGripperInterface(object):
                              component_name='arm',
                              type="translational"):
         return self.manipulator_dict[component_name].manipulability_axmat(tcp_jnt_id=tcp_jnt_id,
-                                                                          tcp_loc_pos=tcp_loc_pos,
-                                                                          tcp_loc_rotmat=tcp_loc_rotmat,
+                                                                          tcp_loc_pos=tcp_tloc_pos,
+                                                                          tcp_loc_rotmat=tcp_loc_rotma,
                                                                           type=type)
 
     def jacobian(self,
@@ -100,7 +101,7 @@ class DexGripperInterface(object):
     def rand_conf(self, component_name):
         return self.manipulator_dict[component_name].rand_conf()
 
-    def cvt_conf_to_tcp(self, component_name, jnt_values):
+    def cvt_conf_to_tcp(self, manipulator_name, jnt_values):
         """
         given jnt_values, this function returns the correspondent global tcp_pos, and tcp_rotmat
         :param manipulator_name:
@@ -109,10 +110,10 @@ class DexGripperInterface(object):
         author: weiwei
         date: 20210417
         """
-        jnt_values_bk = self.get_jnt_values(component_name)
-        self.robot_s.fk(component_name, jnt_values)
-        gl_tcp_pos, gl_tcp_rotmat = self.robot_s.get_gl_tcp(component_name)
-        self.robot_s.fk(component_name, jnt_values_bk)
+        jnt_values_bk = self.get_jnt_values(manipulator_name)
+        self.robot_s.fk(manipulator_name, jnt_values)
+        gl_tcp_pos, gl_tcp_rotmat = self.robot_s.get_gl_tcp(manipulator_name)
+        self.robot_s.fk(manipulator_name, jnt_values_bk)
         return gl_tcp_pos, gl_tcp_rotmat
 
     def cvt_gl_to_loc_tcp(self, manipulator_name, gl_obj_pos, gl_obj_rotmat):
@@ -185,30 +186,3 @@ class DexGripperInterface(object):
             for child in self_copy.cc.np.getChildren():
                 self_copy.cc.ctrav.addCollider(child, self_copy.cc.chan)
         return self_copy
-
-    def grip_at_with_jczy(self, gl_jaw_center_pos, gl_jaw_center_z, gl_jaw_center_y, jaw_width):
-        """
-        :param gl_jaw_center_pos:
-        :param gl_jaw_center_z: jaw_center's approaching direction
-        :param gl_jaw_center_y: jaw_center's opening direction
-        :param jaw_width:
-        :return:
-        """
-        gl_jaw_center_rotmat = np.eye(3)
-        gl_jaw_center_rotmat[:, 2] = rm.unit_vector(gl_jaw_center_z)
-        gl_jaw_center_rotmat[:, 1] = rm.unit_vector(gl_jaw_center_y)
-        gl_jaw_center_rotmat[:, 0] = np.cross(gl_jaw_center_rotmat[:3, 1], gl_jaw_center_rotmat[:3, 2])
-        return self.grip_at_with_jcpose(gl_jaw_center_pos, gl_jaw_center_rotmat, jaw_width)
-
-    def grip_at_with_jcpose(self, gl_jaw_center_pos, gl_jaw_center_rotmat, jaw_width):
-        """
-        :param gl_jaw_center_pos:
-        :param gl_jaw_center_rotmat: jaw_center's rotmat
-        :param jaw_width:
-        :return:
-        """
-        self.jaw_to(jaw_width)
-        eef_root_rotmat = gl_jaw_center_rotmat.dot(self.jaw_center_rotmat.T)
-        eef_root_pos = gl_jaw_center_pos - eef_root_rotmat.dot(self.jaw_center_pos)
-        self.fix_to(eef_root_pos, eef_root_rotmat)
-        return [jaw_width, gl_jaw_center_pos, gl_jaw_center_rotmat, eef_root_pos, eef_root_rotmat]

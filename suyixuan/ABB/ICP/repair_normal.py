@@ -9,7 +9,6 @@ import os
 import basis.trimesh as trimeshWan
 import trimesh as trimesh
 
-
 if __name__ == '__main__':
     base = wd.World(cam_pos=[2.01557, 0.637317, 1.88133], w=960,
                     h=540, lookat_pos=[0, 0, 0])
@@ -20,15 +19,14 @@ if __name__ == '__main__':
     obj_name_list = os.listdir(filepath)
     filepath_output = '.'
     for obj_name in obj_name_list:
-        mesh = trimesh.load_mesh(filepath+'/'+obj_name)
-        obj_name = obj_name.split(".")[0]+".stl"
+        mesh = trimesh.load_mesh(filepath + '/' + obj_name)
+        obj_name = obj_name.split(".")[0] + ".stl"
         mesh.fix_normals()
-        mesh.export(filepath_output+'/'+obj_name)
-    obj = cm.CollisionModel(filepath_output+'/'+obj_name_list[1].split(".")[0]+".stl")
+        mesh.export(filepath_output + '/' + obj_name)
+    obj = cm.CollisionModel(filepath_output + '/' + obj_name_list[1].split(".")[0] + ".stl")
     obj.set_rgba([1, 1, 0, 0.5])
     obj.attach_to(base)
     base.run()
-
 
 
     def update(textNode, count, task):

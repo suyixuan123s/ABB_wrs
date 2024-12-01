@@ -11,6 +11,7 @@ import open3d as o3d
 import basis.robot_math as rm
 import visualization.panda.world as wd
 import modeling.geometric_model as gm
+# from robot_sim.robots.GOFA55.GOFA5 import GOFA5
 from robot_sim.robots.gofa5.gofa5 import GOFA5
 from panda3d.core import AmbientLight
 from direct.task import Task
@@ -29,7 +30,7 @@ class GOFA5Demo:
         self.add_light()
         gm.gen_frame(pos=[0, 0, 0], rotmat=np.eye(3), length=0.2, thickness=0.005).attach_to(self.base)
 
-        # 初始化 GOFA5 机器人并添加到 Panda3D 场景中
+        # 初始化 gofa5 机器人并添加到 Panda3D 场景中
         self.setup_robot()
 
         # 用于存储当前显示的点云对象
@@ -44,11 +45,11 @@ class GOFA5Demo:
         return Task.cont
 
     def setup_robot(self):
-        # 初始化 GOFA5 机器人
+        # 初始化 gofa5 机器人
         self.robot = GOFA5(enable_cc=True)
         self.robot.hnd.jaw_to(0.06)
         self.robot.gen_meshmodel(toggle_tcpcs=False, toggle_jntscs=False).attach_to(self.base)
-        print("GOFA5 机器人初始化完成")
+        print("gofa5 机器人初始化完成")
 
     def add_light(self):
         # 添加环境光源

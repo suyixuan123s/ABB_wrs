@@ -184,7 +184,7 @@ if __name__ == '__main__':
     #     grpr.fk(angle)
     #     grpr.gen_meshmodel().attach_to(base)
     grpr = SchunkRH918(enable_cc=True)
-    grpr.jaw_to(.04)
+    grpr.jaw_to(.03)
     print("jaw_width = ", grpr.get_jawwidth())
     grpr.gen_meshmodel().attach_to(base)
     # grpr.gen_stickmodel().attach_to(base)

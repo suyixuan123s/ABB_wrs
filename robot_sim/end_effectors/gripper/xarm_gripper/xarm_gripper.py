@@ -9,7 +9,7 @@ import robot_sim.end_effectors.gripper.gripper_interface as gi
 
 class XArmGripper(gi.GripperInterface):
 
-    def __init__(self, pos=np.zero0s(3), rotmat=np.eye(3), cdmesh_type='box', name='xarm_gripper', enable_cc=True):
+    def __init__(self, pos=np.zeros(3), rotmat=np.eye(3), cdmesh_type='box', name='xarm_gripper', enable_cc=True):
         super().__init__(pos=pos, rotmat=rotmat, cdmesh_type=cdmesh_type, name=name)
         this_dir, this_filename = os.path.split(__file__)
         cpl_end_pos = self.coupling.jnts[-1]['gl_posq']
@@ -28,7 +28,7 @@ class XArmGripper(gi.GripperInterface):
         # - rgt_outer
         self.rgt_outer = jl.JLChain(pos=cpl_end_pos, rotmat=cpl_end_rotmat, homeconf=np.zeros(2), name='jlc_rgt_outer')
         self.rgt_outer.jnts[1]['loc_pos'] = np.array([0, -.035, .059098])
-        self.rgt_outer.jnts[1]['loc_motionax'] = np.array([-1, 0, ])
+        self.rgt_outer.jnts[1]['loc_motionax'] = np.array([-1, 0, 0])
         self.rgt_outer.jnts[2]['loc_pos'] = np.array([0, -.035465, .042039])  # passive
         self.rgt_outer.jnts[2]['loc_motionax'] = np.array([1, 0, 0])
         # - rgt_inner

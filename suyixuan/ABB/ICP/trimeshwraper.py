@@ -580,7 +580,8 @@ if __name__ == '__main__':
     # pctrim = vdda.o3dmesh_to_trimesh(pcd)  # 将点云转换为Trimesh对象，已注释
     radii = [0.005, 0.01, 0.02, 0.04]  # 定义球半径
     cl, ind = pcd.remove_radius_outlier(nb_points=15, radius=0.003)  # 移除离群点
-    rec_mesh = o3d.geometry.TriangleMesh.create_from_point_cloud_ball_pivoting(pcd, o3d.utility.DoubleVector(radii))  # 使用Ball Pivoting算法生成网格
+    rec_mesh = o3d.geometry.TriangleMesh.create_from_point_cloud_ball_pivoting(pcd, o3d.utility.DoubleVector(
+        radii))  # 使用Ball Pivoting算法生成网格
 
     # objpdnp_raw.reparentTo(self._objpdnp)  # 注释掉的代码
 
@@ -680,4 +681,3 @@ if __name__ == '__main__':
 
     # 启动仿真
     base.run()
-

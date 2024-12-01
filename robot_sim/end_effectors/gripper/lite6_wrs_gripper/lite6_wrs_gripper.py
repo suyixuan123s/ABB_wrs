@@ -61,7 +61,6 @@ class Lite6WRSGripper(gp.GripperInterface):
         self.all_cdelements = []
         self.enable_cc(toggle_cdprimit=enable_cc)
 
-
     @staticmethod
     def _finger_cdnp(name, radius):
         collision_node = CollisionNode(name)

@@ -5,9 +5,9 @@ import modeling.collision_model as cm
 import modeling.model_collection as mc
 import robot_sim._kinematics.jlchain as jl
 import robot_sim.manipulators.gofa5.gofa5 as rbt
-# import robot_sim.end_effectors.gripper.robotiq140.robotiq140 as hnd
+import robot_sim.end_effectors.gripper.robotiq140.robotiq140 as hnd
+import robot_sim.end_effectors.gripper.ag145.ag145 as hnd
 # import robot_sim.end_effectors.gripper.ag145.ag145 as hnd
-import robot_sim.end_effectors.handgripper.dexgripper.dexgripper_smallitems as hnd
 # import robot_sim.end_effectors.gripper.dh60.dh60 as hnd
 import robot_sim.robots.robot_interface as ri
 from panda3d.core import CollisionNode, CollisionBox, Point3
@@ -15,11 +15,13 @@ import copy
 import robot_sim.manipulators.machinetool.machinetool_gripper as machine
 import basis.robot_math as rm
 
+
 class GOFA5(ri.RobotInterface):
 
     def __init__(self, pos=np.zeros(3), rotmat=np.eye(3), name="ur5e_conveyorbelt", enable_cc=True):
         super().__init__(pos=pos, rotmat=rotmat, name=name)
         this_dir, this_filename = os.path.split(__file__)
+
         # base plate
         self.base_stand = jl.JLChain(pos=pos,
                                      rotmat=rotmat,
@@ -36,15 +38,17 @@ class GOFA5(ri.RobotInterface):
         # arm
         arm_homeconf = np.zeros(6)
         self.arm = rbt.GOFA5(pos=pos,
-                            rotmat=self.base_stand.jnts[-1]['gl_rotmatq'],
-                            homeconf=arm_homeconf,
-                            name='arm', enable_cc=False)
-        # gripper
-        self.hnd = hnd.Handgripper(pos=self.arm.jnts[-1]['gl_posq'],
-                            rotmat=self.arm.jnts[-1]['gl_rotmatq'],
-                            name='hnd_s', enable_cc=False)
+                             rotmat=self.base_stand.jnts[-1]['gl_rotmatq'],
+                             homeconf=arm_homeconf,
+                             name='arm', enable_cc=False)
 
-        self.brand =  cm.CollisionModel(os.path.join(this_dir, "meshes", "logo_01.stl"))
+        # gripper
+        self.hnd = hnd.Ag145(pos=self.arm.jnts[-1]['gl_posq'],
+                             rotmat=self.arm.jnts[-1]['gl_rotmatq'],
+                             name='hnd', enable_cc=False)
+
+
+        self.brand = cm.CollisionModel(os.path.join(this_dir, "meshes", "logo_01.stl"))
         self.brand.set_rgba([1, 0, 0, 1])
         self.brand.set_pos(self.arm.jnts[2]['gl_posq'])
         self.brand.set_rotmat(self.arm.jnts[2]['gl_rotmatq'])
@@ -56,6 +60,7 @@ class GOFA5(ri.RobotInterface):
 
         # tool center point
         self.arm.jlc.tcp_jnt_id = -1
+        self.arm.jlc.tcp_loc_pos = self.hnd.jaw_center_pos
         self.arm.jlc.tcp_loc_rotmat = self.hnd.jaw_center_rotmat
         # a list of detailed information about objects in hand, see CollisionChecker.add_objinhnd
         self.oih_infos = []
@@ -79,57 +84,44 @@ class GOFA5(ri.RobotInterface):
         collision_node.addSolid(collision_primitive_c1)
         return collision_node
 
-    # def enable_cc(self):
-    #     # TODO when pose is changed, oih info goes wrong
-    #     super().enable_cc()
-    #     self.cc.add_cdlnks(self.base_stand, [0])
-    #     #self.cc.add_cdlnks(self.machine.base, [0,1,2,3])
-    #     #self.cc.add_cdlnks(self.machine.fingerhigh, [0])
-    #     self.cc.add_cdlnks(self.arm, [1, 2, 3, 4, 5, 6])
-    #     self.cc.add_cdlnks(self.hnd.lft, [0, 1, 2, 3])
-    #     self.cc.add_cdlnks(self.hnd.rgt, [1, 2, 3])
-    #     activelist = [self.base_stand.lnks[0],
-    #                   #self.machine.base.lnks[0],
-    #                   #self.machine.base.lnks[1],
-    #                   #self.machine.base.lnks[2],
-    #                   #self.machine.base.lnks[3],
-    #                   #self.machine.fingerhigh.lnks[0],
-    #                   self.arm.lnks[1],
-    #                   self.arm.lnks[2],
-    #                   self.arm.lnks[3],
-    #                   self.arm.lnks[4],
-    #                   self.arm.lnks[5],
-    #                   self.arm.lnks[6],
-    #                   self.hnd.lft.lnks[0],
-    #                   self.hnd.lft.lnks[1],
-    #                   self.hnd.lft.lnks[2],
-    #                   self.hnd.lft.lnks[3],
-    #                   self.hnd.rgt.lnks[1],
-    #                   self.hnd.rgt.lnks[2],
-    #                   self.hnd.rgt.lnks[3]]
-    #     self.cc.set_active_cdlnks(activelist)
-    #     fromlist = [self.base_stand.lnks[0],
-    #                 #self.machine.base.lnks[0],
-    #                 #self.machine.base.lnks[1],
-    #                 #self.machine.base.lnks[2],
-    #                 #self.machine.base.lnks[3],
-    #                 #self.machine.fingerhigh.lnks[0],
-    #                 self.arm.lnks[1]]
-    #     intolist = [self.arm.lnks[3],
-    #                 self.arm.lnks[4],
-    #                 self.arm.lnks[5],
-    #                 self.arm.lnks[6],
-    #                 self.hnd.lft.lnks[0],
-    #                 self.hnd.lft.lnks[1],
-    #                 self.hnd.lft.lnks[2],
-    #                 self.hnd.lft.lnks[3],
-    #                 self.hnd.rgt.lnks[1],
-    #                 self.hnd.rgt.lnks[2],
-    #                 self.hnd.rgt.lnks[3]]
-    #     self.cc.set_cdpair(fromlist, intolist)
-    #     for oih_info in self.oih_infos:
-    #         objcm = oih_info['collision_model']
-    #         self.hold(objcm)
+    def enable_cc(self):
+        # TODO when pose is changed, oih info goes wrong
+        super().enable_cc()
+        self.cc.add_cdlnks(self.base_stand, [0])
+        # self.cc.add_cdlnks(self.machine.base, [0,1,2,3])
+        # self.cc.add_cdlnks(self.machine.fingerhigh, [0])
+        self.cc.add_cdlnks(self.arm, [1, 2, 3, 4, 5, 6])
+        # self.cc.add_cdlnks(self.hnd.lft, [0, 1])
+        # self.cc.add_cdlnks(self.hnd.rgt, [1])
+        activelist = [self.base_stand.lnks[0],
+                      # self.machine.base.lnks[0],
+                      # self.machine.base.lnks[1],
+                      # self.machine.base.lnks[2],
+                      # self.machine.base.lnks[3],
+                      # self.machine.fingerhigh.lnks[0],
+                      self.arm.lnks[1],
+                      self.arm.lnks[2],
+                      self.arm.lnks[3],
+                      self.arm.lnks[4],
+                      self.arm.lnks[5],
+                      self.arm.lnks[6]
+                      ]
+        self.cc.set_active_cdlnks(activelist)
+        fromlist = [self.base_stand.lnks[0],
+                    # self.machine.base.lnks[0],
+                    # self.machine.base.lnks[1],
+                    # self.machine.base.lnks[2],
+                    # self.machine.base.lnks[3],
+                    # self.machine.fingerhigh.lnks[0],
+                    self.arm.lnks[1]]
+        intolist = [self.arm.lnks[3],
+                    self.arm.lnks[4],
+                    self.arm.lnks[5],
+                    self.arm.lnks[6]]
+        self.cc.set_cdpair(fromlist, intolist)
+        for oih_info in self.oih_infos:
+            objcm = oih_info['collision_model']
+            self.hold(objcm)
 
     def fix_to(self, pos, rotmat):
         self.pos = pos
@@ -137,11 +129,17 @@ class GOFA5(ri.RobotInterface):
         self.base_stand.fix_to(pos=pos, rotmat=rotmat)
         self.arm.fix_to(pos=self.base_stand.jnts[-1]['gl_posq'], rotmat=self.base_stand.jnts[-1]['gl_rotmatq'])
         self.hnd.fix_to(pos=self.arm.jnts[-1]['gl_posq'], rotmat=self.arm.jnts[-1]['gl_rotmatq'])
+
         for obj_info in self.oih_infos:
             gl_pos, gl_rotmat = self.arm.cvt_loc_tcp_to_gl(obj_info['rel_pos'], obj_info['rel_rotmat'])
             obj_info['gl_pos'] = gl_pos
             obj_info['gl_rotmat'] = gl_rotmat
 
+    def jaw_center_pos(self):
+        return self.machine.jaw_center_pos
+
+    def jaw_center_rot(self):
+        return self.machine.jaw_center_rot
 
     def fk(self, component_name='arm', jnt_values=np.zeros(6)):
         """
@@ -183,12 +181,20 @@ class GOFA5(ri.RobotInterface):
         else:
             raise ValueError("The given component name is not supported!")
 
+    def get_jnt_init(self, component_name):
+        if component_name in self.manipulator_dict:
+            return self.arm.init_jnts
+        else:
+            raise ValueError("The given component name is not supported!")
+
     def rand_conf(self, component_name):
         if component_name in self.manipulator_dict:
             return super().rand_conf(component_name)
         else:
             raise NotImplementedError
 
+    def jaw_to(self, hand_name, jawwidth=0.0):
+        self.hnd.jaw_to(jawwidth)
 
     def hold(self, hnd_name, objcm, jawwidth=None):
         """
@@ -229,6 +235,7 @@ class GOFA5(ri.RobotInterface):
         if hnd_name not in self.hnd_dict:
             raise ValueError("Hand name does not exist!")
         if jawwidth is not None:
+            print(jawwidth)
             self.hnd_dict[hnd_name].jaw_to(jawwidth)
         for obj_info in self.oih_infos:
             if obj_info['collision_model'] is objcm:
@@ -259,14 +266,6 @@ class GOFA5(ri.RobotInterface):
                                 toggle_connjnt=toggle_connjnt).attach_to(stickmodel)
         self.hnd.gen_stickmodel(toggle_tcpcs=False,
                                 toggle_jntscs=toggle_jntscs).attach_to(stickmodel)
-        self.hnd.rgtfinger.gen_stickmodel(toggle_tcpcs=False,
-                                toggle_jntscs=toggle_jntscs).attach_to(stickmodel)
-        self.hnd.lftfinger.gen_stickmodel(toggle_tcpcs=False,
-                                toggle_jntscs=toggle_jntscs).attach_to(stickmodel)
-        self.hnd.base1.gen_stickmodel(toggle_tcpcs=False,
-                                toggle_jntscs=toggle_jntscs).attach_to(stickmodel)
-        self.hnd.base2.gen_stickmodel(toggle_tcpcs=False,
-                                toggle_jntscs=toggle_jntscs).attach_to(stickmodel)
 
         return stickmodel
 
@@ -293,16 +292,7 @@ class GOFA5(ri.RobotInterface):
                                    toggle_tcpcs=toggle_tcpcs,
                                    toggle_jntscs=toggle_jntscs,
                                    rgba=rgba).attach_to(meshmodel)
-            self.hnd.rgtfinger.gen_meshmodel(toggle_tcpcs=False,
-                                   toggle_jntscs=toggle_jntscs,
-                                   rgba=rgba).attach_to(meshmodel)
-            self.hnd.lftfinger.gen_meshmodel(toggle_tcpcs=False,
-                                   toggle_jntscs=toggle_jntscs,
-                                   rgba=rgba).attach_to(meshmodel)
-            self.hnd.base1.gen_meshmodel(toggle_tcpcs=False,
-                                   toggle_jntscs=toggle_jntscs,
-                                   rgba=rgba).attach_to(meshmodel)
-            self.hnd.base2.gen_meshmodel(toggle_tcpcs=False,
+            self.hnd.gen_meshmodel(toggle_tcpcs=False,
                                    toggle_jntscs=toggle_jntscs,
                                    rgba=rgba).attach_to(meshmodel)
             brand = copy.deepcopy(self.brand)
@@ -327,11 +317,23 @@ if __name__ == '__main__':
 
     gm.gen_frame().attach_to(base)
     robot_s = GOFA5(enable_cc=True)
-    robot_s.hnd.ssss()
+    robot_s.hnd.jaw_to(.06)
     robot_s.gen_meshmodel(toggle_tcpcs=False, toggle_jntscs=False).attach_to(base)
     tgt_pos = np.array([.25, .2, .15])
     tgt_rotmat = rm.rotmat_from_axangle([0, 1, 0], math.pi * 2 / 3)
     # gm.gen_frame(pos=tgt_pos, rotmat=tgt_rotmat).attach_to(base)
-    # robot_s.show_cdprimit()
+    robot_s.show_cdprimit()
     # robot_s.gen_stickmodel().attach_to(base)
+    base.run()
+    component_name = 'arm'
+    jnt_values = robot_s.ik(component_name, tgt_pos, tgt_rotmat)
+    robot_s.fk(component_name, jnt_values=jnt_values)
+    robot_s_meshmodel = robot_s.gen_meshmodel(toggle_tcpcs=False)
+    robot_s_meshmodel.attach_to(base)
+    # robot_s.show_cdprimit()
+    robot_s.gen_stickmodel().attach_to(base)
+    tic = time.time()
+    result = robot_s.is_collided()
+    toc = time.time()
+    print(result, toc - tic)
     base.run()

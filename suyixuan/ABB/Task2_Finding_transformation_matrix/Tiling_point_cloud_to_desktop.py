@@ -52,7 +52,7 @@ class GOFA5Demo:
         gm.gen_frame(pos=[0, 0, 0], rotmat=np.eye(3), length=1, thickness=0.05).attach_to(self.base)
 
     def setup_robot(self):
-        # 初始化 GOFA5 机器人并添加到 Panda3D 场景中
+        # 初始化 gofa5 机器人并添加到 Panda3D 场景中
         self.robot = GOFA5(enable_cc=True)
         self.robot.hnd.jaw_to(0.06)
         self.robot.gen_meshmodel(toggle_tcpcs=False, toggle_jntscs=False).attach_to(self.base)

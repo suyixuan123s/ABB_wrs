@@ -7,6 +7,8 @@ import robot_sim.manipulators.manipulator_interface as mi
 import time
 
 start = time.time()
+
+
 class GOFA12(mi.ManipulatorInterface):
     def __init__(self, pos=np.zeros(3), rotmat=np.eye(3), homeconf=np.zeros(6), name='ur5e', enable_cc=True):
         super().__init__(pos=pos, rotmat=rotmat, name=name)
@@ -33,43 +35,43 @@ class GOFA12(mi.ManipulatorInterface):
         self.jlc.lnks[0]['loc_pos'] = np.zeros(3)
         self.jlc.lnks[0]['mass'] = 2.0
         self.jlc.lnks[0]['mesh_file'] = os.path.join(this_dir, "meshes", "LINK00.STL")
-        self.jlc.lnks[0]['rgba'] = [.2,.2,.2, 1]
+        self.jlc.lnks[0]['rgba'] = [.2, .2, .2, 1]
         self.jlc.lnks[1]['name'] = "shoulder"
         self.jlc.lnks[1]['loc_pos'] = np.zeros(3)
         self.jlc.lnks[1]['com'] = np.array([.0, -.02, .0])
         self.jlc.lnks[1]['mass'] = 1.95
         self.jlc.lnks[1]['mesh_file'] = os.path.join(this_dir, "meshes", "LINK01.STL")
-        self.jlc.lnks[1]['rgba'] = [.2,.2,.2, 1]
+        self.jlc.lnks[1]['rgba'] = [.2, .2, .2, 1]
         self.jlc.lnks[2]['name'] = "upperarm"
         self.jlc.lnks[2]['loc_pos'] = np.array([.0, .0, .0])
         self.jlc.lnks[2]['com'] = np.array([.13, 0, .1157])
         self.jlc.lnks[2]['mass'] = 3.42
         self.jlc.lnks[2]['mesh_file'] = os.path.join(this_dir, "meshes", "LINK02.STL")
-        self.jlc.lnks[2]['rgba'] = [.2,.2,.2, 1]
+        self.jlc.lnks[2]['rgba'] = [.2, .2, .2, 1]
         self.jlc.lnks[3]['name'] = "forearm"
         self.jlc.lnks[3]['loc_pos'] = np.array([.0, .0, .0])
         self.jlc.lnks[3]['com'] = np.array([.05, .0, .0238])
         self.jlc.lnks[3]['mass'] = 1.437
         self.jlc.lnks[3]['mesh_file'] = os.path.join(this_dir, "meshes", "LINK03.STL")
-        self.jlc.lnks[3]['rgba'] = [.2,.2,.2, 1]
+        self.jlc.lnks[3]['rgba'] = [.2, .2, .2, 1]
         self.jlc.lnks[4]['name'] = "wrist1"
         self.jlc.lnks[4]['loc_pos'] = np.array([.0, .0, .0])
         self.jlc.lnks[4]['com'] = np.array([.0, .0, 0.01])
         self.jlc.lnks[4]['mass'] = 0.871
         self.jlc.lnks[4]['mesh_file'] = os.path.join(this_dir, "meshes", "LINK04.STL")
-        self.jlc.lnks[4]['rgba'] = [.7,.7,.7, 1]
+        self.jlc.lnks[4]['rgba'] = [.7, .7, .7, 1]
         self.jlc.lnks[5]['name'] = "wrist2"
         self.jlc.lnks[5]['loc_pos'] = np.array([.0, .0, .0])
         self.jlc.lnks[5]['com'] = np.array([.0, .0, 0.01])
         self.jlc.lnks[5]['mass'] = 0.8
         self.jlc.lnks[5]['mesh_file'] = os.path.join(this_dir, "meshes", "LINK05.STL")
-        self.jlc.lnks[5]['rgba'] = [.7,.7,.7, 1]
+        self.jlc.lnks[5]['rgba'] = [.7, .7, .7, 1]
         self.jlc.lnks[6]['name'] = "wrist3"
         self.jlc.lnks[6]['loc_pos'] = np.array([.0, .0, .0])
         self.jlc.lnks[6]['com'] = np.array([.0, .0, -0.02])
         self.jlc.lnks[6]['mass'] = 0.8
         self.jlc.lnks[6]['mesh_file'] = os.path.join(this_dir, "meshes", "LINK06.STL")
-        self.jlc.lnks[6]['rgba'] = [.7,.7,.7, 1]
+        self.jlc.lnks[6]['rgba'] = [.7, .7, .7, 1]
         self.jlc.reinitialize()
         # collision checker
         if enable_cc:

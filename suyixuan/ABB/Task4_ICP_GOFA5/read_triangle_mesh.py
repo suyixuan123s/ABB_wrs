@@ -9,7 +9,7 @@ import os
 import open3d as o3d
 
 # 加载 STL 文件
-file_path = r"E:\ABB-Project\ABB_wrs\suyixuan\ABB\ICP\temp.stl"
+file_path = r"E:\ABB-Project\ABB_wrs\robot_sim\others\tbm\meshes\cutter.stl"
 mesh = o3d.io.read_triangle_mesh(file_path)
 
 # 检查是否加载成功

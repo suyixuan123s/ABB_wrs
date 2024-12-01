@@ -92,7 +92,8 @@ if __name__ == '__main__':
     gm.gen_frame().attach_to(base)
     manipulator_instance = IRB14050(enable_cc=True)
     manipulator_instance.fk(
-        jnt_values=[0, 0, manipulator_instance.jnts[3]['motion_rng'][1] / 2, manipulator_instance.jnts[4]['motion_rng'][1], 0, 0, 0])
+        jnt_values=[0, 0, manipulator_instance.jnts[3]['motion_rng'][1] / 2,
+                    manipulator_instance.jnts[4]['motion_rng'][1], 0, 0, 0])
     manipulator_meshmodel = manipulator_instance.gen_meshmodel()
     manipulator_meshmodel.attach_to(base)
     manipulator_instance.gen_stickmodel().attach_to(base)
@@ -106,7 +107,8 @@ if __name__ == '__main__':
     # manipulator_instance2.disable_localcc()
     manipulator_instance2.fix_to(pos=np.array([.2, .2, 0.2]), rotmat=np.eye(3))
     manipulator_instance2.fk(
-        jnt_values=[0, 0, manipulator_instance.jnts[3]['motion_rng'][1] / 2, manipulator_instance.jnts[4]['motion_rng'][1]*1.1,
+        jnt_values=[0, 0, manipulator_instance.jnts[3]['motion_rng'][1] / 2,
+                    manipulator_instance.jnts[4]['motion_rng'][1] * 1.1,
                     manipulator_instance.jnts[5]['motion_rng'][1], 0, 0])
     manipulator_meshmodel2 = manipulator_instance2.gen_meshmodel()
     manipulator_meshmodel2.attach_to(base)

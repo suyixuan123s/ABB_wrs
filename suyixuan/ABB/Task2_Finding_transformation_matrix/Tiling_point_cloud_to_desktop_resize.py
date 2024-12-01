@@ -80,7 +80,7 @@ def main():
     # 初始化 Panda3D 仿真环境
     base = wd.World(cam_pos=[1.5, 1.5, 1.5], lookat_pos=[0, 0, 0])
 
-    # 加载并初始化 GOFA5 机器人和桌子
+    # 加载并初始化 gofa5 机器人和桌子
     robot = GOFA5(enable_cc=True)
     robot.hnd.jaw_to(0.06)
     robot.gen_meshmodel(toggle_tcpcs=False, toggle_jntscs=False).attach_to(base)

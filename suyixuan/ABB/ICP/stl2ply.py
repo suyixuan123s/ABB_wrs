@@ -34,8 +34,6 @@ import open3d as o3d
 # import open3d.geometry as o3dg
 import vision.depth_camera.pcd_data_adapter as vdda
 
-
-
 if __name__ == '__main__':
     base = wd.World(cam_pos=[0.2001557, 0.0637317, 0.1088133], w=960,
                     h=540, lookat_pos=[0, 0, 0])
@@ -60,11 +58,11 @@ if __name__ == '__main__':
     mmesh_trimesh.export("edgenooltst.stl")
     # obj_mmesh = cm.CollisionModel('edgenool.stl')
     obj_mmesh = cm.CollisionModel('edge.stl')
-    obj_mmesh.set_rgba((0,1,1,1))
+    obj_mmesh.set_rgba((0, 1, 1, 1))
     obj_mmesh.attach_to(base)
 
-
     base.run()
+
 
     def update(textNode, count, task):
 

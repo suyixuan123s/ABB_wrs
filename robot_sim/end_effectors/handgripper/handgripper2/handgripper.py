@@ -14,6 +14,7 @@ from panda3d.core import CollisionNode, CollisionBox, Point3
 import robot_sim.manipulators.machinetool.machinetool_gripper as machine
 import basis.robot_math as rm
 
+
 class handgripper(gf.DexGripperInterface):
 
     def __init__(self, pos=np.zeros(3), rotmat=np.eye(3), name="ur5e_conveyorbelt", enable_cc=True):
@@ -33,16 +34,16 @@ class handgripper(gf.DexGripperInterface):
         self.base_stand.reinitialize()
         # arm
         arm_homeconf = np.zeros(3)
-        self.arm = lf.Leftfinger(pos=pos + np.array([0,-0.03919,0.09419]),
-                            rotmat=rm.rotmat_from_euler(-math.pi *3/4 , math.pi , math.pi ),
-                            homeconf=arm_homeconf,
-                            name='arm', enable_cc=False)
+        self.arm = lf.Leftfinger(pos=pos + np.array([0, -0.03919, 0.09419]),
+                                 rotmat=rm.rotmat_from_euler(-math.pi * 3 / 4, math.pi, math.pi),
+                                 homeconf=arm_homeconf,
+                                 name='arm', enable_cc=False)
         # gripper
         hnd_homeconf = np.zeros(3)
-        self.hnd = lf.Leftfinger(pos=pos + np.array([0,-0.03919,0.09419]),
-                            rotmat=rm.rotmat_from_euler(math.pi *3/4 , math.pi , math.pi ),
-                            homeconf=hnd_homeconf,
-                            name='arm', enable_cc=False)
+        self.hnd = lf.Leftfinger(pos=pos + np.array([0, -0.03919, 0.09419]),
+                                 rotmat=rm.rotmat_from_euler(math.pi * 3 / 4, math.pi, math.pi),
+                                 homeconf=hnd_homeconf,
+                                 name='arm', enable_cc=False)
         # tool center point
         # self.arm.jlc.tcp_jnt_id = -1
         # self.arm.jlc.tcp_loc_pos = self.hnd.jaw_center_pos
@@ -73,16 +74,16 @@ class handgripper(gf.DexGripperInterface):
         # TODO when pose is changed, oih info goes wrong
         super().enable_cc()
         self.cc.add_cdlnks(self.base_stand, [0])
-        #self.cc.add_cdlnks(self.machine.base, [0,1,2,3])
-        #self.cc.add_cdlnks(self.machine.fingerhigh, [0])
+        # self.cc.add_cdlnks(self.machine.base, [0,1,2,3])
+        # self.cc.add_cdlnks(self.machine.fingerhigh, [0])
         self.cc.add_cdlnks(self.arm, [0, 1, 2, 3])
         self.cc.add_cdlnks(self.hnd, [0, 1, 2, 3])
         activelist = [self.base_stand.lnks[0],
-                      #self.machine.base.lnks[0],
-                      #self.machine.base.lnks[1],
-                      #self.machine.base.lnks[2],
-                      #self.machine.base.lnks[3],
-                      #self.machine.fingerhigh.lnks[0],
+                      # self.machine.base.lnks[0],
+                      # self.machine.base.lnks[1],
+                      # self.machine.base.lnks[2],
+                      # self.machine.base.lnks[3],
+                      # self.machine.fingerhigh.lnks[0],
                       self.arm.lnks[1],
                       self.arm.lnks[2],
                       self.arm.lnks[3],
@@ -92,11 +93,11 @@ class handgripper(gf.DexGripperInterface):
                       self.hnd.lnks[3]]
         self.cc.set_active_cdlnks(activelist)
         fromlist = [self.base_stand.lnks[0],
-                    #self.machine.base.lnks[0],
-                    #self.machine.base.lnks[1],
-                    #self.machine.base.lnks[2],
-                    #self.machine.base.lnks[3],
-                    #self.machine.fingerhigh.lnks[0],
+                    # self.machine.base.lnks[0],
+                    # self.machine.base.lnks[1],
+                    # self.machine.base.lnks[2],
+                    # self.machine.base.lnks[3],
+                    # self.machine.fingerhigh.lnks[0],
                     self.arm.lnks[1]]
         intolist = [self.arm.lnks[3],
                     self.hnd.lnks[0],
@@ -242,7 +243,7 @@ class handgripper(gf.DexGripperInterface):
         self.hnd.gen_stickmodel(toggle_tcpcs=False,
                                 toggle_jntscs=toggle_jntscs).attach_to(stickmodel)
         self.machine.gen_stickmodel(toggle_tcpcs=False,
-                                toggle_jntscs=toggle_jntscs).attach_to(stickmodel)
+                                    toggle_jntscs=toggle_jntscs).attach_to(stickmodel)
         return stickmodel
 
     def gen_meshmodel(self,

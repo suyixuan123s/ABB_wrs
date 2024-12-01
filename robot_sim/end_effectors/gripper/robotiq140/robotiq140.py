@@ -128,13 +128,12 @@ class Robotiq140(gp.GripperInterface):
         self.lft_inner.reinitialize()
         self.rgt_outer.reinitialize()
         self.rgt_inner.reinitialize()
-
         # jaw width
         self.jawwidth_rng = [0.0, .140]
         # jaw center
         self.jaw_center_pos = np.array([0, 0, .19])  # position for initial state (fully open)
         # relative jaw center pos
-        self.jaw_center_pos_rel = self.jaw_center_pos - self.lft_outer.jnts[4]['loc_pos']
+        self.jaw_center_pos_rel = self.jaw_center_pos - self.lft_outer.jnts[4]['gl_posq']
         # collision detection
         self.all_cdelements = []
         self.enable_cc(toggle_cdprimit=enable_cc)
@@ -220,7 +219,7 @@ class Robotiq140(gp.GripperInterface):
         self.fk(motion_val)
         # TODO dynamically change jaw center
         # print(self.jaw_center_pos_rel)
-        self.jaw_center_pos=np.array([0,0,self.lft_outer.jnts[4]['loc_pos'][2]+self.jaw_center_pos_rel[2]])
+        self.jaw_center_pos=np.array([0,0,self.lft_outer.jnts[4]['gl_posq'][2]+self.jaw_center_pos_rel[2]])
 
     def gen_stickmodel(self,
                        tcp_jntid=None,
@@ -296,17 +295,6 @@ if __name__ == '__main__':
     gm.gen_frame().attach_to(base)
     grpr = Robotiq140(enable_cc=True)
     # grpr.cdmesh_type='convexhull'
-    grpr.jaw_to(0.1)
-    grpr.grip_at_with_jcpose([0,0.2,0], np.eye(3), 0.01)
-    grpr.gen_meshmodel(toggle_tcpcs=True, rgba=[.3, .3, .0, .5], toggle_jntscs=False).attach_to(base)
-
-    grpr.grip_at_with_jcpose([0, 0.2, 0], np.eye(3), 0.03)
-    grpr.gen_meshmodel(toggle_tcpcs=True, rgba=[.3, .3, .0, .5], toggle_jntscs=False).attach_to(base)
-
-    grpr.grip_at_with_jcpose([0, 0.2, 0], np.eye(3), 0.05)
-    grpr.gen_meshmodel(toggle_tcpcs=True, rgba=[.3, .3, .0, .5], toggle_jntscs=False).attach_to(base)
-
-    grpr.grip_at_with_jcpose([0, 0.2, 0], np.eye(3), 0.1)
-    grpr.gen_meshmodel(toggle_tcpcs=True, rgba=[.3, .3, .0, .5], toggle_jntscs=False).attach_to(base)
-
+    grpr.jaw_to(.1)
+    grpr.gen_meshmodel(toggle_tcpcs=True, rgba=[.3, .3, .0, .5], toggle_jntscs=True).attach_to(base)
     base.run()

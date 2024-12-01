@@ -5,6 +5,7 @@ import basis.robot_math as rm
 import robot_sim._kinematics.jlchain as jl
 import robot_sim._kinematics.collision_checker as cc
 
+
 class SuctionInterface(object):
 
     def __init__(self, pos=np.zeros(3), rotmat=np.eye(3), cdmesh_type='aabb', name='suction'):
@@ -38,7 +39,7 @@ class SuctionInterface(object):
         author: weiwei
         date: 20201223
         """
-        return_val =  self.cc.is_collided(obstacle_list=obstacle_list, otherrobot_list=otherrobot_list)
+        return_val = self.cc.is_collided(obstacle_list=obstacle_list, otherrobot_list=otherrobot_list)
         return return_val
 
     def is_mesh_collided(self, objcm_list=[], toggle_debug=False):
@@ -75,7 +76,6 @@ class SuctionInterface(object):
         eef_root_pos = gl_suction_center_pos - eef_root_rotmat.dot(self.suction_center_pos)
         self.fix_to(eef_root_pos, eef_root_rotmat)
         return [gl_suction_center_pos, gl_suction_center_rotmat, eef_root_pos, eef_root_rotmat]
-
 
     def suction_to_with_sczy(self, gl_suction_center_pos, gl_suction_center_z, gl_suction_center_y):
         """

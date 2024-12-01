@@ -20,17 +20,14 @@ class Leftfinger(fi.FingerInterface):
         self.jlc.jnts[2]['loc_motionax'] = np.array([1, 0, 0])
         self.jlc.jnts[3]['loc_pos'] = np.array([0, 0, 0.0445])
         self.jlc.jnts[3]['loc_motionax'] = np.array([1, 0, 0])
-        self.jlc.jnts[3]['loc_rotmat'] = rm.rotmat_from_euler(0, 0, math.pi*0 )
-        self.jlc.jnts[4]['loc_pos'] = np.array([0, -0.0035, 0.034])
-        self.jlc.jnts[4]['loc_motionax'] = np.array([0, 0, 0])
-        self.jlc.jnts[4]['loc_rotmat'] = rm.rotmat_from_euler(56.95/180*math.pi, 0, math.pi*0 )
+        self.jlc.jnts[3]['loc_rotmat'] = rm.rotmat_from_euler(0, 0, math.pi )
 
         # links
         self.jlc.lnks[0]['name'] = "base"
         self.jlc.lnks[0]['loc_pos'] = np.zeros(3)
         self.jlc.lnks[0]['mass'] = 2.0
         self.jlc.lnks[0]['mesh_file'] = os.path.join(this_dir, "meshes", "LINK00.STL")
-        self.jlc.lnks[0]['rgba'] = [.7,.7,.7, 1]
+        self.jlc.lnks[0]['rgba'] = [.2,.2,.2, 1]
         self.jlc.lnks[1]['name'] = "shoulder"
         self.jlc.lnks[1]['loc_pos'] = np.zeros(3)
         self.jlc.lnks[1]['com'] = np.array([.0, -.02, .0])
@@ -42,7 +39,7 @@ class Leftfinger(fi.FingerInterface):
         self.jlc.lnks[2]['com'] = np.array([.13, 0, .1157])
         self.jlc.lnks[2]['mass'] = 3.42
         self.jlc.lnks[2]['mesh_file'] = os.path.join(this_dir, "meshes", "LINK02.STL")
-        self.jlc.lnks[2]['rgba'] = [.7,.7,.7, 1]
+        self.jlc.lnks[2]['rgba'] = [.2,.2,.2, 1]
         self.jlc.lnks[3]['name'] = "forearm"
         self.jlc.lnks[3]['loc_pos'] = np.array([.0, .0, .0])
         self.jlc.lnks[3]['com'] = np.array([.05, .0, .0238])
@@ -80,7 +77,7 @@ if __name__ == '__main__':
     gm.gen_frame().attach_to(base)
     manipulator_instance = Leftfinger(enable_cc=True)
     manipulator_meshmodel = manipulator_instance.gen_meshmodel()
-    manipulator_meshmodel.attach_to(base)
+    # manipulator_meshmodel.attach_to(base)
     manipulator_meshmodel.show_cdprimit()
     manipulator_instance.gen_stickmodel(toggle_jntscs=True).attach_to(base)
     end = time.time()

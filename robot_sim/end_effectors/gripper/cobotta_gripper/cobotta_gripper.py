@@ -141,7 +141,7 @@ if __name__ == '__main__':
     #     grpr.fk(angle)
     #     grpr.gen_meshmodel().attach_to(base)
     grpr = CobottaGripper(enable_cc=True)
-    grpr.jaw_to(.02)
+    grpr.jaw_to(.013)
     grpr.gen_meshmodel(toggle_tcpcs=True).attach_to(base)
     # grpr.gen_stickmodel(toggle_jntscs=False).attach_to(base)
     grpr.fix_to(pos=np.array([0, .3, .2]), rotmat=rm.rotmat_from_axangle([1, 0, 0], .05))

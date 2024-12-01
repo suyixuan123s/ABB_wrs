@@ -9,6 +9,7 @@ import cv2
 import numpy as np
 import pyrealsense2 as rs
 
+
 def capture_chessboard_images(output_dir, num_images=10):
     """
     使用 RealSense 相机拍摄多张棋盘格图像并保存。
@@ -67,6 +68,7 @@ def capture_chessboard_images(output_dir, num_images=10):
         # 停止管道
         pipeline.stop()
         cv2.destroyAllWindows()
+
 
 # 示例使用
 if __name__ == '__main__':
