@@ -58,7 +58,7 @@ tx, ty, tz = 0.525, 0.76, 1.25
 transformation_camera_to_sim, transformation_sim_to_camera = compute_transformation(alpha, beta, gamma, tx, ty, tz)
 
 # 指定文件路径
-file_path = r"E:\ABB-Project\ABB_wrs\suyixuan\ABBB\transformation_matrices.txt"
+file_path = r"E:\ABB-Project\ABB_wrs\suyixuan\ABB\Task2_Finding_transformation_matrix\transformation_matrices.txt"
 
 # 检查目录是否存在，如果不存在则创建
 os.makedirs(os.path.dirname(file_path), exist_ok=True)

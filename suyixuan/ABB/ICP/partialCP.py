@@ -43,9 +43,11 @@ if __name__ == '__main__':
     icosphere.attach_to(base)
 
     # 加载3D对象（例如：mug.stl）
-    name = "mug.stl"
-    obj = tw.TrimeshHu("./object_g2/", name, scale=0.001)
+    # name = "mug.stl"
+    # obj = tw.TrimeshHu("./object_g2/", name, scale=0.001)
 
+    name = "rack_10ml_green.STL"
+    obj = tw.TrimeshHu("../Task4_ICP_GOFA5/meshes/", name, scale=0.001)
     # 通过 TrimeshHu 获取 Trimesh 网格
     mesh = obj.outputTrimesh
 
@@ -53,6 +55,7 @@ if __name__ == '__main__':
     # testmesh = gm.GeometricModel(mesh)
     # testmesh.set_rgba([1, 0, 0, 1])  # 设置颜色为红色
     # testmesh.attach_to(base)  # 将模型添加到场景中
+    # # base.run()
 
     # 在一个顶点处生成大球
     gm.gen_sphere(sample[5], 0.03).attach_to(base)
@@ -92,7 +95,7 @@ if __name__ == '__main__':
 
     # 创建可视网格并导出为STL
     viewedmesh = trimesh.Trimesh(vertices=viewed_vertices, faces=viewed_faces)
-    viewedmesh.export("temp.stl")
+    viewedmesh.export("temp1.stl")
 
     # # 创建并显示生成的网格
     # test = gm.GeometricModel("temp.stl")
@@ -101,7 +104,7 @@ if __name__ == '__main__':
     # base.run()
 
     # 使用Open3D读取网格，计算法线，生成点云
-    viewedmesh_o3d = o3d.io.read_triangle_mesh("temp.stl")
+    viewedmesh_o3d = o3d.io.read_triangle_mesh("temp1.stl")
     viewedmesh_o3d.compute_vertex_normals()
     pcd = viewedmesh_o3d.sample_points_poisson_disk(number_of_points=1000)
 

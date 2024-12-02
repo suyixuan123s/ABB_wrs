@@ -96,6 +96,14 @@ def main():
 
     # 获取转换矩阵
     transformation_matrix = get_transformation_matrix(alpha, beta, gamma, tx, ty, tz)
+    print(transformation_matrix)
+
+    transformation_sim_to_camera = np.linalg.inv(transformation_matrix)
+
+    print(transformation_sim_to_camera)
+
+
+
 
     # 转换到仿真坐标系
     transformed_points = transform_points(points, transformation_matrix)
