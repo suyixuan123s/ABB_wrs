@@ -87,7 +87,7 @@ def point_cloud_registration(source_cloud, target_cloud):
         np.eye(4), o3d.pipelines.registration.TransformationEstimationPointToPoint())
 
     # 使用 fitness 和 inlier_rmse 来了解配准结果
-    print("ICP Converged:", reg_p2p.fitness > 0.5)  # 如果拟合度大于0.5，表示配准有效
+    print("ICP_Iterative_Closest_Point Converged:", reg_p2p.fitness > 0.5)  # 如果拟合度大于0.5，表示配准有效
     print("Fitness (匹配度): ", reg_p2p.fitness)
     print("Inlier RMSE (内点均方根误差): ", reg_p2p.inlier_rmse)
     print("Transformation Matrix (变换矩阵):\n", reg_p2p.transformation)

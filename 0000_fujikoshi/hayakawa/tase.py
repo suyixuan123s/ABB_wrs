@@ -679,7 +679,7 @@ def execute_global_registration(source_down, target_down, source_fpfh, target_fp
 
 def refine_registration(source, target, result_ransac):
     distance_threshold = 30
-    print(":: Point-to-plane ICP registration is applied on original point")
+    print(":: Point-to-plane ICP_Iterative_Closest_Point registration is applied on original point")
     print("   clouds to refine the alignment. This time we use a strict")
     print("   distance threshold %.3f." % distance_threshold)
     result = o3d.registration.registration_icp(
@@ -705,7 +705,7 @@ def objectfitting(newpcd, fitobjpcd, refpoint_fitting):
         result_ransac = execute_global_registration(source_down, target_down,
                                                     source_fpfh, source_fpfh, voxel_size)
         print(result_ransac)
-        print("ICP start")
+        print("ICP_Iterative_Closest_Point start")
         result_icp = refine_registration(source, target, result_ransac)
         print(result_icp)
         transformation = result_icp.transformation

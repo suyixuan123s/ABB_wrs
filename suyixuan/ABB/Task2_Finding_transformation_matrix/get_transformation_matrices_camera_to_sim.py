@@ -1,7 +1,7 @@
 """
 Author: Yixuan Su
 Date: 2024/11/17 10:26
-File: single_stl_to_point_cloud.py
+File: get_transformation_matrices_camera_to_sim.py
 """
 
 import os
@@ -41,10 +41,11 @@ def compute_transformation(alpha_deg, beta_deg, gamma_deg, tx, ty, tz):
     transformation_camera_to_sim[:3, :3] = rotation_matrix
     transformation_camera_to_sim[:3, 3] = [tx, ty, tz]
 
-    # 计算仿真坐标系到相机坐标系的外参 (取逆)
-    transformation_sim_to_camera = np.linalg.inv(transformation_camera_to_sim)
+    # # 计算仿真坐标系到相机坐标系的外参 (取逆)
+    # transformation_sim_to_camera = np.linalg.inv(transformation_camera_to_sim)
 
-    return transformation_camera_to_sim, transformation_sim_to_camera
+    # return transformation_camera_to_sim, transformation_sim_to_camera
+    return transformation_camera_to_sim
 
 
 # 已知参数
@@ -52,10 +53,13 @@ def compute_transformation(alpha_deg, beta_deg, gamma_deg, tx, ty, tz):
 # tx, ty, tz = 0.47, 0.757, 1.27
 
 
-alpha, beta, gamma = -148.0, -0.4, -178.0
-tx, ty, tz = 0.525, 0.76, 1.25
+# alpha, beta, gamma = -148.0, -0.4, -178.0
+# tx, ty, tz = 0.525, 0.76, 1.25
+
+alpha, beta, gamma = 27.5, -180.0, 180.0
+tx, ty, tz = 0.42, -0.77, 1.23
 # 计算外参矩阵
-transformation_camera_to_sim, transformation_sim_to_camera = compute_transformation(alpha, beta, gamma, tx, ty, tz)
+transformation_camera_to_sim = compute_transformation(alpha, beta, gamma, tx, ty, tz)
 
 # 指定文件路径
 file_path = r"E:\ABB-Project\ABB_wrs\suyixuan\ABB\Task2_Finding_transformation_matrix\transformation_matrices.txt"
@@ -67,7 +71,7 @@ os.makedirs(os.path.dirname(file_path), exist_ok=True)
 with open(file_path, "w") as f:
     f.write("相机到仿真坐标系的外参 (Camera to Simulation):\n")
     f.write(np.array2string(transformation_camera_to_sim, formatter={'float_kind': lambda x: f"{x:.6f}"}))
-    f.write("\n\n仿真坐标系到相机坐标系的外参 (Simulation to Camera):\n")
-    f.write(np.array2string(transformation_sim_to_camera, formatter={'float_kind': lambda x: f"{x:.6f}"}))
+    # f.write("\n\n仿真坐标系到相机坐标系的外参 (Simulation to Camera):\n")
+    # f.write(np.array2string(transformation_sim_to_camera, formatter={'float_kind': lambda x: f"{x:.6f}"}))
 
 print(f"文件已保存到: {file_path}")

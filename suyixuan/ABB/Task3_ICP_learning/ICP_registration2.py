@@ -11,9 +11,14 @@ import numpy as np
 # source = o3d.io.read_point_cloud("source_point_cloud.ply")  # 读取源点云
 # target = o3d.io.read_point_cloud("target_point_cloud.ply")  # 读取目标点云
 
-source = o3d.io.read_point_cloud("point_cloud.ply")  # 读取源点云
+
+source = o3d.io.read_point_cloud(
+    r"/suyixuan/ABB/ICP_Iterative_Closest_Point\normalized_realsense_point_cloud.ply")  # 读取源点云
 target = o3d.io.read_point_cloud(
-    r"E:\ABB-Project\ABB_wrs\suyixuan\ABB\Task4_ICP_GOFA5\point_cloud\rack_5ml_green_point_cloud.ply")  # 读取目标点云
+    r"/suyixuan/ABB/ICP_Iterative_Closest_Point\normalized_stl_point_cloud.ply")  # 读取目标点云
+
+# source = o3d.io.read_point_cloud(r"E:\ABB-Project\ABB_wrs\suyixuan\ABB\ICP_Iterative_Closest_Point\colored_point_cloud120302.ply")  # 读取源点云
+# target = o3d.io.read_point_cloud(r"E:\ABB-Project\ABB_wrs\suyixuan\ABB\ICP_Iterative_Closest_Point\converted_stl_point_cloud.ply")  # 读取目标点云
 
 # 设置不同颜色以区分点云
 source.paint_uniform_color([1, 0, 0])  # 红色
@@ -28,24 +33,39 @@ print("显示目标点云...")
 o3d.visualization.draw_geometries([target], window_name="target Registration", width=1024, height=768)
 
 # 设定一个初始粗对齐变换矩阵（接近于我们之前施加的旋转和平移）
-initial_guess = np.array([
-    [1, 0, 0, 1.0],  # 沿 X 轴平移 1.0 个单位
-    [0, 1, 0, -0.5],  # 沿 Y 轴平移 -0.5 个单位
-    [0, 0, 1, 0.2],  # 沿 Z 轴平移 0.2 个单位
-    [0, 0, 0, 1]
-])
+# initial_guess = np.array([
+#     [0.51058156, 0.00491067, 0.8598153, 0.30657232],
+#     [-0.0921574, 0.99453585, 0.04904545, -0.30394721],
+#     [-0.8548763, -0.10428005, 0.50824422, 1.47714186],
+#     [0, 0, 0, 1]
+# ])
+
+# initial_guess = np.array([
+#     [0.99962989, -0.00844353, 0.0258611, 0.00203317],
+#     [0.01180651, 0.9910745, -0.13278532, -0.09554107],
+#     [-0.0245091, 0.1330415, 0.99080738, 0.62364565],
+#     [0, 0, 0, 1]
+# ])
+
+initial_guess = np.array(
+
+    [[9.98695073e-01, -4.29472256e-03, -5.08892267e-02, -1.89501654e-02],
+     [2.83316108e-04, 9.96908356e-01, -7.85725674e-02, -2.95379411e-02],
+     [5.10693429e-02, 7.84556141e-02, 9.95608678e-01, -1.87374895e-02],
+     [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 1.00000000e+00]
+     ])
 
 # # 初始粗对齐（可以提供一个初步的旋转和平移）
 # # 这里假设初始对齐为单位矩阵（即没有旋转和平移）
 # trans_init = np.eye(4)  # 初始变换矩阵（单位矩阵）
 
-# 使用 ICP 算法进行点云配准
+# 使用 ICP_Iterative_Closest_Point 算法进行点云配准
 # pipelines.registration 模块在较新版本的 Open3D 中适用
 max_correspondence_distance = 0.5  # 最大匹配距离
 
 reg_icp = o3d.pipelines.registration.registration_icp(
     source, target, max_correspondence_distance, init=initial_guess,
-    estimation_method=o3d.pipelines.registration.TransformationEstimationPointToPoint(),  # 使用点到点 ICP
+    estimation_method=o3d.pipelines.registration.TransformationEstimationPointToPoint(),  # 使用点到点 ICP_Iterative_Closest_Point
     criteria=o3d.pipelines.registration.ICPConvergenceCriteria(
         max_iteration=3000,  # 最大迭代次数
         relative_fitness=1e-6,  # 相对收敛条件
@@ -54,20 +74,19 @@ reg_icp = o3d.pipelines.registration.registration_icp(
 )
 
 # 打印配准结果
-# print("ICP converged:", reg_icp.converged)
+# print("ICP_Iterative_Closest_Point converged:", reg_icp.converged)
 print("Fitness:", reg_icp.fitness)  # 配准度（匹配的点对数量比例，越接近 1 越好）
 print("RMSE:", reg_icp.inlier_rmse)  # 配准误差（越小越好）
 
 # 打印最终变换矩阵
 print(f"Transformation Matrix:")
-print()
 print(reg_icp.transformation)  # 最终变换矩阵
 
 # 应用变换到源点云，得到对齐后的点云
 source.transform(reg_icp.transformation)
 
 # 可视化对齐后的点云
-o3d.visualization.draw_geometries([source, target], window_name="After ICP Registration", width=1024, height=768)
+o3d.visualization.draw_geometries([source, target], window_name="After ICP_Iterative_Closest_Point Registration", width=1024, height=768)
 
 '''
 Fitness: 1.0

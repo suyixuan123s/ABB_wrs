@@ -86,6 +86,8 @@ if __name__ == '__main__':
                                           [0.00698126, -0.52990635, -0.84802743, 1.25],
                                           [0., 0., 0., 1.]])
     # 添加桌面上的点云（替换为您的点云文件路径）
-    gofa_demo.add_point_cloud(r'E:\ABB-Project\ABB_wrs\suyixuan\ABB_Point_Cloud\colored_point_cloud1118.ply',
-                              camera_to_table_transform)
+    # gofa_demo.add_point_cloud(r'E:\ABB-Project\ABB_wrs\suyixuan\Point_Cloud_Datasets\colored_point_cloud1118.ply',
+    #                           camera_to_table_transform)
+
+    gofa_demo.add_point_cloud(r'E:\ABB-Project\ABB_wrs\suyixuan\ABB\ICP\colored_point_cloud1203.ply', camera_to_table_transform)
     gofa_demo.run()

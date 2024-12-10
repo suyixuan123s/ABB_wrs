@@ -124,7 +124,7 @@ def save_segmented_objects(object_clouds, method_name="method"):
     保存分割的物体点云，每种分割方法的结果保存在单独的文件夹中。
     """
     # 创建保存分割结果的目录
-    base_dir = f'E:/ABB-Project/ABB_wrs/ABB/ABB-11-6/Dataset/segmentation_results/{method_name}'
+    base_dir = f'/suyixuan/ABB/ABB-12-03/Dataset/segmentation_results/{method_name}'
     os.makedirs(base_dir, exist_ok=True)
 
     # 保存每个物体点云到该方法的文件夹中
@@ -135,7 +135,8 @@ def save_segmented_objects(object_clouds, method_name="method"):
 
 if __name__ == "__main__":
     # 加载裁剪后的点云文件路径
-    cropped_point_cloud_path = r'E:\ABB-Project\ABB_wrs\ABBB\ABB-11-6\Dataset\colored_point_cloud1106.ply'
+  #  cropped_point_cloud_path = r'E:\ABB-Project\ABB_wrs\ABBB\ABB-11-6\Dataset\colored_point_cloud1106.ply'
+    cropped_point_cloud_path = r'E:\ABB-Project\ABB_wrs\suyixuan\ABB\ICP\cropped_point_cloud1203.ply'
 
     # 读取裁剪后的点云
     point_cloud = o3d.io.read_point_cloud(cropped_point_cloud_path)
@@ -164,7 +165,7 @@ if __name__ == "__main__":
     elif choice == "3":
         # RANSAC 平面分割
         plane_cloud, remaining_cloud = segment_with_ransac(point_cloud)
-        ransac_dir = 'E:/ABB-Project/ABB_wrs/ABB/ABB-11-6/Dataset/segmentation_results/RANSAC'
+        ransac_dir = '/suyixuan/ABB/ABB-12-03/Dataset/segmentation_results/RANSAC'
         os.makedirs(ransac_dir, exist_ok=True)
         o3d.io.write_point_cloud(os.path.join(ransac_dir, "plane_segmented.ply"), plane_cloud)
         print("平面分割结果已保存")
@@ -174,7 +175,7 @@ if __name__ == "__main__":
     elif choice == "4":
         # 体素分割
         voxel_cloud = segment_with_voxel(point_cloud)
-        voxel_dir = 'E:/ABB-Project/ABB_wrs/ABB/ABB-11-6/Dataset/segmentation_results/Voxel'
+        voxel_dir = '/suyixuan/ABB/ABB-12-03/Dataset/segmentation_results/Voxel'
         os.makedirs(voxel_dir, exist_ok=True)
         o3d.io.write_point_cloud(os.path.join(voxel_dir, "voxel_segmented.ply"), voxel_cloud)
         print("体素分割结果已保存")

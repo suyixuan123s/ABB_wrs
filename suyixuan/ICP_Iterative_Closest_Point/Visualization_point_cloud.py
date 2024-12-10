@@ -24,7 +24,7 @@ def view_point_cloud(file_path):
 # 用法示例
 if __name__ == "__main__":
     # 指定点云文件路径
-    file_path = r'E:\ABB-Project\ABB_wrs\suyixuan\ABB\Task3_ICP_learning\box_point_cloud.ply'
+    file_path = r'E:\ABB-Project\ABB_wrs\suyixuan\ABB\ICP_Iterative_Closest_Point\point_clouds\0.15_0.2427050983124842_0.0.ply'
 
     # 查看点云
     view_point_cloud(file_path)

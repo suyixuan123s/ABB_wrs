@@ -33,7 +33,7 @@ if __name__ == "__main__":
     translation_vector = stl_center - camera_center
     camera_pcd.translate(translation_vector)
 
-    # ICP 配准
+    # ICP_Iterative_Closest_Point 配准
     threshold = 0.05  # 配准的距离阈值，可以根据点云稠密度调整
     transformation_init = np.eye(4)  # 初始变换矩阵
 
@@ -42,7 +42,7 @@ if __name__ == "__main__":
         o3d.pipelines.registration.TransformationEstimationPointToPoint())
 
     # 打印配准结果
-    print("ICP converged:", reg_p2p.fitness > 0.5)
+    print("ICP_Iterative_Closest_Point converged:", reg_p2p.fitness > 0.5)
     print("Fitness:", reg_p2p.fitness)
     print("Inlier RMSE:", reg_p2p.inlier_rmse)
     print("Transformation matrix:\n", reg_p2p.transformation)

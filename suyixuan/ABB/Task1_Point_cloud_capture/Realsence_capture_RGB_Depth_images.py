@@ -1,7 +1,7 @@
 """
 Author: Yixuan Su
 Date: 2024/11/18 13:56
-File: capture_point_cloud_By_Depth_Intrinsic_resize.py
+File: capture_point_cloud_By_Depth_Intrinsic_simulation_resize.py
 """
 
 import pyrealsense2 as rs

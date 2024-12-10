@@ -8,7 +8,7 @@ import os
 import open3d as o3d
 
 # 定义文件路径
-stl_file_path = r"E:\ABB-Project\ABB_wrs\suyixuan\ABB\ICP_Iterative_Closest_Point\armadillo.stl"
+stl_file_path = r"E:\ABB-Project\ABB_wrs\suyixuan\ABB\ICP\box12.STL"
 point_cloud_directory = r"E:\ABB-Project\ABB_wrs\suyixuan\ABB\Task4_ICP_GOFA5\point_cloud"
 
 # 读取STL文件

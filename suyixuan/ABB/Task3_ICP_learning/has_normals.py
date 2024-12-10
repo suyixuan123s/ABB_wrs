@@ -4,6 +4,7 @@ Date: 2024/11/25 15:23
 File: has_normals.py
 Description: 
 """
+
 import open3d as o3d
 
 # 加载点云

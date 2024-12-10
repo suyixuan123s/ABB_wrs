@@ -28,9 +28,9 @@ voxel_size = 0.01
 source.estimate_normals(search_param=o3d.geometry.KDTreeSearchParamHybrid(radius=voxel_size * 2, max_nn=30))
 target.estimate_normals(search_param=o3d.geometry.KDTreeSearchParamHybrid(radius=voxel_size * 2, max_nn=30))
 
-# # 调整法线方向（可选）
-# source.orient_normals_towards_camera_location(camera_location=[0.0, 0.0, 0.0])
-# target.orient_normals_towards_camera_location(camera_location=[0.0, 0.0, 0.0])
+# 调整法线方向（可选）
+source.orient_normals_towards_camera_location(camera_location=[0.0, 0.0, 0.0])
+target.orient_normals_towards_camera_location(camera_location=[0.0, 0.0, 0.0])
 
 # 计算FPFH特征
 source_fpfh = o3d.pipelines.registration.compute_fpfh_feature(

@@ -18,8 +18,11 @@ y_range = (-0.71, 0.80)  # y 轴范围
 z_range = (-0.015, 0.60)  # z 轴范围
 
 # 已知的手调参数
-alpha, beta, gamma = -148.0, -0.4, -178.0
-tx, ty, tz = 0.525, 0.76, 1.25
+# alpha, beta, gamma = -148.0, -0.4, -178.0
+# tx, ty, tz = 0.525, 0.76, 1.25
+
+alpha, beta, gamma = 27.5, -180.0, 180.0
+tx, ty, tz = 0.42, -0.77, 1.23
 
 
 def get_transformation_matrix(alpha_deg, beta_deg, gamma_deg, tx, ty, tz):
@@ -89,7 +92,8 @@ def main():
     gm.gen_frame(pos=[0, 0, 0], rotmat=np.eye(3), length=1, thickness=0.05).attach_to(base)
 
     # 加载点云
-    pcd_path = r"E:\ABB-Project\ABB_wrs\suyixuan\ABB_Point_Cloud\colored_point_cloud1118.ply"  # 请更换为实际路径
+    # pcd_path = r"E:\ABB-Project\ABB_wrs\suyixuan\Point_Cloud_Datasets\colored_point_cloud1118.ply"  # 请更换为实际路径
+    pcd_path = r"E:\ABB-Project\ABB_wrs\suyixuan\ABB\ICP\colored_point_cloud1203.ply"  # 请更换为实际路径
     pcd = o3d.io.read_point_cloud(pcd_path)
     points = np.asarray(pcd.points)
     colors = np.asarray(pcd.colors) if pcd.has_colors() else np.array([[1, 0, 0]] * len(points))  # 默认红色
@@ -120,7 +124,7 @@ def main():
     desk_pcd.points = o3d.utility.Vector3dVector(desk_points)
     desk_pcd.colors = o3d.utility.Vector3dVector(desk_colors)
 
-    output_path = r"E:\ABB-Project\ABB_wrs\suyixuan\ABB_Point_Cloud\cropped_point_cloud1.ply"
+    output_path = r"/suyixuan/Point_Cloud_Datasets\cropped_point_cloud1203.ply"
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
     o3d.io.write_point_cloud(output_path, desk_pcd)

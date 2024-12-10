@@ -173,7 +173,8 @@ if __name__ == '__main__':
     gofa_demo = GOFA5Demo(root)
     # 加载点云路径
     # pcd_path = r'E:\ABB\AI\Depth-Anything-V2\Point_cloud_files\demo26\colored_point_cloud111.ply'
-    pcd_path = r'E:\ABB-Project\ABB_wrs\suyixuan\ABB_Point_Cloud\colored_point_cloud1118.ply'
+    # pcd_path = r'E:\ABB-Project\ABB_wrs\suyixuan\Point_Cloud_Datasets\colored_point_cloud1118.ply'
+    pcd_path = r'E:\ABB-Project\ABB_wrs\suyixuan\ABB\ICP\colored_point_cloud1203.ply'
     gofa_demo.add_point_cloud(pcd_path)
 
     # 创建控制窗口
@@ -183,3 +184,6 @@ if __name__ == '__main__':
     gofa_demo.run_panda3d()
 
 #  点云已更新：alpha=-148.0°, beta=-0.4°, gamma=-178.0°, tx=0.525, ty=0.76, tz=1.25
+
+
+# 点云已更新：alpha=27.5°, beta=-180.0°, gamma=180.0°, tx=0.42, ty=-0.77, tz=1.23
