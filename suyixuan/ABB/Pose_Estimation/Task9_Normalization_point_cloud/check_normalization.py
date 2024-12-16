@@ -31,7 +31,7 @@ def check_normalization(point_cloud, name="Point Cloud"):
 
 
 # 加载两个点云文件
-source_ply_path = r"/suyixuan/ABB/Pose_Estimation/Task6_Point_cloud_processing/Dataset_Point_Cloud/normalized_realsense_point_cloud.ply"  # 修改为实际路径
+source_ply_path = r"/suyixuan/ABB/Pose_Estimation/Task6_Point_Cloud_Segment_and_Analyze/Dataset_Point_Cloud/normalized_realsense_point_cloud.ply"  # 修改为实际路径
 target_ply_path = r"/suyixuan/ABB/Pose_Estimation/Task8_STL_To_Point_Cloud/Datasets/stl_to_point_cloud_voxelization_normalized.ply"  # 修改为实际路径
 
 # 加载点云

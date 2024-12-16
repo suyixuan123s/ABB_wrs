@@ -41,11 +41,11 @@ def check_normalization(point_cloud, name="Point Cloud"):
 
 
 # 加载点云
-source_ply_path = r"/suyixuan/ABB/Pose_Estimation/Task6_Point_cloud_processing/Dataset_Point_Cloud/normalized_realsense_point_cloud.ply"  # 修改为实际路径
-target_ply_path = r"/suyixuan/ABB/Pose_Estimation/Task8_STL_To_Point_Cloud/Datasets/stl_to_point_cloud_voxelization_normalized.ply"  # 修改为实际路径
+source_ply_path = r"E:\ABB-Project\ABB_wrs\suyixuan\ABB\Pose_Estimation\Task6_Point_cloud_processing\Dataset_Point_Cloud\normalized_realsense_point_cloud.ply"  # 修改为实际路径
+target_ply_path = r"E:\ABB-Project\ABB_wrs\suyixuan\ABB\Pose_Estimation\Task8_STL_To_Point_Cloud\Datasets\stl_to_point_cloud_voxelization_normalized.ply"  # 修改为实际路径
 
-normalized_source_save_path = r"/suyixuan/ABB/Pose_Estimation/Task8_STL_To_Point_Cloud/normalize_point_cloud_independently/normalized_source_point_cloud.ply"
-normalized_target_save_path = r"/suyixuan/ABB/Pose_Estimation/Task8_STL_To_Point_Cloud/normalize_point_cloud_independently/normalized_target_point_cloud.ply"
+normalized_source_save_path = r"E:\ABB-Project\ABB_wrs\suyixuan\ABB\Pose_Estimation\Task9_Normalization_point_cloud\normalize_point_cloud_independently\normalized_source_point_cloud.ply"
+normalized_target_save_path = r"E:\ABB-Project\ABB_wrs\suyixuan\ABB\Pose_Estimation\Task9_Normalization_point_cloud\normalize_point_cloud_independently\normalized_target_point_cloud.ply"
 
 
 source = o3d.io.read_point_cloud(source_ply_path)
@@ -74,3 +74,32 @@ o3d.io.write_point_cloud(normalized_target_save_path, target)
 
 print(f"归一化后的源点云已保存至: {normalized_source_save_path}")
 print(f"归一化后的目标点云已保存至: {normalized_target_save_path}")
+
+
+
+"""
+
+E:\ABB-Project\ABB_wrs\venv\Scripts\python.exe E:\ABB-Project\ABB_wrs\suyixuan\ABB\Pose_Estimation\Task9_Normalization_point_cloud\normalize_point_cloud_independently.py 
+--- Source Point Cloud ---
+Bounding Box Min: [0. 0. 0.]
+Bounding Box Max: [1. 1. 1.]
+Range in X: 1.000000
+Range in Y: 1.000000
+Range in Z: 1.000000
+
+--- Target Point Cloud ---
+Bounding Box Min: [0. 0. 0.]
+Bounding Box Max: [1. 1. 1.]
+Range in X: 1.000000
+Range in Y: 1.000000
+Range in Z: 1.000000
+
+归一化后的源点云已保存至: E:\ABB-Project\ABB_wrs\suyixuan\ABB\Pose_Estimation\Task9_Normalization_point_cloud\normalize_point_cloud_independently\normalized_source_point_cloud.ply
+归一化后的目标点云已保存至: E:\ABB-Project\ABB_wrs\suyixuan\ABB\Pose_Estimation\Task9_Normalization_point_cloud\normalize_point_cloud_independently\normalized_target_point_cloud.ply
+
+Process finished with exit code 0
+
+
+
+
+"""

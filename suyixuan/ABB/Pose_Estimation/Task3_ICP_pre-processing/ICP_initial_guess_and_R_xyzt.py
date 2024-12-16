@@ -1,7 +1,7 @@
 """
 Author: Yixuan Su
 Date: 2024/11/19 10:23
-File: ICP_initial_guess.py
+File: ICP_initial_guess_and_R_xyzt.py
 """
 
 import open3d as o3d
@@ -13,9 +13,9 @@ import numpy as np
 
 
 source = o3d.io.read_point_cloud(
-    r"E:\ABB-Project\ABB_wrs\suyixuan\ABB\Pose_Estimation\Task8_STL_To_Point_Cloud\normalize_point_cloud_independently\normalized_source_point_cloud.ply")  # 读取源点云
+    r"E:\ABB-Project\ABB_wrs\suyixuan\ABB\Pose_Estimation\Task6_Point_cloud_processing\Dataset_Point_Cloud\normalized_realsense_point_cloud.ply")  # 读取源点云
 target = o3d.io.read_point_cloud(
-    r"E:\ABB-Project\ABB_wrs\suyixuan\ABB\Pose_Estimation\Task8_STL_To_Point_Cloud\normalize_point_cloud_independently\normalized_target_point_cloud.ply")  # 读取目标点云
+    r"E:\ABB-Project\ABB_wrs\suyixuan\ABB\Pose_Estimation\Task8_STL_To_Point_Cloud\Datasets\stl_to_point_cloud_voxelization_normalized.ply")  # 读取目标点云
 
 # source = o3d.io.read_point_cloud(r"E:\ABB-Project\ABB_wrs\suyixuan\ABB\ICP_Iterative_Closest_Point\colored_point_cloud120302.ply")  # 读取源点云
 # target = o3d.io.read_point_cloud(r"E:\ABB-Project\ABB_wrs\suyixuan\ABB\ICP_Iterative_Closest_Point\converted_stl_point_cloud.ply")  # 读取目标点云

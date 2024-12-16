@@ -1,7 +1,7 @@
 """
 Author: Yixuan Su
 Date: 2024/12/16 14:36
-File: normalize_point_cloud.py
+File: normalize_point_cloud_uniform_scaling1.py
 Description: 
 """
 

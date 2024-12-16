@@ -1,7 +1,7 @@
 """
 Author: Yixuan Su
 Date: 2024/11/25 15:22
-File: ICP_eye4_voxel_down_sample_estimate_normals_ransac_orient_normals_towards_camera_location.py
+File: ICP_eye4_voxel_down_sample_and_estimate_normals_and_fpfh_Ransac.py
 Description:
 """
 
@@ -37,12 +37,20 @@ o3d.visualization.draw_geometries([source], window_name="source voxel_down_sampl
 print("显示源点云...")
 o3d.visualization.draw_geometries([target], window_name="target voxel_down_sample Registration", width=1024, height=768)
 
+
+# 估计法线
+source.estimate_normals(search_param=o3d.geometry.KDTreeSearchParamHybrid(radius=voxel_size * 2, max_nn=30))
+target.estimate_normals(search_param=o3d.geometry.KDTreeSearchParamHybrid(radius=voxel_size * 2, max_nn=30))
+
+# 调整法线方向（可选）
+source.orient_normals_towards_camera_location(camera_location=[0.0, 0.0, 0.0])
+target.orient_normals_towards_camera_location(camera_location=[0.0, 0.0, 0.0])
+
 # 计算FPFH特征
 source_fpfh = o3d.pipelines.registration.compute_fpfh_feature(
     source, o3d.geometry.KDTreeSearchParamHybrid(radius=voxel_size * 5, max_nn=100))
 target_fpfh = o3d.pipelines.registration.compute_fpfh_feature(
     target, o3d.geometry.KDTreeSearchParamHybrid(radius=voxel_size * 5, max_nn=100))
-
 
 # RANSAC粗配准
 distance_threshold = voxel_size * 1.5
