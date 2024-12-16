@@ -220,7 +220,7 @@ class TensorDatapoint(dict):
 class TensorDataset(object):
     """ A class for efficient storage and access of datasets containing datapoints
     with multiple attributes of different types (e.g. images and robot_s gripper poses).
-    The dataset can only be modified by appending a datapoint
+    The Datasets can only be modified by appending a datapoint
     or removing the last datapoint, but can be read from any index at any time.
 
     Under the hood, this class saves individual attributes in chunks as compressed NumPy files.
@@ -236,21 +236,21 @@ class TensorDataset(object):
         self._datapoints_per_file = config['datapoints_per_file']
         self._access_mode = access_mode
 
-        # open dataset folder
-        # create dataset if necessary
+        # open Datasets folder
+        # create Datasets if necessary
         if not os.path.exists(self._filename) and access_mode != READ_ONLY_ACCESS:
             os.mkdir(self._filename)
-        # throw error if dataset doesn't exist
+        # throw error if Datasets doesn't exist
         elif not os.path.exists(self._filename) and access_mode == READ_ONLY_ACCESS:
             raise ValueError('Dataset %s does not exist!' % (self._filename))
-        # check dataset empty
+        # check Datasets empty
         elif access_mode == WRITE_ACCESS and os.path.exists(self._filename) and len(os.listdir(self._filename)) > 0:
             if not force_overwrite:
                 human_input = keyboard_input('Dataset %s exists. Overwrite?' % (self._filename), yesno=True)
                 if human_input.lower() == 'n':
-                    raise ValueError('User opted not to overwrite dataset')
+                    raise ValueError('User opted not to overwrite Datasets')
 
-            # delete the old dataset
+            # delete the old Datasets
             shutil.rmtree(self._filename)
             os.mkdir(self._filename)
 
@@ -391,7 +391,7 @@ class TensorDataset(object):
 
     @property
     def datapoint_indices(self):
-        """ Returns an array of all dataset indices. """
+        """ Returns an array of all Datasets indices. """
         return np.arange(self._num_datapoints)
 
     @property
@@ -468,7 +468,7 @@ class TensorDataset(object):
         return False
 
     def _allocate_tensors(self):
-        """ Allocates the tensors in the dataset. """
+        """ Allocates the tensors in the Datasets. """
         # init tensors dict
         self._tensors = {}
 
@@ -501,7 +501,7 @@ class TensorDataset(object):
         # check datapoint fields
         for field_name in datapoint.keys():
             if field_name not in self.field_names:
-                raise ValueError('Field %s not specified in dataset' % (field_name))
+                raise ValueError('Field %s not specified in Datasets' % (field_name))
 
         # store data in tensor
         cur_num_tensors = self._num_tensors
@@ -538,7 +538,7 @@ class TensorDataset(object):
         self._num_datapoints += 1
 
     def __getitem__(self, ind):
-        """ Indexes the dataset for the datapoint at the given index. """
+        """ Indexes the Datasets for the datapoint at the given index. """
         return self.datapoint(ind)
 
     def datapoint(self, ind, field_names=None):
@@ -563,7 +563,7 @@ class TensorDataset(object):
         # check valid input
         if ind >= self._num_datapoints:
             raise ValueError(
-                'Index %d larger than the number of datapoints in the dataset (%d)' % (ind, self._num_datapoints))
+                'Index %d larger than the number of datapoints in the Datasets (%d)' % (ind, self._num_datapoints))
 
         # load the field names
         if field_names is None:
@@ -627,12 +627,12 @@ class TensorDataset(object):
         return self.__next__()
 
     def delete_last(self, num_to_delete=1):
-        """ Deletes the last N datapoints from the dataset.
+        """ Deletes the last N datapoints from the Datasets.
 
         Parameters
         ----------
         num_to_delete : int
-            the number of datapoints to remove from the end_type of the dataset
+            the number of datapoints to remove from the end_type of the Datasets
         """
         # check access level
         if self._access_mode == READ_ONLY_ACCESS:
@@ -640,7 +640,7 @@ class TensorDataset(object):
 
         # check num to delete
         if num_to_delete > self._num_datapoints:
-            raise ValueError('Cannot remove more than the number of datapoints in the dataset')
+            raise ValueError('Cannot remove more than the number of datapoints in the Datasets')
 
         # compute indices
         last_datapoint_ind = self._num_datapoints - 1
@@ -689,7 +689,7 @@ class TensorDataset(object):
             self._num_tensors = 0
 
     def add_metadata(self, key, value):
-        """ Adds metadata (key-value pairs) to the dataset.
+        """ Adds metadata (key-value pairs) to the Datasets.
 
         Parameters
         ----------
@@ -726,10 +726,10 @@ class TensorDataset(object):
 
     @staticmethod
     def open(dataset_dir, access_mode=READ_ONLY_ACCESS):
-        """ Opens a tensor dataset. """
+        """ Opens a tensor Datasets. """
         # check access mode
         if access_mode == WRITE_ACCESS:
-            raise ValueError('Cannot open a dataset with write-only access')
+            raise ValueError('Cannot open a Datasets with write-only access')
 
         # read config
         try:
@@ -741,7 +741,7 @@ class TensorDataset(object):
             config_filename = os.path.join(dataset_dir, 'config.yaml')
             config = YamlConfig(config_filename)
 
-        # open dataset
+        # open Datasets
         dataset = TensorDataset(dataset_dir, config, access_mode=access_mode)
         return dataset
 
@@ -756,9 +756,9 @@ class TensorDataset(object):
         Returns
         -------
         :obj:`numpy.ndarray`
-            array of training indices in the global dataset
+            array of training indices in the global Datasets
         :obj:`numpy.ndarray`
-            array of validation indices in the global dataset
+            array of validation indices in the global Datasets
         dict
             metadata about the split
         """
@@ -774,9 +774,9 @@ class TensorDataset(object):
         return train_indices, val_indices, metadata
 
     def make_split(self, split_name, val_indices=None, train_pct=0.8, field_name=None):
-        """ Splits the dataset into train and test according
+        """ Splits the Datasets into train and test according
         to the given attribute.
-        The split is saved with the dataset for future access.
+        The split is saved with the Datasets for future access.
 
         Parameters
         ----------
@@ -792,9 +792,9 @@ class TensorDataset(object):
         Returns
         -------
         :obj:`numpy.ndarray`
-            array of training indices in the global dataset
+            array of training indices in the global Datasets
         :obj:`numpy.ndarray`
-            array of validation indices in the global dataset
+            array of validation indices in the global Datasets
         """
         # check train percentage
         if train_pct < 0 or train_pct > 1:
@@ -836,7 +836,7 @@ class TensorDataset(object):
 
             # check valid field
             if field_name not in self.config['fields'].keys():
-                raise ValueError('Field %d not in dataset!' % (field_name))
+                raise ValueError('Field %d not in Datasets!' % (field_name))
             if 'height' in self.config['fields'][field_name].keys():
                 raise ValueError('Can only split on scalar fields!')
 
@@ -890,7 +890,7 @@ class TensorDataset(object):
         return train_indices, val_indices
 
     def delete_split(self, split_name):
-        """ Delete a split of the dataset.
+        """ Delete a split of the Datasets.
 
         Parameters
         ----------

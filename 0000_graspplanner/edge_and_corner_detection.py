@@ -22,8 +22,8 @@ def edge_detection(point_cloud_np, normal_np, k=20, threshold=14, load=True, sho
     else:
         # pcd_neighbor_normal_np_list = []
         point_cloud = vdda.nparray_to_o3dpcd(point_cloud_np)
-        # point_cloud, ind = point_cloud.remove_radius_outlier(nb_points=10, radius=radius)
-        # point_cloud_np = vdda.o3dpcd_to_parray(point_cloud)
+        # point_cloud_dataset, ind = point_cloud_dataset.remove_radius_outlier(nb_points=10, radius=radius)
+        # point_cloud_np = vdda.o3dpcd_to_parray(point_cloud_dataset)
 
         point_cloud_tree = o3d.geometry.KDTreeFlann(point_cloud)
         pcd_neighbor_np_list = []
@@ -99,8 +99,8 @@ def edge_detection_normal(point_cloud_np, normal_np, k=20, threshold=45, load=Tr
     else:
         # pcd_neighbor_normal_np_list = []
         point_cloud = vdda.nparray_to_o3dpcd(point_cloud_np)
-        # point_cloud, ind = point_cloud.remove_radius_outlier(nb_points=10, radius=radius)
-        # point_cloud_np = vdda.o3dpcd_to_parray(point_cloud)
+        # point_cloud_dataset, ind = point_cloud_dataset.remove_radius_outlier(nb_points=10, radius=radius)
+        # point_cloud_np = vdda.o3dpcd_to_parray(point_cloud_dataset)
 
         point_cloud_tree = o3d.geometry.KDTreeFlann(point_cloud)
         pcd_neighbor_np_list = []
@@ -372,7 +372,7 @@ def voxel_grid_filter(point_cloud, voxel_size):
     使用体素网格采样点云数据
 
     参数:
-        point_cloud: 原始点云数据（numpy.ndarray, shape: [N, 3]）
+        point_cloud_dataset: 原始点云数据（numpy.ndarray, shape: [N, 3]）
         voxel_size: 体素网格的大小（float）
 
     返回:

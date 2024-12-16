@@ -37,8 +37,8 @@ while True:
         # ESC pressed
         print("Escape hit, closing...")
         break
-        # point_cloud = pk_obj.transform_depth_image_to_point_cloud(depth_image_handle)
-        # pcd_list.append(point_cloud)
+        # point_cloud_dataset = pk_obj.transform_depth_image_to_point_cloud(depth_image_handle)
+        # pcd_list.append(point_cloud_dataset)
         # # pk_obj.image_release(color_image_handle)
         # # pk_obj.image_release(depth_image_handle)
         # # print("x")

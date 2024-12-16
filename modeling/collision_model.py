@@ -42,7 +42,7 @@ class CollisionModel(gm.GeometricModel):
         """
         :param initor:
         :param btransparency:
-        :param cdprimit_type: box, ball, cylinder, point_cloud, user_defined
+        :param cdprimit_type: box, ball, cylinder, point_cloud_dataset, user_defined
         :param cdmesh_type: aabb, obb, convex_hull, triangulation
         :param expand_radius:
         :param name:
@@ -84,7 +84,7 @@ class CollisionModel(gm.GeometricModel):
                                                                      'surface_balls',
                                                                      'cylinder',
                                                                      'polygons',
-                                                                     'point_cloud',
+                                                                     'point_cloud_dataset',
                                                                      'user_defined']:
             raise ValueError("Wrong primitive collision model type name!")
         if cdprimitive_type == 'surface_balls':
@@ -100,7 +100,7 @@ class CollisionModel(gm.GeometricModel):
                 collision_node = pcd.gen_cylindrical_cdnp(self.objpdnp_raw, name='cdnp_cyl', radius=expand_radius)
             if cdprimitive_type == "polygons":
                 collision_node = pcd.gen_polygons_cdnp(self.objpdnp_raw, name='cdnp_plys', radius=expand_radius)
-            if cdprimitive_type == "point_cloud":
+            if cdprimitive_type == "point_cloud_dataset":
                 collision_node = pcd.gen_pointcloud_cdnp(self.objtrm, name='cdnp_ptc', radius=expand_radius)
             if cdprimitive_type == "user_defined":
                 collision_node = userdefined_cdprimitive_fn(name="cdnp_usrdef", radius=expand_radius)

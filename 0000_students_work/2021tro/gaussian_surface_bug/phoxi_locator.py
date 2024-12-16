@@ -511,7 +511,7 @@ class PhxiLocator(object):
         min_rmse = 100
         sample_name_list = ["a_lft_0", "a_rgt_0"]
         for sample_name in sample_name_list:
-            source = pickle.load(open(config.ROOT + "/dataset/sample_handpcd/" + sample_name + "_pcd.pkl", "rb"))
+            source = pickle.load(open(config.ROOT + "/Datasets/sample_handpcd/" + sample_name + "_pcd.pkl", "rb"))
             rmse, fitness, transform = o3dh.registration_ptpt(source, target, downsampling_voxelsize=dv,
                                                               toggledebug=show_icp)
             if rmse < min_rmse:

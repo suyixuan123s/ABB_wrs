@@ -468,7 +468,7 @@ if __name__ == '__main__':
     # base.run()
     get_objpcd_partial_bycampos(objcm, sample_num=10000, toggledebug=True)
 
-    # pcd = pickle.load(open(el.root + "/dataset/pcd/a_lft_0.pkl", "rb"))
+    # pcd = pickle.load(open(el.root + "/Datasets/pcd/a_lft_0.pkl", "rb"))
     # amat = pickle.load(open(el.root + "/camcalib/data/phoxi_calibmat_0117.pkl", "rb"))
     # pcd = transform_pcd(remove_pcd_zeros(pcd), amat)
     # print(len(pcd))

@@ -376,7 +376,7 @@ class PyKinectAzure(object):
         """
         Transforms the depth map to point clouds
         :param depth_image_handle (k4a_image_t): Handle to the Image
-        :return point_cloud numpy array
+        :return point_cloud_dataset numpy array
         author: weiwei
         date: 20210708
         """
